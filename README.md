@@ -1,11 +1,15 @@
-# Loja — Reincarnation in Another World: Next Level
+# Zavyn — versão 2
 
-Primeira versão da loja virtual própria da série.
+Primeira identidade da loja/plataforma Zavyn.
 
-## Estrutura
-- `index.html` — página principal
-- `style.css` — visual
-- `script.js` — catálogo e carrinho demonstrativo
+## Arquivos
+- index.html
+- style.css
+- script.js
 
-## Próxima etapa
-Substituir as capas provisórias pelas capas reais e conectar o checkout/entrega digital.
+## Próximas etapas
+1. Substituir capas provisórias pelas capas reais.
+2. Criar páginas individuais para os volumes.
+3. Configurar pagamento e entrega digital.
+4. Criar área de leitores.
+5. Futuramente criar cadastro e painel para autores.
