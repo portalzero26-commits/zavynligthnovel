@@ -98,6 +98,21 @@
 </section>
 </main>
 
+<div id="bookModal" class="book-modal" aria-hidden="true">
+  <div class="modal-backdrop" onclick="closeBookModal()"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" onclick="closeBookModal()" aria-label="Fechar">×</button>
+    <div class="modal-cover-wrap"><img id="modalCover" src="" alt=""></div>
+    <div class="modal-info">
+      <p class="eyebrow" id="modalSeries">REINCARNATION IN ANOTHER WORLD: NEXT LEVEL</p>
+      <h2 id="modalTitle"></h2>
+      <p id="modalVolume" class="modal-volume"></p>
+      <p id="modalDescription" class="modal-description"></p>
+      <div class="modal-buy"><strong id="modalPrice"></strong><button class="button" id="modalAdd">ADICIONAR AO CARRINHO</button></div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="footer-logo">ZAVYN</div>
   <p>Livros que levam você a novos mundos.</p>
