@@ -156,6 +156,7 @@ async function createPixPayment(){
      body:JSON.stringify({
        name,
        email,
+       totalAmount:cartTotal(),
        items:cart.map(b=>({n:b.n,qty:b.qty}))
      })
    });
