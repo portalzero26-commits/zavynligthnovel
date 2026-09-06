@@ -11,6 +11,9 @@ const books=[
 
 let cart=JSON.parse(localStorage.getItem("zavynCart")||"[]").map(item=>books.find(b=>b.n===item.n)?{...books.find(b=>b.n===item.n),qty:item.qty||1}:null).filter(Boolean);
 const money=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const ZAVYN_API_URL="https://zavyn-api.portalzero26.workers.dev";
+let selectedPayment="pix";
+let currentOrderId=null;
 
 function saveCart(){localStorage.setItem("zavynCart",JSON.stringify(cart.map(b=>({n:b.n,qty:b.qty}))));}
 function cartCount(){return cart.reduce((sum,b)=>sum+b.qty,0);}
@@ -113,15 +116,119 @@ function renderCheckout(){
 document.querySelectorAll(".payment-option").forEach(btn=>btn.addEventListener("click",()=>{
  document.querySelectorAll(".payment-option").forEach(b=>b.classList.remove("selected"));
  btn.classList.add("selected");
+ selectedPayment=btn.dataset.payment||"pix";
+ const notice=document.getElementById("paymentNotice");
+ if(notice) notice.textContent=selectedPayment==="pix" ? "PIX conectado ao Mercado Pago. O pedido será criado com o valor calculado pela Zavyn." : "Cartão será conectado na próxima etapa. Nesta versão, use PIX para testar o pagamento.";
 }));
 
-document.getElementById("checkoutForm").addEventListener("submit",e=>{
- e.preventDefault();
+function showPaymentResult(html){
+ const box=document.getElementById("paymentResult");
+ if(!box)return;
+ box.innerHTML=html;
+ box.classList.add("visible");
+ box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function closePaymentResult(){
+ const box=document.getElementById("paymentResult");
+ if(box){box.classList.remove("visible");box.innerHTML="";}
+ currentOrderId=null;
+}
+
+async function createPixPayment(){
  if(!cart.length){alert("Seu carrinho está vazio.");return;}
  const name=document.getElementById("customerName").value.trim();
  const email=document.getElementById("customerEmail").value.trim();
- if(!name || !email){return;}
- alert("Checkout preparado! O próximo passo é conectar o pagamento real da Zavyn. Nenhuma cobrança foi realizada.");
+ if(!name || !email){alert("Preencha seu nome e seu e-mail.");return;}
+ if(!/^\S+@\S+\.\S+$/.test(email)){alert("Digite um e-mail válido.");return;}
+
+ const submit=document.querySelector(".checkout-submit");
+ const original=submit.textContent;
+ submit.disabled=true;
+ submit.textContent="CRIANDO PIX...";
+ closePaymentResult();
+
+ try{
+   const response=await fetch(`${ZAVYN_API_URL}/create-order`,{
+     method:"POST",
+     headers:{"Content-Type":"application/json"},
+     body:JSON.stringify({
+       name,
+       email,
+       items:cart.map(b=>({n:b.n,qty:b.qty}))
+     })
+   });
+   const data=await response.json();
+   if(!response.ok || !data.ok){
+     throw new Error(data.error || "Não foi possível criar o PIX.");
+   }
+
+   const order=data.order||{};
+   currentOrderId=order.id||null;
+   const payment=order.transactions?.payments?.[0]||{};
+   const method=payment.payment_method||{};
+   const qr=method.qr_code_base64||"";
+   const code=method.qr_code||"";
+   const ticket=method.ticket_url||"";
+
+   showPaymentResult(`
+     <div class="payment-result-head"><span class="payment-status-dot"></span><div><strong>PIX criado com sucesso</strong><small>Pedido ${order.id||""}</small></div></div>
+     <p class="payment-result-total">Total: <strong>${money(data.calculatedTotal||cartTotal())}</strong></p>
+     ${qr?`<div class="pix-qr-wrap"><img src="data:image/png;base64,${qr}" alt="QR Code PIX para pagamento"></div>`:""}
+     ${code?`<label class="pix-code-label">PIX copia e cola<input id="pixCode" readonly value="${code.replace(/"/g,"&quot;")}"></label><button type="button" class="button secondary-action" id="copyPixBtn">COPIAR CÓDIGO PIX</button>`:""}
+     <div class="payment-result-actions">
+       <button type="button" class="button" id="checkPaymentBtn">VERIFICAR PAGAMENTO</button>
+       ${ticket?`<a class="payment-ticket" href="${ticket}" target="_blank" rel="noopener">ABRIR PIX</a>`:""}
+     </div>
+     <p class="payment-help">No ambiente de teste, o Mercado Pago pode aprovar este pedido automaticamente.</p>
+   `);
+
+   const copyBtn=document.getElementById("copyPixBtn");
+   if(copyBtn) copyBtn.onclick=async()=>{
+     try{await navigator.clipboard.writeText(code);copyBtn.textContent="CÓDIGO COPIADO ✓";}catch{alert("Não foi possível copiar automaticamente. Selecione o código e copie.");}
+   };
+   const checkBtn=document.getElementById("checkPaymentBtn");
+   if(checkBtn) checkBtn.onclick=checkCurrentPayment;
+ }catch(error){
+   showPaymentResult(`<div class="payment-error"><strong>Não foi possível criar o PIX.</strong><p>${error.message}</p><button type="button" class="button" onclick="closePaymentResult()">FECHAR</button></div>`);
+ }finally{
+   submit.disabled=false;
+   submit.textContent=original;
+ }
+}
+
+async function checkCurrentPayment(){
+ if(!currentOrderId){alert("Nenhum pedido ativo para consultar.");return;}
+ const btn=document.getElementById("checkPaymentBtn");
+ if(btn){btn.disabled=true;btn.textContent="VERIFICANDO...";}
+ try{
+   const response=await fetch(`${ZAVYN_API_URL}/check-order?id=${encodeURIComponent(currentOrderId)}`);
+   const data=await response.json();
+   const order=data.order||{};
+   const payment=order.transactions?.payments?.[0]||{};
+   const approved=payment.status==="processed" && payment.status_detail==="accredited";
+   if(approved){
+     cart=[];
+     saveCart();
+     renderCart();
+     renderCheckout();
+     showPaymentResult(`<div class="payment-success"><div class="success-icon">✓</div><strong>Pagamento aprovado!</strong><p>O Mercado Pago confirmou o pagamento do pedido.</p><p class="success-note">Próxima etapa do projeto: liberar automaticamente o e-book após a confirmação.</p><button type="button" class="button" onclick="closePaymentResult()">CONTINUAR</button></div>`);
+   }else{
+     showPaymentResult(`<div class="payment-waiting"><strong>Pagamento ainda não confirmado.</strong><p>Status atual: <b>${payment.status||order.status||"aguardando"}</b> · ${payment.status_detail||order.status_detail||"waiting_transfer"}</p><button type="button" class="button" id="checkPaymentBtn">VERIFICAR NOVAMENTE</button></div>`);
+     document.getElementById("checkPaymentBtn").onclick=checkCurrentPayment;
+   }
+ }catch(error){
+   alert("Não foi possível consultar o pagamento agora.");
+ }finally{
+   const b=document.getElementById("checkPaymentBtn");
+   if(b){b.disabled=false;}
+ }
+}
+
+document.getElementById("checkoutForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if(selectedPayment!=="pix"){alert("O pagamento por cartão será integrado na próxima etapa. Por enquanto, selecione PIX para testar o checkout.");return;}
+ createPixPayment();
 });
 
 document.getElementById("backToCartBtn").onclick=()=>{

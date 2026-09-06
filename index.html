@@ -127,7 +127,7 @@
             <button type="button" class="payment-option selected" data-payment="pix"><span>PIX</span><small>Pagamento instantâneo</small></button>
             <button type="button" class="payment-option" data-payment="card"><span>Cartão</span><small>Crédito ou débito</small></button>
           </div>
-          <div id="paymentNotice" class="payment-notice">O pagamento real será conectado nesta etapa. Nenhuma cobrança é feita nesta versão.</div>
+          <div id="paymentNotice" class="payment-notice">PIX conectado ao Mercado Pago. O pedido será criado com o valor calculado pela Zavyn.</div>
         </div>
         <button class="button checkout-submit" type="submit">CONTINUAR PARA PAGAMENTO</button>
         <button class="back-to-cart" id="backToCartBtn" type="button">← Voltar para a sacola</button>
@@ -139,6 +139,7 @@
         <div class="summary-line"><span>Subtotal</span><strong id="checkoutSubtotal">R$ 0,00</strong></div>
         <div class="summary-line total"><span>Total</span><strong id="checkoutTotal">R$ 0,00</strong></div>
         <p class="digital-note">📖 Produto digital · acesso após a confirmação do pagamento.</p>
+      <div id="paymentResult" class="payment-result" aria-live="polite"></div>
       </aside>
     </div>
   </div>

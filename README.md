@@ -14,3 +14,11 @@ IMPORTANTE: ao publicar no GitHub Pages, envie TODOS esses arquivos e a pasta co
 
 
 V8: corrigido o ícone do carrinho para SVG, removendo o quadrado branco causado pela renderização do emoji.
+
+
+## Pagamento PIX — V10
+O checkout usa a API da Zavyn em `https://zavyn-api.portalzero26.workers.dev`. O arquivo `zavyn-api-worker-v2.js` contém o Worker atualizado com `/create-order` e `/check-order`.
+
+Para teste no Cloudflare, configure a variável `MP_TEST_MODE` como `true` e mantenha `MP_ACCESS_TOKEN` como Secret. O site calcula os itens, mas o Worker valida os preços novamente antes de criar a Order.
+
+Cartão ainda não está conectado nesta versão.
