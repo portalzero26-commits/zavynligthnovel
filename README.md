@@ -11,3 +11,6 @@ covers/volume-1.webp ... volume-7.webp
 covers/volume-8.png
 
 IMPORTANTE: ao publicar no GitHub Pages, envie TODOS esses arquivos e a pasta covers para a raiz do repositório. Não envie a pasta Zavyn_v6_logo_capas_corrigido como uma pasta dentro do repositório.
+
+
+V8: corrigido o ícone do carrinho para SVG, removendo o quadrado branco causado pela renderização do emoji.

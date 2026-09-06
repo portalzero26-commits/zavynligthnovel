@@ -20,7 +20,7 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
 @media(max-width:460px){.logo{width:145px}.main-nav{gap:11px}.main-nav a{font-size:.7rem}.grid{grid-template-columns:1fr}.book>p{min-height:auto}.hero{padding:65px 5%}.hero h1{letter-spacing:-2px}.real-hero-cover{width:160px}}
 
 /* Carrinho lateral — Zavyn V7 */
-.cart-link{border:0;background:transparent;color:#f5f4ef;cursor:pointer;padding:6px 0;font:inherit}
+.cart-link{appearance:none;-webkit-appearance:none;border:0!important;background:transparent!important;color:#f5f4ef;cursor:pointer;padding:6px 2px;font:inherit;position:relative;display:inline-flex;align-items:flex-start;justify-content:center;box-shadow:none!important;outline-offset:3px}.cart-icon{width:27px;height:27px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.cart-link:focus{outline:1px solid rgba(216,173,76,.65)}
 .cart-drawer{position:fixed;inset:0;z-index:120;display:none}
 .cart-drawer.open{display:block}
 .cart-drawer-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}
