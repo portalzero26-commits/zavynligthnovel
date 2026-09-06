@@ -18,3 +18,21 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
 @media(max-width:1000px){.header{flex-wrap:wrap}.logo{width:210px}.main-nav{order:3;width:100%;flex-basis:100%;gap:24px}.main-nav a{padding:8px 0}.main-nav a.active:after{bottom:0}.header-tools{margin-left:auto}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{grid-template-columns:1fr}.hero-card{max-width:400px;width:100%;justify-self:center}.search-box{width:190px}}
 @media(max-width:700px){.header{padding:8px 4%;gap:12px}.logo{width:170px}.logo img{height:50px}.header-tools{gap:8px}.search-box{width:42px;padding:0 10px}.search-box input{display:none}.main-nav{gap:15px}.main-nav a{font-size:.75rem}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.section,.author-section,.cart-section,.contact-section{padding:65px 5%}.section-heading{align-items:flex-start;flex-direction:column}.catalog-quote{text-align:left}.modal-card{grid-template-columns:1fr;gap:22px;padding:20px;max-height:94vh}.modal-cover-wrap{width:190px;justify-self:center}.modal-info{padding:0}.modal-info h2{font-size:2.4rem}.modal-buy{flex-wrap:wrap}.modal-buy .button{flex:1}.book>p{min-height:92px}}
 @media(max-width:460px){.logo{width:145px}.main-nav{gap:11px}.main-nav a{font-size:.7rem}.grid{grid-template-columns:1fr}.book>p{min-height:auto}.hero{padding:65px 5%}.hero h1{letter-spacing:-2px}.real-hero-cover{width:160px}}
+
+/* Carrinho lateral — Zavyn V7 */
+.cart-link{border:0;background:transparent;color:#f5f4ef;cursor:pointer;padding:6px 0;font:inherit}
+.cart-drawer{position:fixed;inset:0;z-index:120;display:none}
+.cart-drawer.open{display:block}
+.cart-drawer-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}
+.cart-panel{position:absolute;right:0;top:0;height:100%;width:min(520px,94vw);background:#0d1116;border-left:1px solid #3a3f47;box-shadow:-25px 0 80px rgba(0,0,0,.55);display:flex;flex-direction:column;padding:28px}
+.cart-panel-head{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid #292f37}
+.cart-panel-head h2{margin:5px 0 0;font-size:2rem}
+.drawer-items{flex:1;overflow:auto;padding:18px 0}
+.drawer-cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:start;margin:0 0 12px;padding:12px;background:#141920;border:1px solid #2a3038;border-radius:9px}
+.drawer-cart-item>img{width:64px;height:88px;object-fit:cover;border-radius:5px;border:1px solid #333941}
+.drawer-item-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.drawer-item-info strong{color:#fff}.drawer-item-info span{color:#c0c3ca;font-size:.86rem}.drawer-item-info small{color:#8f949d;font-size:.75rem}
+.item-subtotal{color:#dfb85f;font-size:.9rem;white-space:nowrap}
+.qty-controls{display:flex;align-items:center;gap:9px;margin-top:10px}.qty-controls button{width:26px;height:26px;border:1px solid #4a5058;background:#0b0e12;color:#fff;border-radius:4px;cursor:pointer}.qty-controls b{min-width:18px;text-align:center}.qty-controls .remove-link{width:auto;border:0;background:transparent;color:#a9adb5;text-decoration:underline;font-size:.72rem;margin-left:3px}
+.drawer-footer{border-top:1px solid #292f37;padding-top:20px}.drawer-total{display:flex;justify-content:space-between;align-items:center;font-size:1.05rem;margin-bottom:16px}.drawer-total strong{font-size:1.45rem;color:#e2bd63}.drawer-checkout{width:100%}
+@media(max-width:700px){.cart-panel{padding:20px}.drawer-cart-item{grid-template-columns:54px 1fr}.drawer-cart-item>img{width:54px;height:76px}.item-subtotal{grid-column:2}}

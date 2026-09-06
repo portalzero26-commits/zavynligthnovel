@@ -9,8 +9,12 @@ const books=[
 {n:8,title:"A batalha contra a Hidra",price:19.90,image:"covers/volume-8.png",description:"O confronto contra a Hidra chega ao centro da história. Um volume de batalha, tensão e grandes consequências para a jornada."}
 ];
 
-let cart=[];
+let cart=JSON.parse(localStorage.getItem("zavynCart")||"[]").map(item=>books.find(b=>b.n===item.n)?{...books.find(b=>b.n===item.n),qty:item.qty||1}:null).filter(Boolean);
 const money=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+function saveCart(){localStorage.setItem("zavynCart",JSON.stringify(cart.map(b=>({n:b.n,qty:b.qty}))));}
+function cartCount(){return cart.reduce((sum,b)=>sum+b.qty,0);}
+function cartTotal(){return cart.reduce((sum,b)=>sum+b.price*b.qty,0);}
 
 function renderBooks(list=books){
  document.getElementById("volumes").innerHTML=list.map(b=>`
@@ -33,27 +37,60 @@ function openBookModal(n){
  document.getElementById("modalVolume").textContent=`Volume ${b.n} • Reincarnation in Another World: Next Level`;
  document.getElementById("modalDescription").textContent=b.description;
  document.getElementById("modalPrice").textContent=money(b.price);
- document.getElementById("modalAdd").onclick=()=>{addToCart(b.n);closeBookModal();document.getElementById("carrinho").scrollIntoView({behavior:"smooth"});};
+ document.getElementById("modalAdd").onclick=()=>{addToCart(b.n);closeBookModal();openCart();};
  const modal=document.getElementById("bookModal"); modal.classList.add("open"); modal.setAttribute("aria-hidden","false"); document.body.classList.add("modal-open");
 }
 function closeBookModal(){const modal=document.getElementById("bookModal");modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");}
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeBookModal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeBookModal();closeCart();}});
 
 function addToCart(n){
- const b=books.find(x=>x.n===n);
- if(!cart.some(x=>x.n===n))cart.push(b);
- renderCart();
+ const b=books.find(x=>x.n===n); if(!b)return;
+ const existing=cart.find(x=>x.n===n);
+ if(existing) existing.qty+=1; else cart.push({...b,qty:1});
+ saveCart(); renderCart(); openCart();
 }
-function removeFromCart(n){cart=cart.filter(x=>x.n!==n);renderCart();}
+function changeQty(n,delta){
+ const item=cart.find(x=>x.n===n); if(!item)return;
+ item.qty+=delta;
+ if(item.qty<=0) cart=cart.filter(x=>x.n!==n);
+ saveCart(); renderCart();
+}
+function removeFromCart(n){cart=cart.filter(x=>x.n!==n);saveCart();renderCart();}
+
+function cartItemMarkup(b){return `<div class="cart-item drawer-cart-item">
+  <img src="${b.image}" alt="Capa do Volume ${b.n}">
+  <div class="drawer-item-info"><strong>Volume ${b.n}</strong><span>${b.title}</span><small>${money(b.price)} cada</small>
+    <div class="qty-controls"><button type="button" onclick="changeQty(${b.n},-1)" aria-label="Diminuir quantidade">−</button><b>${b.qty}</b><button type="button" onclick="changeQty(${b.n},1)" aria-label="Aumentar quantidade">+</button><button class="remove-link" type="button" onclick="removeFromCart(${b.n})">Remover</button></div>
+  </div>
+  <strong class="item-subtotal">${money(b.price*b.qty)}</strong>
+</div>`}
+
 function renderCart(){
- document.getElementById("cartCount").textContent=cart.length;
- const box=document.getElementById("cartItems");
- if(!cart.length){box.innerHTML='<p class="empty">Seu carrinho está vazio.</p>';}
- else box.innerHTML=cart.map(b=>`<div class="cart-item"><span>Volume ${b.n} — ${b.title}</span><span>${money(b.price)} <button onclick="removeFromCart(${b.n})" aria-label="Remover">×</button></span></div>`).join("");
- document.getElementById("cartTotal").textContent=money(cart.reduce((s,b)=>s+b.price,0));
+ const count=cartCount();
+ document.getElementById("cartCount").textContent=count;
+ const html=cart.length?cart.map(cartItemMarkup).join(""): '<p class="empty">Seu carrinho está vazio.</p>';
+ document.getElementById("cartItems").innerHTML=html;
+ document.getElementById("cartTotal").textContent=money(cartTotal());
+ document.getElementById("drawerItems").innerHTML=html;
+ document.getElementById("drawerTotal").textContent=money(cartTotal());
 }
 
-document.getElementById("checkoutBtn").onclick=()=>alert(cart.length?"O checkout real será conectado na próxima etapa.":"Adicione pelo menos um livro ao carrinho.");
+function openCart(){const d=document.getElementById("cartDrawer");d.classList.add("open");d.setAttribute("aria-hidden","false");}
+function closeCart(){const d=document.getElementById("cartDrawer");if(!d)return;d.classList.remove("open");d.setAttribute("aria-hidden","true");}
+
+document.getElementById("openCartBtn").onclick=openCart;
+document.getElementById("closeCartBtn").onclick=closeCart;
+document.getElementById("closeCartBackdrop").onclick=closeCart;
+
+document.getElementById("checkoutBtn").onclick=()=>{
+ if(!cart.length){alert("Adicione pelo menos um livro ao carrinho.");return;}
+ alert("Seu carrinho está pronto. Na próxima etapa vamos conectar o checkout e o pagamento real da Zavyn.");
+};
+document.getElementById("drawerCheckoutBtn").onclick=()=>{
+ if(!cart.length){alert("Adicione pelo menos um livro ao carrinho.");return;}
+ alert("Seu carrinho está pronto. Na próxima etapa vamos conectar o checkout e o pagamento real da Zavyn.");
+};
+
 renderBooks();renderCart();
 
 const searchInput=document.getElementById("bookSearch");

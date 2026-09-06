@@ -23,7 +23,7 @@
     <label class="search-box" aria-label="Buscar livros">
       <span>⌕</span><input id="bookSearch" type="search" placeholder="Buscar livros...">
     </label>
-    <a class="cart-link" href="#carrinho" aria-label="Abrir carrinho">🛒 <span id="cartCount">0</span></a>
+    <button class="cart-link" id="openCartBtn" type="button" aria-label="Abrir carrinho">🛒 <span id="cartCount">0</span></button>
   </div>
 </header>
 
@@ -99,8 +99,8 @@
   </div>
   <div id="cartItems"><p class="empty">Seu carrinho está vazio.</p></div>
   <div class="cart-total">Total <strong id="cartTotal">R$ 0,00</strong></div>
-  <button class="button" id="checkoutBtn">FINALIZAR COMPRA</button>
-  <p class="notice">Checkout e entrega digital serão conectados na próxima etapa.</p>
+  <button class="button" id="checkoutBtn" type="button">FINALIZAR COMPRA</button>
+  <p class="notice">Seu carrinho fica salvo neste dispositivo. O pagamento real será conectado na etapa de checkout.</p>
 </section>
 </main>
 
@@ -117,6 +117,22 @@
       <div class="modal-buy"><strong id="modalPrice"></strong><button class="button" id="modalAdd">ADICIONAR AO CARRINHO</button></div>
     </div>
   </div>
+</div>
+
+<div id="cartDrawer" class="cart-drawer" aria-hidden="true">
+  <div class="cart-drawer-backdrop" id="closeCartBackdrop"></div>
+  <aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle">
+    <div class="cart-panel-head">
+      <div><p class="eyebrow gold">SUA SACOLA</p><h2 id="cartDrawerTitle">Carrinho</h2></div>
+      <button class="modal-close" id="closeCartBtn" type="button" aria-label="Fechar carrinho">×</button>
+    </div>
+    <div id="drawerItems" class="drawer-items"></div>
+    <div class="drawer-footer">
+      <div class="drawer-total"><span>Total</span><strong id="drawerTotal">R$ 0,00</strong></div>
+      <button class="button drawer-checkout" id="drawerCheckoutBtn" type="button">PROSSEGUIR PARA CHECKOUT</button>
+      <p class="notice">Pagamento seguro e entrega digital serão configurados na próxima etapa.</p>
+    </div>
+  </aside>
 </div>
 
 <footer>
