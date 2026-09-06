@@ -1,17 +1,5 @@
-# Zavyn — versão 4
+Zavyn v5 — identidade visual
 
-Vitrine da Zavyn com as oito capas reais de Reincarnation in Another World: Next Level.
+Esta versão mantém as 8 capas e o catálogo com 4 volumes por linha no desktop, adiciona a logo oficial da Zavyn no cabeçalho e rodapé, e aplica a identidade visual escura/dourada inspirada na prévia aprovada.
 
-## Melhorias da versão 4
-- Catálogo dos volumes com capas reais.
-- Cards reorganizados para destacar capa, volume, título e preço.
-- Botões separados para detalhes e adição à sacola.
-- Janela de detalhes responsiva para cada volume.
-- Informações básicas do livro preparadas para receber as sinopses oficiais.
-- Carrinho preservado para a próxima etapa de checkout.
-
-## Próximas etapas
-1. Inserir as sinopses oficiais e demais dados de cada volume.
-2. Definir a estratégia de preço.
-3. Configurar pagamento e entrega digital.
-4. Criar área de leitores e, futuramente, área para autores.
+Arquivos principais: index.html, style.css, script.js, zavyn-logo.png e covers/.

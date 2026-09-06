@@ -11,22 +11,27 @@
 
 <header class="header">
   <a class="logo" href="#inicio" aria-label="Zavyn início">
-    <span class="logo-mark">Z</span><span>ZAVYN</span>
+    <img src="zavyn-logo.png" alt="Zavyn — Seu mundo. Sua escolha.">
   </a>
-  <nav>
+  <nav class="main-nav">
     <a href="#inicio">Início</a>
-    <a href="#livros">Livros</a>
-    <a href="#autores">Autores</a>
+    <a class="active" href="#livros">Livros</a>
     <a href="#sobre">Sobre</a>
-    <a href="#carrinho">🛒 <span id="cartCount">0</span></a>
+    <a href="#contato">Contato</a>
   </nav>
+  <div class="header-tools">
+    <label class="search-box" aria-label="Buscar livros">
+      <span>⌕</span><input id="bookSearch" type="search" placeholder="Buscar livros...">
+    </label>
+    <a class="cart-link" href="#carrinho" aria-label="Abrir carrinho">🛒 <span id="cartCount">0</span></a>
+  </div>
 </header>
 
 <main>
 <section id="inicio" class="hero">
   <div class="hero-glow"></div>
   <div class="hero-content">
-    <p class="eyebrow">ZAVYN • LIVRARIA DIGITAL</p>
+    <p class="eyebrow gold">BEM-VINDO AO UNIVERSO ZAVYN</p>
     <h1>Histórias que<br><em>levam você</em><br>a novos mundos.</h1>
     <p class="lead">Descubra aventuras, fantasias e histórias independentes. A Zavyn começa com uma obra — e nasce para abrir espaço para muitas outras.</p>
     <div class="actions">
@@ -45,18 +50,11 @@
 <section id="livros" class="section">
   <div class="section-heading">
     <div>
-      <p class="eyebrow">CATÁLOGO ZAVYN</p>
-      <h2>Livros em destaque</h2>
+      <p class="eyebrow gold">CATÁLOGO ZAVYN</p>
+      <h2>Reincarnation in Another World: <em>Next Level</em></h2>
+      <p class="catalog-subtitle">Conheça os oito volumes da primeira série da Zavyn.</p>
     </div>
-    <p>Uma nova história pode começar com uma única página.</p>
-  </div>
-  <div class="series-banner">
-    <div>
-      <p class="eyebrow">SÉRIE</p>
-      <h3>Reincarnation in Another World: Next Level</h3>
-      <p>Conheça os oito volumes da primeira série da Zavyn.</p>
-    </div>
-    <a class="button small-button" href="#volumes">VER VOLUMES</a>
+    <p class="catalog-quote">“Histórias que vão além do imaginável.”</p>
   </div>
   <div id="volumes" class="grid"></div>
 </section>
@@ -73,6 +71,14 @@
     <div class="panel-line"></div>
     <p>EM BREVE</p>
     <strong>UMA NOVA CASA<br>PARA AUTORES</strong>
+  </div>
+</section>
+
+<section id="contato" class="contact-section">
+  <div>
+    <p class="eyebrow gold">CONTATO</p>
+    <h2>Fale com a Zavyn.</h2>
+    <p>Em breve, este espaço receberá os canais oficiais de atendimento e suporte.</p>
   </div>
 </section>
 
@@ -96,17 +102,25 @@
   <button class="button" id="checkoutBtn">FINALIZAR COMPRA</button>
   <p class="notice">Checkout e entrega digital serão conectados na próxima etapa.</p>
 </section>
-
-<div class="book-modal" id="bookModal" aria-hidden="true">
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Detalhes do livro">
-    <button class="modal-close" id="closeModal" aria-label="Fechar">×</button>
-    <div class="modal-content" id="modalContent"></div>
-  </div>
-</div>
 </main>
 
+<div id="bookModal" class="book-modal" aria-hidden="true">
+  <div class="modal-backdrop" onclick="closeBookModal()"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" onclick="closeBookModal()" aria-label="Fechar">×</button>
+    <div class="modal-cover-wrap"><img id="modalCover" src="" alt=""></div>
+    <div class="modal-info">
+      <p class="eyebrow" id="modalSeries">REINCARNATION IN ANOTHER WORLD: NEXT LEVEL</p>
+      <h2 id="modalTitle"></h2>
+      <p id="modalVolume" class="modal-volume"></p>
+      <p id="modalDescription" class="modal-description"></p>
+      <div class="modal-buy"><strong id="modalPrice"></strong><button class="button" id="modalAdd">ADICIONAR AO CARRINHO</button></div>
+    </div>
+  </div>
+</div>
+
 <footer>
-  <div class="footer-logo">ZAVYN</div>
+  <img class="footer-logo-img" src="zavyn-logo.png" alt="Zavyn — Seu mundo. Sua escolha.">
   <p>Livros que levam você a novos mundos.</p>
   <small>© 2026 Zavyn. Todos os direitos reservados.</small>
 </footer>
