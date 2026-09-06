@@ -200,6 +200,8 @@ async function createPixPayment(){
 }
 
 async function checkCurrentPayment(){
+ // Recupera o ID também do localStorage, evitando perder o pedido por atualização/re-renderização da página.
+ currentOrderId=currentOrderId||localStorage.getItem("zavynCurrentOrderId")||null;
  if(!currentOrderId){alert("Nenhum pedido ativo para consultar.");return;}
  const btn=document.getElementById("checkPaymentBtn");
  if(btn){btn.disabled=true;btn.textContent="VERIFICANDO...";}
@@ -207,6 +209,10 @@ async function checkCurrentPayment(){
    const response=await fetch(`${ZAVYN_API_URL}/check-order?id=${encodeURIComponent(currentOrderId)}`);
    const data=await response.json();
    const order=data.order||{};
+   if(order.id){
+     currentOrderId=order.id;
+     localStorage.setItem("zavynCurrentOrderId",currentOrderId);
+   }
    const payment=order.transactions?.payments?.[0]||{};
    const approved=payment.status==="processed" && payment.status_detail==="accredited";
    if(approved){
