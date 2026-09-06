@@ -13,7 +13,7 @@ let cart=JSON.parse(localStorage.getItem("zavynCart")||"[]").map(item=>books.fin
 const money=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const ZAVYN_API_URL="https://zavyn-api.portalzero26.workers.dev";
 let selectedPayment="pix";
-let currentOrderId=null;
+let currentOrderId=localStorage.getItem("zavynCurrentOrderId")||null;
 
 function saveCart(){localStorage.setItem("zavynCart",JSON.stringify(cart.map(b=>({n:b.n,qty:b.qty}))));}
 function cartCount(){return cart.reduce((sum,b)=>sum+b.qty,0);}
@@ -132,6 +132,7 @@ function showPaymentResult(html){
 function closePaymentResult(){
  const box=document.getElementById("paymentResult");
  if(box){box.classList.remove("visible");box.innerHTML="";}
+ localStorage.removeItem("zavynCurrentOrderId");
  currentOrderId=null;
 }
 
@@ -165,6 +166,7 @@ async function createPixPayment(){
 
    const order=data.order||{};
    currentOrderId=order.id||null;
+   if(currentOrderId) localStorage.setItem("zavynCurrentOrderId",currentOrderId);
    const payment=order.transactions?.payments?.[0]||{};
    const method=payment.payment_method||{};
    const qr=method.qr_code_base64||"";
@@ -210,6 +212,7 @@ async function checkCurrentPayment(){
    if(approved){
      cart=[];
      saveCart();
+     localStorage.removeItem("zavynCurrentOrderId");
      renderCart();
      renderCheckout();
      showPaymentResult(`<div class="payment-success"><div class="success-icon">✓</div><strong>Pagamento aprovado!</strong><p>O Mercado Pago confirmou o pagamento do pedido.</p><p class="success-note">Próxima etapa do projeto: liberar automaticamente o e-book após a confirmação.</p><button type="button" class="button" onclick="closePaymentResult()">CONTINUAR</button></div>`);
