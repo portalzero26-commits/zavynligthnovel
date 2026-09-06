@@ -105,6 +105,44 @@
   <button class="button" id="checkoutBtn" type="button">FINALIZAR COMPRA</button>
   <p class="notice">Seu carrinho fica salvo neste dispositivo. O pagamento real será conectado na etapa de checkout.</p>
 </section>
+
+<section id="checkout" class="checkout-section" aria-labelledby="checkoutTitle">
+  <div class="checkout-wrap">
+    <div class="checkout-heading">
+      <p class="eyebrow gold">FINALIZAÇÃO</p>
+      <h2 id="checkoutTitle">Finalize sua compra.</h2>
+      <p>Confira seu pedido e informe os dados necessários para receber seus livros digitais.</p>
+    </div>
+    <div class="checkout-grid">
+      <form id="checkoutForm" class="checkout-form">
+        <div class="checkout-card">
+          <p class="checkout-label">1. Seus dados</p>
+          <label>Nome completo<input id="customerName" name="name" type="text" autocomplete="name" required placeholder="Seu nome"></label>
+          <label>E-mail<input id="customerEmail" name="email" type="email" autocomplete="email" required placeholder="voce@email.com"></label>
+          <p class="form-note">O e-mail será usado para a entrega digital após a confirmação do pagamento.</p>
+        </div>
+        <div class="checkout-card">
+          <p class="checkout-label">2. Forma de pagamento</p>
+          <div class="payment-options">
+            <button type="button" class="payment-option selected" data-payment="pix"><span>PIX</span><small>Pagamento instantâneo</small></button>
+            <button type="button" class="payment-option" data-payment="card"><span>Cartão</span><small>Crédito ou débito</small></button>
+          </div>
+          <div id="paymentNotice" class="payment-notice">O pagamento real será conectado nesta etapa. Nenhuma cobrança é feita nesta versão.</div>
+        </div>
+        <button class="button checkout-submit" type="submit">CONTINUAR PARA PAGAMENTO</button>
+        <button class="back-to-cart" id="backToCartBtn" type="button">← Voltar para a sacola</button>
+      </form>
+
+      <aside class="checkout-summary">
+        <p class="checkout-label">RESUMO DO PEDIDO</p>
+        <div id="checkoutItems"></div>
+        <div class="summary-line"><span>Subtotal</span><strong id="checkoutSubtotal">R$ 0,00</strong></div>
+        <div class="summary-line total"><span>Total</span><strong id="checkoutTotal">R$ 0,00</strong></div>
+        <p class="digital-note">📖 Produto digital · acesso após a confirmação do pagamento.</p>
+      </aside>
+    </div>
+  </div>
+</section>
 </main>
 
 <div id="bookModal" class="book-modal" aria-hidden="true">

@@ -82,14 +82,16 @@ document.getElementById("openCartBtn").onclick=openCart;
 document.getElementById("closeCartBtn").onclick=closeCart;
 document.getElementById("closeCartBackdrop").onclick=closeCart;
 
-document.getElementById("checkoutBtn").onclick=()=>{
+function openCheckout(){
  if(!cart.length){alert("Adicione pelo menos um livro ao carrinho.");return;}
- alert("Seu carrinho está pronto. Na próxima etapa vamos conectar o checkout e o pagamento real da Zavyn.");
-};
-document.getElementById("drawerCheckoutBtn").onclick=()=>{
- if(!cart.length){alert("Adicione pelo menos um livro ao carrinho.");return;}
- alert("Seu carrinho está pronto. Na próxima etapa vamos conectar o checkout e o pagamento real da Zavyn.");
-};
+ closeCart();
+ renderCheckout();
+ document.getElementById("checkout").classList.add("checkout-active");
+ document.getElementById("checkout").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+document.getElementById("drawerCheckoutBtn").onclick=openCheckout;
+document.getElementById("checkoutBtn").onclick=openCheckout;
 
 renderBooks();renderCart();
 
@@ -99,3 +101,29 @@ if(searchInput){searchInput.addEventListener("input",()=>{
  const filtered=books.filter(b=>`volume ${b.n} ${b.title} reincarnation in another world next level`.includes(q));
  renderBooks(filtered);
 });}
+
+function renderCheckout(){
+ const container=document.getElementById("checkoutItems");
+ if(!container)return;
+ container.innerHTML=cart.length ? cart.map(b=>`<div class="summary-item"><span>V${b.n} · ${b.title} <b>× ${b.qty}</b></span><strong>${money(b.price*b.qty)}</strong></div>`).join("") : '<p class="empty">Seu carrinho está vazio.</p>';
+ document.getElementById("checkoutSubtotal").textContent=money(cartTotal());
+ document.getElementById("checkoutTotal").textContent=money(cartTotal());
+}
+
+document.querySelectorAll(".payment-option").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".payment-option").forEach(b=>b.classList.remove("selected"));
+ btn.classList.add("selected");
+}));
+
+document.getElementById("checkoutForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if(!cart.length){alert("Seu carrinho está vazio.");return;}
+ const name=document.getElementById("customerName").value.trim();
+ const email=document.getElementById("customerEmail").value.trim();
+ if(!name || !email){return;}
+ alert("Checkout preparado! O próximo passo é conectar o pagamento real da Zavyn. Nenhuma cobrança foi realizada.");
+});
+
+document.getElementById("backToCartBtn").onclick=()=>{
+ document.getElementById("carrinho").scrollIntoView({behavior:"smooth",block:"start"});
+};
