@@ -1,12 +1,12 @@
 const books=[
-{n:1,title:"O início da jornada",price:19.90,image:"covers/volume-1.webp",description:"A primeira etapa de uma aventura em outro mundo. Conheça o começo da jornada e os desafios que dão forma a essa nova história."},
-{n:2,title:"Novos caminhos",price:19.90,image:"covers/volume-2.webp",description:"A jornada avança e novas possibilidades surgem pelo caminho. Um volume para quem quer descobrir o que existe além do primeiro passo."},
-{n:3,title:"Mistérios da floresta",price:19.90,image:"covers/volume-3.webp",description:"Uma nova região traz perguntas, perigos e mistérios. A aventura se aprofunda enquanto o grupo segue em frente."},
-{n:4,title:"Um novo desafio",price:19.90,image:"covers/volume-4.webp",description:"Novos obstáculos colocam os protagonistas à prova. A jornada ganha escala e cada escolha passa a ter mais peso."},
-{n:5,title:"O jogo",price:19.90,image:"covers/volume-5.webp",description:"Estratégia, tensão e decisões entram em cena. Um capítulo marcante da série, onde cada movimento pode mudar o rumo da história."},
-{n:6,title:"Novos destinos",price:19.90,image:"covers/volume-6.webp",description:"A história abre novos horizontes e conduz os personagens para destinos ainda desconhecidos."},
-{n:7,title:"A Hidra se aproxima",price:19.90,image:"covers/volume-7.webp",description:"A ameaça da Hidra se torna cada vez mais próxima. O clima muda e a batalha que se aproxima promete ser decisiva."},
-{n:8,title:"A batalha contra a Hidra",price:19.90,image:"covers/volume-8.png",description:"O confronto contra a Hidra chega ao centro da história. Um volume de batalha, tensão e grandes consequências para a jornada."}
+{n:1,title:"O início da jornada",price:5.00,image:"covers/volume-1.webp",description:"A primeira etapa de uma aventura em outro mundo. Conheça o começo da jornada e os desafios que dão forma a essa nova história."},
+{n:2,title:"Novos caminhos",price:5.00,image:"covers/volume-2.webp",description:"A jornada avança e novas possibilidades surgem pelo caminho. Um volume para quem quer descobrir o que existe além do primeiro passo."},
+{n:3,title:"Mistérios da floresta",price:5.00,image:"covers/volume-3.webp",description:"Uma nova região traz perguntas, perigos e mistérios. A aventura se aprofunda enquanto o grupo segue em frente."},
+{n:4,title:"Um novo desafio",price:5.00,image:"covers/volume-4.webp",description:"Novos obstáculos colocam os protagonistas à prova. A jornada ganha escala e cada escolha passa a ter mais peso."},
+{n:5,title:"O jogo",price:5.00,image:"covers/volume-5.webp",description:"Estratégia, tensão e decisões entram em cena. Um capítulo marcante da série, onde cada movimento pode mudar o rumo da história."},
+{n:6,title:"Novos destinos",price:5.00,image:"covers/volume-6.webp",description:"A história abre novos horizontes e conduz os personagens para destinos ainda desconhecidos."},
+{n:7,title:"A Hidra se aproxima",price:5.00,image:"covers/volume-7.webp",description:"A ameaça da Hidra se torna cada vez mais próxima. O clima muda e a batalha que se aproxima promete ser decisiva."},
+{n:8,title:"A batalha contra a Hidra",price:5.00,image:"covers/volume-8.png",description:"O confronto contra a Hidra chega ao centro da história. Um volume de batalha, tensão e grandes consequências para a jornada."}
 ];
 
 let cart=JSON.parse(localStorage.getItem("zavynCart")||"[]").map(item=>books.find(b=>b.n===item.n)?{...books.find(b=>b.n===item.n),qty:item.qty||1}:null).filter(Boolean);
@@ -14,6 +14,7 @@ const money=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const ZAVYN_API_URL="https://zavyn-api.portalzero26.workers.dev";
 let selectedPayment="pix";
 let currentOrderId=localStorage.getItem("zavynCurrentOrderId")||null;
+let currentOrderExternalReference=localStorage.getItem("zavynCurrentOrderExternalReference")||null;
 
 function saveCart(){localStorage.setItem("zavynCart",JSON.stringify(cart.map(b=>({n:b.n,qty:b.qty}))));}
 function cartCount(){return cart.reduce((sum,b)=>sum+b.qty,0);}
@@ -133,7 +134,9 @@ function closePaymentResult(){
  const box=document.getElementById("paymentResult");
  if(box){box.classList.remove("visible");box.innerHTML="";}
  localStorage.removeItem("zavynCurrentOrderId");
+ localStorage.removeItem("zavynCurrentOrderExternalReference");
  currentOrderId=null;
+ currentOrderExternalReference=null;
 }
 
 async function createPixPayment(){
@@ -167,7 +170,9 @@ async function createPixPayment(){
 
    const order=data.order||{};
    currentOrderId=order.id||null;
+   currentOrderExternalReference=order.external_reference||data.externalReference||null;
    if(currentOrderId) localStorage.setItem("zavynCurrentOrderId",currentOrderId);
+   if(currentOrderExternalReference) localStorage.setItem("zavynCurrentOrderExternalReference",currentOrderExternalReference);
    const payment=order.transactions?.payments?.[0]||{};
    const method=payment.payment_method||{};
    const qr=method.qr_code_base64||"";
@@ -201,34 +206,50 @@ async function createPixPayment(){
 }
 
 async function checkCurrentPayment(){
- // Recupera o ID também do localStorage, evitando perder o pedido por atualização/re-renderização da página.
  currentOrderId=currentOrderId||localStorage.getItem("zavynCurrentOrderId")||null;
- if(!currentOrderId){alert("Nenhum pedido ativo para consultar.");return;}
+ currentOrderExternalReference=currentOrderExternalReference||localStorage.getItem("zavynCurrentOrderExternalReference")||null;
+ if(!currentOrderId && !currentOrderExternalReference){alert("Nenhum pedido ativo para consultar.");return;}
  const btn=document.getElementById("checkPaymentBtn");
  if(btn){btn.disabled=true;btn.textContent="VERIFICANDO...";}
  try{
-   const response=await fetch(`${ZAVYN_API_URL}/check-order?id=${encodeURIComponent(currentOrderId)}`);
+   const query=currentOrderExternalReference
+     ? `external_reference=${encodeURIComponent(currentOrderExternalReference)}`
+     : `id=${encodeURIComponent(currentOrderId)}`;
+   const response=await fetch(`${ZAVYN_API_URL}/check-order?${query}`);
    const data=await response.json();
+   if(!response.ok || !data.ok){
+     throw new Error(data.error || data.order?.errors?.[0]?.message || "Não foi possível consultar o pedido.");
+   }
    const order=data.order||{};
    if(order.id){
      currentOrderId=order.id;
      localStorage.setItem("zavynCurrentOrderId",currentOrderId);
    }
+   if(order.external_reference){
+     currentOrderExternalReference=order.external_reference;
+     localStorage.setItem("zavynCurrentOrderExternalReference",currentOrderExternalReference);
+   }
    const payment=order.transactions?.payments?.[0]||{};
    const approved=payment.status==="processed" && payment.status_detail==="accredited";
    if(approved){
+     const purchasedVolumes=[...new Set(cart.map(b=>b.n))].sort((a,b)=>a-b);
+     const ref=order.external_reference||currentOrderExternalReference;
+     const downloads=purchasedVolumes.map(volume=>`
+       <a class="download-button" href="${ZAVYN_API_URL}/download?external_reference=${encodeURIComponent(ref)}&volume=${volume}" download="Zavyn-Volume-${volume}.pdf">
+         BAIXAR VOLUME ${volume}
+       </a>`).join("");
      cart=[];
      saveCart();
-     localStorage.removeItem("zavynCurrentOrderId");
      renderCart();
      renderCheckout();
-     showPaymentResult(`<div class="payment-success"><div class="success-icon">✓</div><strong>Pagamento aprovado!</strong><p>O Mercado Pago confirmou o pagamento do pedido.</p><p class="success-note">Próxima etapa do projeto: liberar automaticamente o e-book após a confirmação.</p><button type="button" class="button" onclick="closePaymentResult()">CONTINUAR</button></div>`);
+     showPaymentResult(`<div class="payment-success"><div class="success-icon">✓</div><strong>Pagamento aprovado!</strong><p>O Mercado Pago confirmou o pagamento do seu pedido.</p><div class="download-box"><p class="download-title">SEUS E-BOOKS ESTÃO DISPONÍVEIS</p><p class="download-help">Toque no botão de cada volume para abrir o PDF.</p><div class="download-list">${downloads}</div></div><p class="success-note">Guarde esta página até concluir os downloads. A entrega automática por e-mail será adicionada em uma próxima etapa.</p><button type="button" class="button" onclick="closePaymentResult()">CONTINUAR</button></div>`);
    }else{
      showPaymentResult(`<div class="payment-waiting"><strong>Pagamento ainda não confirmado.</strong><p>Status atual: <b>${payment.status||order.status||"aguardando"}</b> · ${payment.status_detail||order.status_detail||"waiting_transfer"}</p><button type="button" class="button" id="checkPaymentBtn">VERIFICAR NOVAMENTE</button></div>`);
      document.getElementById("checkPaymentBtn").onclick=checkCurrentPayment;
    }
  }catch(error){
-   alert("Não foi possível consultar o pagamento agora.");
+   showPaymentResult(`<div class="payment-error"><strong>Não foi possível consultar o pagamento.</strong><p>${error.message}</p><button type="button" class="button" id="retryPaymentBtn">TENTAR NOVAMENTE</button></div>`);
+   document.getElementById("retryPaymentBtn").onclick=checkCurrentPayment;
  }finally{
    const b=document.getElementById("checkPaymentBtn");
    if(b){b.disabled=false;}
