@@ -188,7 +188,7 @@ async function createPixPayment(){
        <button type="button" class="button" id="checkPaymentBtn">VERIFICAR PAGAMENTO</button>
        ${ticket?`<a class="payment-ticket" href="${ticket}" target="_blank" rel="noopener">ABRIR PIX</a>`:""}
      </div>
-     <p class="payment-help">No ambiente de teste, o Mercado Pago pode aprovar este pedido automaticamente.</p>
+     <p class="payment-help">Pagamento em ambiente de produção. Após pagar o PIX, use “VERIFICAR PAGAMENTO” para confirmar a aprovação.</p>
    `);
 
    const copyBtn=document.getElementById("copyPixBtn");
