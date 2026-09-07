@@ -205,6 +205,23 @@ async function createPixPayment(){
  }
 }
 
+function getPurchasedVolumesFromReference(externalReference){
+ const volumes=[];
+ if(!externalReference)return volumes;
+ const parts=String(externalReference).split("_");
+ for(const part of parts){
+   const match=part.match(/^v([1-8])x(\d+)$/);
+   if(match){
+     const volume=Number(match[1]);
+     const quantity=Number(match[2]);
+     if(Number.isInteger(volume)&&volume>=1&&volume<=8&&Number.isInteger(quantity)&&quantity>0){
+       volumes.push(volume);
+     }
+   }
+ }
+ return volumes;
+}
+
 async function checkCurrentPayment(){
  currentOrderId=currentOrderId||localStorage.getItem("zavynCurrentOrderId")||null;
  currentOrderExternalReference=currentOrderExternalReference||localStorage.getItem("zavynCurrentOrderExternalReference")||null;
@@ -232,17 +249,23 @@ async function checkCurrentPayment(){
    const payment=order.transactions?.payments?.[0]||{};
    const approved=payment.status==="processed" && payment.status_detail==="accredited";
    if(approved){
-     const purchasedVolumes=[...new Set(cart.map(b=>b.n))].sort((a,b)=>a-b);
      const ref=order.external_reference||currentOrderExternalReference;
+     const purchasedVolumes=[...new Set(getPurchasedVolumesFromReference(ref))].sort((a,b)=>a-b);
+
+     if(!ref || purchasedVolumes.length===0){
+       throw new Error("O pagamento foi aprovado, mas não foi possível identificar os volumes deste pedido.");
+     }
+
      const downloads=purchasedVolumes.map(volume=>`
        <a class="download-button" href="${ZAVYN_API_URL}/download?external_reference=${encodeURIComponent(ref)}&volume=${volume}" download="Zavyn-Volume-${volume}.pdf">
          BAIXAR VOLUME ${volume}
        </a>`).join("");
+
      cart=[];
      saveCart();
      renderCart();
      renderCheckout();
-     showPaymentResult(`<div class="payment-success"><div class="success-icon">✓</div><strong>Pagamento aprovado!</strong><p>O Mercado Pago confirmou o pagamento do seu pedido.</p><div class="download-box"><p class="download-title">SEUS E-BOOKS ESTÃO DISPONÍVEIS</p><p class="download-help">Toque no botão de cada volume para abrir o PDF.</p><div class="download-list">${downloads}</div></div><p class="success-note">Guarde esta página até concluir os downloads. A entrega automática por e-mail será adicionada em uma próxima etapa.</p><button type="button" class="button" onclick="closePaymentResult()">CONTINUAR</button></div>`);
+     showPaymentResult(`<div class="payment-success"><div class="success-icon">✓</div><strong>Pagamento aprovado!</strong><p>O Mercado Pago confirmou o pagamento do seu pedido.</p><div class="download-box"><p class="download-title">SEUS E-BOOKS ESTÃO DISPONÍVEIS</p><p class="download-help">O pedido foi confirmado. Baixe abaixo somente os volumes registrados nesta compra.</p><div class="download-list">${downloads}</div></div><p class="success-note">Guarde esta página até concluir os downloads. A entrega automática por e-mail será adicionada em uma próxima etapa.</p><button type="button" class="button" onclick="closePaymentResult()">CONTINUAR</button></div>`);
    }else{
      showPaymentResult(`<div class="payment-waiting"><strong>Pagamento ainda não confirmado.</strong><p>Status atual: <b>${payment.status||order.status||"aguardando"}</b> · ${payment.status_detail||order.status_detail||"waiting_transfer"}</p><button type="button" class="button" id="checkPaymentBtn">VERIFICAR NOVAMENTE</button></div>`);
      document.getElementById("checkPaymentBtn").onclick=checkCurrentPayment;

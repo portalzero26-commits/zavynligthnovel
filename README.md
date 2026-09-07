@@ -24,3 +24,6 @@ Esta V13 ainda deve ser usada com o ambiente de teste até a conclusão da valid
 - `zavyn-logo.png`
 - `covers/volume-1.webp` até `volume-7.webp`
 - `covers/volume-8.png`
+
+
+V14 — entrega digital: após aprovação, os botões de download são montados a partir da external_reference do pedido, e não do carrinho local.
