@@ -375,7 +375,7 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
 }
 
 
-/* ===== Zavyn V19 — primeiro slot do mural ===== */
+/* ===== Zavyn V20 — três slots do mural ===== */
 .mural-slot-button {
   position: relative;
   min-height: 180px;
@@ -401,7 +401,6 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
 }
 .mural-plus { font-size: 34px; line-height: 1; }
 .mural-caption { font-size: .82rem; opacity: .72; }
-.mural-slot-disabled { opacity: .55; }
 .mural-slot-button.has-image { border-style: solid; }
 .mural-slot-button.has-image::after {
   content: "";

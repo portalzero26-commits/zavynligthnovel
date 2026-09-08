@@ -316,46 +316,58 @@ function getMuralStorageKey(user, slot = 1) {
   return user && user.id ? `zavynMural_${user.id}_${slot}` : "";
 }
 
-function renderMural(user) {
-  const slot = document.getElementById("muralSlot1");
+function renderMuralSlot(user, slotNumber) {
+  const slot = document.getElementById(`muralSlot${slotNumber}`);
   if (!slot) return;
 
-  const key = getMuralStorageKey(user, 1);
+  const key = getMuralStorageKey(user, slotNumber);
   const imageUrl = key ? localStorage.getItem(key) : "";
+
   if (imageUrl) {
     slot.classList.add("has-image");
     slot.style.backgroundImage = `url(${JSON.stringify(imageUrl)})`;
     slot.innerHTML = `<span class="mural-edit-badge">✎</span>`;
-    slot.setAttribute("aria-label", "Alterar foto do mural");
+    slot.setAttribute("aria-label", `Alterar foto ${slotNumber} do mural`);
   } else {
     slot.classList.remove("has-image");
     slot.style.backgroundImage = "";
     slot.innerHTML = `<span class="mural-plus">+</span><span class="mural-caption">Adicionar foto</span>`;
-    slot.setAttribute("aria-label", "Adicionar foto ao mural");
+    slot.setAttribute("aria-label", `Adicionar foto ${slotNumber} ao mural`);
+  }
+}
+
+function renderMural(user) {
+  for (let slotNumber = 1; slotNumber <= 3; slotNumber++) {
+    renderMuralSlot(user, slotNumber);
   }
 }
 
 function setupMural(user) {
-  const slot = document.getElementById("muralSlot1");
-  const file = document.getElementById("muralFile1");
   const message = document.getElementById("muralMessage");
-  if (!slot || !file || !user) return;
+  if (!user) return;
 
   renderMural(user);
-  slot.addEventListener("click", () => file.click());
-  file.addEventListener("change", async () => {
-    if (!file.files || !file.files[0]) return;
-    try {
-      const preview = await compressAvatar(file.files[0]);
-      localStorage.setItem(getMuralStorageKey(user, 1), preview);
-      renderMural(user);
-      setAuthMessage(message, "Foto adicionada ao mural.", "success");
-      file.value = "";
-    } catch (error) {
-      file.value = "";
-      setAuthMessage(message, error.message || "Não foi possível adicionar essa imagem.", "error");
-    }
-  });
+
+  for (let slotNumber = 1; slotNumber <= 3; slotNumber++) {
+    const slot = document.getElementById(`muralSlot${slotNumber}`);
+    const file = document.getElementById(`muralFile${slotNumber}`);
+    if (!slot || !file) continue;
+
+    slot.addEventListener("click", () => file.click());
+    file.addEventListener("change", async () => {
+      if (!file.files || !file.files[0]) return;
+      try {
+        const preview = await compressAvatar(file.files[0]);
+        localStorage.setItem(getMuralStorageKey(user, slotNumber), preview);
+        renderMuralSlot(user, slotNumber);
+        setAuthMessage(message, `Foto ${slotNumber} adicionada ao mural.`, "success");
+        file.value = "";
+      } catch (error) {
+        file.value = "";
+        setAuthMessage(message, error.message || "Não foi possível adicionar essa imagem.", "error");
+      }
+    });
+  }
 }
 
 async function logoutZavyn() {
