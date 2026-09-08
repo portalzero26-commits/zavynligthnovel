@@ -193,6 +193,10 @@ async function loadMyProfile() {
   return data.user;
 }
 
+function getAvatarStorageKey(user) {
+  return user && user.id ? `zavynAvatar_${user.id}` : "";
+}
+
 function renderProfile(user) {
   const name = document.getElementById("profileName");
   const handle = document.getElementById("profileHandle");
@@ -205,13 +209,57 @@ function renderProfile(user) {
   if (name) name.textContent = user.name || "Usuário";
   if (handle) handle.textContent = `@${user.username || "usuario"}`;
   if (bio) bio.textContent = user.bio || "Sua biografia aparecerá aqui.";
+
+  const localAvatar = getAvatarStorageKey(user) ? localStorage.getItem(getAvatarStorageKey(user)) : "";
+  const avatarUrl = user.avatar_url || localAvatar || "";
   if (avatar) {
-    avatar.textContent = (user.name || "Z").trim().charAt(0).toUpperCase() || "Z";
+    if (avatarUrl) {
+      avatar.textContent = "";
+      avatar.style.backgroundImage = `url(${JSON.stringify(avatarUrl)})`;
+      avatar.style.backgroundSize = "cover";
+      avatar.style.backgroundPosition = "center";
+    } else {
+      avatar.textContent = (user.name || "Z").trim().charAt(0).toUpperCase() || "Z";
+      avatar.style.backgroundImage = "";
+    }
   }
 
   if (editName) editName.value = user.name || "";
   if (editUsername) editUsername.value = user.username || "";
   if (editBio) editBio.value = user.bio || "";
+}
+
+function compressAvatar(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) return resolve("");
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+      reject(new Error("Escolha uma imagem JPG, PNG ou WebP."));
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      reject(new Error("A foto deve ter no máximo 8 MB."));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 512;
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = () => reject(new Error("Não foi possível ler a imagem."));
+      img.src = reader.result;
+    };
+    reader.onerror = () => reject(new Error("Não foi possível carregar a imagem."));
+    reader.readAsDataURL(file);
+  });
 }
 
 async function handleProfileUpdate(event) {
@@ -224,6 +272,7 @@ async function handleProfileUpdate(event) {
   const name = document.getElementById("profileEditName").value.trim();
   const username = document.getElementById("profileEditUsername").value.trim();
   const bio = document.getElementById("profileEditBio").value.trim();
+  const avatarFile = document.getElementById("profileAvatarFile");
 
   const originalText = button.textContent;
   button.disabled = true;
@@ -231,16 +280,29 @@ async function handleProfileUpdate(event) {
   setAuthMessage(message, "");
 
   try {
+    let avatar_url = "";
+    const currentUser = await loadMyProfile();
+    if (currentUser && currentUser.avatar_url) avatar_url = currentUser.avatar_url;
+    if (avatarFile && avatarFile.files && avatarFile.files[0]) {
+      avatar_url = await compressAvatar(avatarFile.files[0]);
+    }
+
     const { response, data } = await zavynAuthRequest("/profile", {
       method: "PUT",
-      body: JSON.stringify({ name, username, bio })
+      body: JSON.stringify({ name, username, bio, avatar_url })
     });
 
     if (!response.ok || !data.ok) {
       throw new Error(data.error || "Não foi possível atualizar o perfil.");
     }
 
+    if (avatar_url && data.user && !data.user.avatar_url) {
+      localStorage.setItem(getAvatarStorageKey(data.user), avatar_url);
+    } else if (data.user && data.user.avatar_url) {
+      localStorage.removeItem(getAvatarStorageKey(data.user));
+    }
     renderProfile(data.user);
+    if (avatarFile) avatarFile.value = "";
     setAuthMessage(message, "Perfil atualizado com sucesso.", "success");
   } catch (error) {
     setAuthMessage(message, error.message || "Erro ao atualizar o perfil.", "error");
@@ -282,6 +344,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (user) {
       renderProfile(user);
     }
+  }
+
+  const avatarButton = document.getElementById("profileAvatarButton");
+  const avatarFile = document.getElementById("profileAvatarFile");
+  if (avatarButton && avatarFile) {
+    avatarButton.addEventListener("click", () => avatarFile.click());
+    avatarFile.addEventListener("change", async () => {
+      if (!avatarFile.files || !avatarFile.files[0]) return;
+      try {
+        const preview = await compressAvatar(avatarFile.files[0]);
+        const avatar = document.getElementById("profileAvatar");
+        if (avatar) {
+          avatar.textContent = "";
+          avatar.style.backgroundImage = `url(${JSON.stringify(preview)})`;
+          avatar.style.backgroundSize = "cover";
+          avatar.style.backgroundPosition = "center";
+        }
+        setAuthMessage(document.getElementById("profileMessage"), "Foto selecionada. Clique em salvar para confirmar.", "success");
+      } catch (error) {
+        avatarFile.value = "";
+        setAuthMessage(document.getElementById("profileMessage"), error.message || "Não foi possível usar essa imagem.", "error");
+      }
+    });
   }
 
   const logoutButton = document.getElementById("logoutButton");

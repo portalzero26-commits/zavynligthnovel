@@ -15,7 +15,8 @@
 
   <main class="profile-page">
     <section class="profile-card">
-      <div class="profile-avatar" id="profileAvatar" aria-hidden="true">Z</div>
+      <button type="button" class="profile-avatar profile-avatar-button" id="profileAvatarButton" aria-label="Alterar foto de perfil"><span id="profileAvatar">Z</span><span class="avatar-edit-badge">✎</span></button>
+      <input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
       <div class="profile-info">
         <h1 id="profileName">Carregando...</h1>
         <p class="profile-handle" id="profileHandle">@usuario</p>
@@ -45,6 +46,7 @@
     <section class="profile-section">
       <div class="section-heading">
         <h2>Editar perfil</h2>
+        <span>Foto, nome e bio</span>
       </div>
 
       <form class="auth-form" id="profileEditForm">
@@ -53,6 +55,8 @@
 
         <label for="profileEditUsername">@Usuário</label>
         <input id="profileEditUsername" type="text" minlength="3" maxlength="20" required>
+
+        <div class="profile-photo-help">Clique na foto acima para escolher uma imagem. Recomendado: imagem quadrada.</div>
 
         <label for="profileEditBio">Bio</label>
         <textarea id="profileEditBio" maxlength="500" rows="4" placeholder="Conte um pouco sobre você..."></textarea>
