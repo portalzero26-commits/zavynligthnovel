@@ -238,3 +238,42 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
   .profile-stats div:nth-child(2) { border-right: 0; }
   .profile-stats div:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,.08); }
 }
+
+/* ===== Zavyn V16 — autenticação real ===== */
+.auth-form input:focus,
+.auth-form textarea:focus {
+  outline: 1px solid rgba(216,173,76,.75);
+  border-color: rgba(216,173,76,.55);
+}
+.auth-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  font: inherit;
+  resize: vertical;
+}
+.field-help {
+  margin-top: -5px;
+  color: #9297a1;
+  font-size: .76rem;
+}
+.primary-btn:disabled,
+.outline-button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+.auth-message {
+  min-height: 1.3em;
+  margin-top: 14px;
+}
+.auth-message.error { color: #e58b8b; }
+.auth-message.success { color: #9ed39e; }
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}

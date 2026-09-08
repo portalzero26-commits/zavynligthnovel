@@ -20,27 +20,31 @@
 
       <form class="auth-form" id="signupForm">
         <label for="signupName">Nome</label>
-        <input id="signupName" name="name" type="text" autocomplete="name" required>
+        <input id="signupName" name="name" type="text" autocomplete="name" maxlength="80" required>
 
         <label for="signupUsername">@Usuário</label>
-        <input id="signupUsername" name="username" type="text" autocomplete="username" minlength="3" required>
+        <input id="signupUsername" name="username" type="text" autocomplete="username" minlength="3" maxlength="20" placeholder="ex.: mateus_01" required>
+        <small class="field-help">Use apenas letras, números e _.</small>
 
         <label for="signupEmail">E-mail</label>
         <input id="signupEmail" name="email" type="email" autocomplete="email" required>
 
         <label for="signupPassword">Senha</label>
-        <input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" required>
+        <input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+        <small class="field-help">Mínimo de 8 caracteres.</small>
 
         <button type="submit" class="primary-btn">CRIAR CONTA</button>
       </form>
 
-      <p class="auth-switch">Já tem uma conta? <a href="login.html">Entrar</a></p>
       <p id="signupMessage" class="auth-message" aria-live="polite"></p>
+      <p class="auth-switch">Já tem uma conta? <a href="login.html">Entrar</a></p>
     </section>
   </main>
 
   <footer class="site-footer">
     <a class="footer-support" href="mailto:Zavynsuporte@gmail.com">Suporte: Zavynsuporte@gmail.com</a>
   </footer>
+
+  <script src="auth.js"></script>
 </body>
 </html>

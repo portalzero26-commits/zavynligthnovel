@@ -19,8 +19,8 @@
       <p class="auth-intro">Acesse sua conta Zavyn.</p>
 
       <form class="auth-form" id="loginForm">
-        <label for="loginEmail">E-mail</label>
-        <input id="loginEmail" name="email" type="email" autocomplete="email" required>
+        <label for="loginEmail">E-mail ou @usuário</label>
+        <input id="loginEmail" name="login" type="text" autocomplete="username" required>
 
         <label for="loginPassword">Senha</label>
         <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
@@ -28,13 +28,15 @@
         <button type="submit" class="primary-btn">ENTRAR</button>
       </form>
 
-      <p class="auth-switch">Ainda não tem conta? <a href="cadastro.html">Criar conta</a></p>
       <p id="loginMessage" class="auth-message" aria-live="polite"></p>
+      <p class="auth-switch">Ainda não tem conta? <a href="cadastro.html">Criar conta</a></p>
     </section>
   </main>
 
   <footer class="site-footer">
     <a class="footer-support" href="mailto:Zavynsuporte@gmail.com">Suporte: Zavynsuporte@gmail.com</a>
   </footer>
+
+  <script src="auth.js"></script>
 </body>
 </html>

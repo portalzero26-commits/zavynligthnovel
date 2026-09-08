@@ -15,11 +15,11 @@
 
   <main class="profile-page">
     <section class="profile-card">
-      <div class="profile-avatar" aria-hidden="true">Z</div>
+      <div class="profile-avatar" id="profileAvatar" aria-hidden="true">Z</div>
       <div class="profile-info">
-        <h1>Seu perfil</h1>
-        <p class="profile-handle">@usuario</p>
-        <p class="profile-bio">Sua biografia aparecerá aqui.</p>
+        <h1 id="profileName">Carregando...</h1>
+        <p class="profile-handle" id="profileHandle">@usuario</p>
+        <p class="profile-bio" id="profileBio">Carregando perfil...</p>
       </div>
     </section>
 
@@ -44,16 +44,42 @@
 
     <section class="profile-section">
       <div class="section-heading">
+        <h2>Editar perfil</h2>
+      </div>
+
+      <form class="auth-form" id="profileEditForm">
+        <label for="profileEditName">Nome</label>
+        <input id="profileEditName" type="text" maxlength="80" required>
+
+        <label for="profileEditUsername">@Usuário</label>
+        <input id="profileEditUsername" type="text" minlength="3" maxlength="20" required>
+
+        <label for="profileEditBio">Bio</label>
+        <textarea id="profileEditBio" maxlength="500" rows="4" placeholder="Conte um pouco sobre você..."></textarea>
+
+        <button type="submit" class="primary-btn">SALVAR ALTERAÇÕES</button>
+        <p id="profileMessage" class="auth-message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="profile-section">
+      <div class="section-heading">
         <h2>Livros publicados</h2>
       </div>
       <div class="empty-state">
         <p>Você ainda não publicou nenhum livro.</p>
       </div>
     </section>
+
+    <section class="profile-actions">
+      <button type="button" class="outline-button" id="logoutButton">SAIR DA CONTA</button>
+    </section>
   </main>
 
   <footer class="site-footer">
     <a class="footer-support" href="mailto:Zavynsuporte@gmail.com">Suporte: Zavynsuporte@gmail.com</a>
   </footer>
+
+  <script src="auth.js"></script>
 </body>
 </html>
