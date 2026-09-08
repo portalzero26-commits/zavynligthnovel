@@ -100,11 +100,224 @@ document.getElementById("checkoutBtn").onclick=openCheckout;
 renderBooks();renderCart();
 
 const searchInput=document.getElementById("bookSearch");
-if(searchInput){searchInput.addEventListener("input",()=>{
- const q=searchInput.value.trim().toLowerCase();
- const filtered=books.filter(b=>`volume ${b.n} ${b.title} reincarnation in another world next level`.includes(q));
- renderBooks(filtered);
-});}
+const userSearchModal=document.getElementById("userSearchModal");
+const userSearchModalInput=document.getElementById("userSearchModalInput");
+const userSearchResults=document.getElementById("userSearchResults");
+const publicProfileModal=document.getElementById("publicProfileModal");
+const publicProfileContent=document.getElementById("publicProfileContent");
+
+function openUserSearch(){
+ if(!userSearchModal)return;
+ userSearchModal.classList.add("open");
+ userSearchModal.setAttribute("aria-hidden","false");
+ document.body.classList.add("modal-open");
+ if(userSearchModalInput){
+   userSearchModalInput.value=searchInput?.value?.trim()||"";
+   setTimeout(()=>userSearchModalInput.focus(),40);
+   if(userSearchModalInput.value) searchUsers(userSearchModalInput.value);
+   else if(userSearchResults) userSearchResults.innerHTML='<p class="user-search-empty">Digite para começar a buscar.</p>';
+ }
+}
+
+function closeUserSearch(){
+ if(!userSearchModal)return;
+ userSearchModal.classList.remove("open");
+ userSearchModal.setAttribute("aria-hidden","true");
+ if(!publicProfileModal?.classList.contains("open")) document.body.classList.remove("modal-open");
+}
+
+function closePublicProfile(){
+ if(!publicProfileModal)return;
+ publicProfileModal.classList.remove("open");
+ publicProfileModal.setAttribute("aria-hidden","true");
+ if(!userSearchModal?.classList.contains("open")) document.body.classList.remove("modal-open");
+}
+
+function escapeHtml(value){
+ return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+}
+
+function userInitial(user){
+ return (String(user?.name||user?.username||"Z").trim().charAt(0).toUpperCase()||"Z");
+}
+
+function avatarMarkup(user, className="user-result-avatar"){
+ const avatar=user?.avatar_url||"";
+ if(avatar) return `<span class="${className} has-avatar" style="background-image:url(${JSON.stringify(avatar)})"></span>`;
+ return `<span class="${className}">${escapeHtml(userInitial(user))}</span>`;
+}
+
+function renderUserResults(users, query){
+ if(!userSearchResults)return;
+ if(!users.length){
+   userSearchResults.innerHTML=`<p class="user-search-empty">Nenhum usuário encontrado para <strong>${escapeHtml(query)}</strong>.</p>`;
+   return;
+ }
+ userSearchResults.innerHTML=users.map(user=>`
+   <button type="button" class="user-result" data-username="${escapeHtml(user.username)}">
+     ${avatarMarkup(user)}
+     <span class="user-result-info">
+       <strong>${escapeHtml(user.name||"Usuário")}</strong>
+       <small>@${escapeHtml(user.username)}</small>
+     </span>
+     <span class="user-result-arrow">→</span>
+   </button>
+ `).join("");
+ userSearchResults.querySelectorAll(".user-result").forEach(btn=>{
+   btn.addEventListener("click",()=>openPublicProfile(btn.dataset.username));
+ });
+}
+
+let userSearchTimer=null;
+async function searchUsers(query){
+ const q=String(query||"").trim();
+ if(!userSearchResults)return;
+ if(q.length<2){
+   userSearchResults.innerHTML='<p class="user-search-empty">Digite pelo menos 2 caracteres.</p>';
+   return;
+ }
+ userSearchResults.innerHTML='<p class="user-search-loading">Procurando usuários...</p>';
+ try{
+   const response=await fetch(`${ZAVYN_API_URL}/users/search?q=${encodeURIComponent(q)}`,{
+     method:"GET",
+     headers:{Accept:"application/json"}
+   });
+   const data=await response.json();
+   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível buscar usuários.");
+   renderUserResults(Array.isArray(data.users)?data.users:[],q);
+ }catch(error){
+   userSearchResults.innerHTML=`<p class="user-search-empty error">${escapeHtml(error.message||"Erro ao buscar usuários.")}</p>`;
+ }
+}
+
+function scheduleUserSearch(value){
+ clearTimeout(userSearchTimer);
+ userSearchTimer=setTimeout(()=>searchUsers(value),220);
+}
+
+async function openPublicProfile(username){
+ if(!publicProfileModal||!publicProfileContent)return;
+ publicProfileModal.classList.add("open");
+ publicProfileModal.setAttribute("aria-hidden","false");
+ document.body.classList.add("modal-open");
+ publicProfileContent.innerHTML='<p class="user-search-loading">Carregando perfil...</p>';
+ try{
+   const response=await fetch(`${ZAVYN_API_URL}/public-profile?username=${encodeURIComponent(username)}`,{
+     method:"GET",
+     headers:{Accept:"application/json"}
+   });
+   const data=await response.json();
+   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível carregar o perfil.");
+   renderPublicProfile(data);
+ }catch(error){
+   publicProfileContent.innerHTML=`<div class="public-profile-error"><p>${escapeHtml(error.message||"Erro ao carregar o perfil.")}</p><button type="button" class="outline-button" onclick="closePublicProfile()">FECHAR</button></div>`;
+ }
+}
+
+function renderPublicProfile(data){
+ const user=data.user||{};
+ const followers=Number(data.followers||0);
+ const following=Number(data.following||0);
+ const mural=Array.isArray(data.mural)?data.mural:[];
+ const loggedUser=data.current_user||null;
+ const isSelf=Boolean(loggedUser&&loggedUser.id===user.id);
+ const followingUser=Boolean(data.following_user);
+ const buttonHtml=isSelf
+   ? '<span class="public-profile-own">Este é o seu perfil</span>'
+   : `<button type="button" class="public-follow-btn ${followingUser?"following":""}" id="publicFollowBtn" data-username="${escapeHtml(user.username)}">${followingUser?"✓ Seguindo":"＋ Seguir"}</button>`;
+ const avatar=user.avatar_url
+   ? `<div class="public-profile-avatar has-avatar" style="background-image:url(${JSON.stringify(user.avatar_url)})"></div>`
+   : `<div class="public-profile-avatar">${escapeHtml(userInitial(user))}</div>`;
+ const muralHtml=[1,2,3].map(slot=>{
+   const has=mural.some(item=>Number(item.slot)===slot);
+   return has
+     ? `<div class="public-mural-slot has-image"><img src="${ZAVYN_API_URL}/public-mural-image?username=${encodeURIComponent(user.username)}&slot=${slot}" alt="Foto ${slot} do mural de @${escapeHtml(user.username)}" loading="lazy"></div>`
+     : `<div class="public-mural-slot empty"><span>＋</span></div>`;
+ }).join("");
+ publicProfileContent.innerHTML=`
+   <div class="public-profile-top">
+     ${avatar}
+     <div class="public-profile-main">
+       <p class="eyebrow gold">PERFIL ZAVYN</p>
+       <h2 id="publicProfileName">${escapeHtml(user.name||"Usuário")}</h2>
+       <p class="public-profile-handle">@${escapeHtml(user.username||"usuario")}</p>
+       <p class="public-profile-bio">${escapeHtml(user.bio||"Este usuário ainda não adicionou uma bio.")}</p>
+       <div class="public-profile-stats">
+         <div><strong>${followers}</strong><span>Seguidores</span></div>
+         <div><strong>${following}</strong><span>Seguindo</span></div>
+       </div>
+       <div class="public-profile-action">${buttonHtml}</div>
+     </div>
+   </div>
+   <div class="public-profile-divider"></div>
+   <div class="public-profile-mural">
+     <div class="public-profile-section-title"><h3>Mural</h3><span>Até 3 fotos</span></div>
+     <div class="public-mural-grid">${muralHtml}</div>
+   </div>
+   <div class="public-profile-books">
+     <div class="public-profile-section-title"><h3>Livros publicados</h3></div>
+     <p>Este espaço ficará disponível quando a publicação de autores for liberada.</p>
+   </div>
+ `;
+ const followBtn=document.getElementById("publicFollowBtn");
+ if(followBtn){
+   followBtn.addEventListener("click",()=>togglePublicFollow(followBtn,user.username));
+ }
+}
+
+async function togglePublicFollow(button,username){
+ const token=localStorage.getItem("zavynAuthToken")||"";
+ if(!token){
+   window.location.href="login.html";
+   return;
+ }
+ const original=button.textContent;
+ button.disabled=true;
+ button.textContent="...";
+ try{
+   const response=await fetch(`${ZAVYN_API_URL}/follow`,{
+     method:"POST",
+     headers:{
+       Authorization:`Bearer ${token}`,
+       "Content-Type":"application/json",
+       Accept:"application/json"
+     },
+     body:JSON.stringify({username})
+   });
+   const data=await response.json();
+   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível seguir este usuário.");
+   button.classList.add("following");
+   button.textContent="✓ Seguindo";
+   const countEl=publicProfileContent.querySelector(".public-profile-stats div:first-child strong");
+   if(countEl && Number.isFinite(Number(data.followers))) countEl.textContent=String(data.followers);
+ }catch(error){
+   button.textContent=original;
+   alert(error.message||"Não foi possível seguir este usuário.");
+ }finally{
+   button.disabled=false;
+ }
+}
+
+if(searchInput){
+ searchInput.readOnly=true;
+ searchInput.addEventListener("focus",openUserSearch);
+ searchInput.addEventListener("click",openUserSearch);
+ searchInput.addEventListener("input",openUserSearch);
+}
+document.getElementById("closeUserSearchBtn")?.addEventListener("click",closeUserSearch);
+document.getElementById("closeUserSearchBackdrop")?.addEventListener("click",closeUserSearch);
+document.getElementById("closePublicProfileBtn")?.addEventListener("click",closePublicProfile);
+document.getElementById("closePublicProfileBackdrop")?.addEventListener("click",closePublicProfile);
+userSearchModalInput?.addEventListener("input",e=>{
+ if(searchInput) searchInput.value=e.target.value;
+ scheduleUserSearch(e.target.value);
+});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"){
+   if(publicProfileModal?.classList.contains("open")) closePublicProfile();
+   else if(userSearchModal?.classList.contains("open")) closeUserSearch();
+ }
+});
 
 function renderCheckout(){
  const container=document.getElementById("checkoutItems");

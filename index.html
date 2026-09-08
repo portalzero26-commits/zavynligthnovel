@@ -24,8 +24,8 @@
       <a class="account-link" href="login.html">Entrar</a>
       <a class="account-button" href="cadastro.html">Criar conta</a>
     </div>
-    <label class="search-box" aria-label="Buscar livros">
-      <span>⌕</span><input id="bookSearch" type="search" placeholder="Buscar livros...">
+    <label class="search-box" aria-label="Buscar usuários">
+      <span>⌕</span><input id="bookSearch" type="search" placeholder="Buscar usuários..." autocomplete="off">
     </label>
     <button class="cart-link" id="openCartBtn" type="button" aria-label="Abrir carrinho">
     <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.1 10.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H7"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
@@ -165,6 +165,36 @@
       <div class="modal-buy"><strong id="modalPrice"></strong><button class="button" id="modalAdd">ADICIONAR AO CARRINHO</button></div>
     </div>
   </div>
+</div>
+
+
+<div id="userSearchModal" class="user-search-modal" aria-hidden="true">
+  <div class="user-search-backdrop" id="closeUserSearchBackdrop"></div>
+  <section class="user-search-card" role="dialog" aria-modal="true" aria-labelledby="userSearchTitle">
+    <button class="modal-close" id="closeUserSearchBtn" type="button" aria-label="Fechar">×</button>
+    <div class="user-search-head">
+      <p class="eyebrow gold">COMUNIDADE ZAVYN</p>
+      <h2 id="userSearchTitle">Buscar usuários</h2>
+      <p>Encontre leitores e autores pelo nome ou @usuário.</p>
+    </div>
+    <label class="user-search-input-wrap">
+      <span>⌕</span>
+      <input id="userSearchModalInput" type="search" placeholder="Digite um nome ou @usuário..." autocomplete="off">
+    </label>
+    <div id="userSearchResults" class="user-search-results">
+      <p class="user-search-empty">Digite para começar a buscar.</p>
+    </div>
+  </section>
+</div>
+
+<div id="publicProfileModal" class="public-profile-modal" aria-hidden="true">
+  <div class="public-profile-backdrop" id="closePublicProfileBackdrop"></div>
+  <section class="public-profile-card" role="dialog" aria-modal="true" aria-labelledby="publicProfileName">
+    <button class="modal-close" id="closePublicProfileBtn" type="button" aria-label="Fechar">×</button>
+    <div id="publicProfileContent">
+      <p class="user-search-loading">Carregando perfil...</p>
+    </div>
+  </section>
 </div>
 
 <div id="cartDrawer" class="cart-drawer" aria-hidden="true">

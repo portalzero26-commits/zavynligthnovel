@@ -433,3 +433,280 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
 @media (max-width: 640px) {
   .mural-slot-button { min-height: 130px; }
 }
+
+
+/* =========================================================
+   BUSCA DE USUÁRIOS / PERFIL PÚBLICO
+========================================================= */
+
+.user-search-modal,
+.public-profile-modal{
+  position:fixed;
+  inset:0;
+  z-index:120;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.user-search-modal.open,
+.public-profile-modal.open{display:flex}
+
+.user-search-backdrop,
+.public-profile-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.84);
+  backdrop-filter:blur(12px);
+}
+
+.user-search-card,
+.public-profile-card{
+  position:relative;
+  z-index:1;
+  width:min(680px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:30px;
+  background:#0f1318;
+  color:#f5f3ed;
+  border:1px solid #3a3f47;
+  border-radius:18px;
+  box-shadow:0 35px 100px rgba(0,0,0,.7);
+}
+
+.user-search-head h2{
+  margin:8px 0 6px;
+  font-size:clamp(2rem,5vw,3rem);
+  color:#fff;
+}
+.user-search-head p:not(.eyebrow){
+  margin:0 0 22px;
+  color:#aeb2ba;
+  line-height:1.6;
+}
+
+.user-search-input-wrap{
+  height:52px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 16px;
+  border:1px solid #4a4f58;
+  border-radius:14px;
+  background:#090c10;
+  color:#d8ad4c;
+}
+.user-search-input-wrap span{
+  font-size:1.6rem;
+  transform:rotate(-20deg);
+}
+.user-search-input-wrap input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  font-size:1rem;
+}
+.user-search-input-wrap input::placeholder{color:#777c85}
+
+.user-search-results{
+  margin-top:16px;
+  display:grid;
+  gap:8px;
+}
+.user-result{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;
+  background:#151920;
+  color:#fff;
+  text-align:left;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.user-result:hover{
+  border-color:rgba(216,173,76,.55);
+  background:#1a1e25;
+  transform:translateY(-1px);
+}
+.user-result-avatar{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#242932;
+  border:1px solid #5a4a2c;
+  color:#d8ad4c;
+  font-weight:800;
+  font-size:1.1rem;
+  background-size:cover;
+  background-position:center;
+}
+.user-result-avatar.has-avatar{
+  background-repeat:no-repeat;
+}
+.user-result-info{
+  min-width:0;
+  display:grid;
+  gap:4px;
+}
+.user-result-info strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.user-result-info small{color:#9da1aa}
+.user-result-arrow{
+  margin-left:auto;
+  color:#d8ad4c;
+  font-size:1.2rem;
+}
+.user-search-empty,
+.user-search-loading{
+  margin:12px 0 4px;
+  padding:24px;
+  border:1px dashed rgba(255,255,255,.12);
+  border-radius:14px;
+  color:#9da1aa;
+  text-align:center;
+}
+.user-search-empty.error{color:#e2a6a6}
+
+/* Perfil público */
+.public-profile-card{width:min(820px,100%)}
+.public-profile-top{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:28px;
+  align-items:center;
+}
+.public-profile-avatar{
+  width:150px;
+  height:150px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#1a1f26;
+  border:2px solid #6f572d;
+  color:#d8ad4c;
+  font-size:3.5rem;
+  font-weight:800;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.public-profile-main h2{
+  margin:5px 0;
+  font-size:clamp(2rem,5vw,3rem);
+  color:#fff;
+}
+.public-profile-handle{color:#d8ad4c;font-weight:700}
+.public-profile-bio{
+  margin:15px 0;
+  color:#b2b5bd;
+  line-height:1.65;
+  max-width:560px;
+  white-space:pre-wrap;
+}
+.public-profile-stats{
+  display:flex;
+  gap:30px;
+  margin:18px 0;
+}
+.public-profile-stats div{display:grid;gap:3px}
+.public-profile-stats strong{font-size:1.25rem;color:#fff}
+.public-profile-stats span{font-size:.78rem;color:#8f949d}
+.public-follow-btn{
+  border:1px solid #d8ad4c;
+  border-radius:10px;
+  padding:10px 20px;
+  background:#d8ad4c;
+  color:#111;
+  font-weight:900;
+  cursor:pointer;
+}
+.public-follow-btn.following{
+  background:transparent;
+  color:#d8ad4c;
+}
+.public-follow-btn:disabled{opacity:.6;cursor:wait}
+.public-profile-own{
+  display:inline-block;
+  padding:10px 14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  color:#aeb2ba;
+  font-size:.85rem;
+}
+.public-profile-divider{
+  height:1px;
+  margin:28px 0 24px;
+  background:rgba(255,255,255,.1);
+}
+.public-profile-section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:14px;
+}
+.public-profile-section-title h3{margin:0;color:#fff}
+.public-profile-section-title span{font-size:.8rem;color:#888d96}
+.public-mural-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.public-mural-slot{
+  min-height:170px;
+  overflow:hidden;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#151920;
+  display:grid;
+  place-items:center;
+}
+.public-mural-slot img{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:170px;
+  object-fit:cover;
+}
+.public-mural-slot.empty{color:#555b65;font-size:2rem}
+.public-profile-books{
+  margin-top:28px;
+  padding-top:22px;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.public-profile-books p{
+  margin:0;
+  color:#888d96;
+  line-height:1.6;
+}
+.public-profile-error{text-align:center;padding:30px 10px}
+.public-profile-error p{color:#c7c9ce;margin-bottom:20px}
+
+@media(max-width:700px){
+  .user-search-card,
+  .public-profile-card{padding:22px}
+  .public-profile-top{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .public-profile-avatar{width:105px;height:105px;justify-self:center;font-size:2.5rem}
+  .public-profile-bio{margin-left:auto;margin-right:auto}
+  .public-profile-stats{justify-content:center}
+  .public-profile-action{text-align:center}
+  .public-mural-grid{grid-template-columns:1fr}
+  .public-mural-slot,
+  .public-mural-slot img{min-height:220px}
+}
