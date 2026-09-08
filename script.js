@@ -171,61 +171,30 @@ function renderUserResults(users, query){
 let userSearchTimer=null;
 async function searchUsers(query){
  const q=String(query||"").trim();
-
  if(!userSearchResults)return;
-
  if(q.length<2){
    userSearchResults.innerHTML='<p class="user-search-empty">Digite pelo menos 2 caracteres.</p>';
    return;
  }
-
  userSearchResults.innerHTML='<p class="user-search-loading">Procurando usuários...</p>';
-
  try{
    const token=localStorage.getItem("zavynAuthToken")||"";
-
    if(!token){
      userSearchResults.innerHTML='<p class="user-search-empty error">Faça login para buscar usuários.</p>';
      return;
    }
-
-   const response=await fetch(
-     `${ZAVYN_API_URL}/users/search?q=${encodeURIComponent(q)}`,
-     {
-       method:"GET",
-       headers:{
-         Authorization:`Bearer ${token}`,
-         Accept:"application/json"
-       }
+   const response=await fetch(`${ZAVYN_API_URL}/users/search?q=${encodeURIComponent(q)}`,{
+     method:"GET",
+     headers:{
+       Authorization:`Bearer ${token}`,
+       Accept:"application/json"
      }
-   );
-
+   });
    const data=await response.json();
-
-   if(!response.ok||!data.ok){
-     throw new Error(
-       data.error ||
-       "Não foi possível buscar usuários."
-     );
-   }
-
-   renderUserResults(
-     Array.isArray(data.users)
-       ? data.users
-       : [],
-     q
-   );
-
+   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível buscar usuários.");
+   renderUserResults(Array.isArray(data.users)?data.users:[],q);
  }catch(error){
-
-   userSearchResults.innerHTML=
-     `<p class="user-search-empty error">${
-       escapeHtml(
-         error.message ||
-         "Erro ao buscar usuários."
-       )
-     }</p>`;
-
+   userSearchResults.innerHTML=`<p class="user-search-empty error">${escapeHtml(error.message||"Erro ao buscar usuários.")}</p>`;
  }
 }
 
@@ -241,9 +210,16 @@ async function openPublicProfile(username){
  document.body.classList.add("modal-open");
  publicProfileContent.innerHTML='<p class="user-search-loading">Carregando perfil...</p>';
  try{
+   const token=localStorage.getItem("zavynAuthToken")||"";
+   if(!token){
+     throw new Error("Faça login para visualizar perfis públicos.");
+   }
    const response=await fetch(`${ZAVYN_API_URL}/public-profile?username=${encodeURIComponent(username)}`,{
      method:"GET",
-     headers:{Accept:"application/json"}
+     headers:{
+       Authorization:`Bearer ${token}`,
+       Accept:"application/json"
+     }
    });
    const data=await response.json();
    if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível carregar o perfil.");
@@ -258,9 +234,8 @@ function renderPublicProfile(data){
  const followers=Number(data.followers||0);
  const following=Number(data.following||0);
  const mural=Array.isArray(data.mural)?data.mural:[];
- const loggedUser=data.current_user||null;
- const isSelf=Boolean(loggedUser&&loggedUser.id===user.id);
- const followingUser=Boolean(data.following_user);
+ const isSelf=Boolean(data.isSelf);
+ const followingUser=Boolean(data.isFollowing);
  const buttonHtml=isSelf
    ? '<span class="public-profile-own">Este é o seu perfil</span>'
    : `<button type="button" class="public-follow-btn ${followingUser?"following":""}" id="publicFollowBtn" data-username="${escapeHtml(user.username)}">${followingUser?"✓ Seguindo":"＋ Seguir"}</button>`;
