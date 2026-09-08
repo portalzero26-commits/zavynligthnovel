@@ -103,8 +103,32 @@ const searchInput=document.getElementById("bookSearch");
 const userSearchModal=document.getElementById("userSearchModal");
 const userSearchModalInput=document.getElementById("userSearchModalInput");
 const userSearchResults=document.getElementById("userSearchResults");
-const publicProfileModal=document.getElementById("publicProfileModal");
-const publicProfileContent=document.getElementById("publicProfileContent");
+let publicProfileModal=document.getElementById("publicProfileModal");
+let publicProfileContent=document.getElementById("publicProfileContent");
+
+function ensurePublicProfileModal(){
+ if(publicProfileModal && publicProfileContent) return true;
+
+ const modal=document.createElement("div");
+ modal.id="publicProfileModal";
+ modal.className="public-profile-modal";
+ modal.setAttribute("aria-hidden","true");
+ modal.innerHTML=`
+   <div class="public-profile-backdrop" id="closePublicProfileBackdrop"></div>
+   <section class="public-profile-card" role="dialog" aria-modal="true">
+     <button class="modal-close" id="closePublicProfileBtn" type="button" aria-label="Fechar">×</button>
+     <div id="publicProfileContent"></div>
+   </section>
+ `;
+ document.body.appendChild(modal);
+
+ publicProfileModal=modal;
+ publicProfileContent=modal.querySelector("#publicProfileContent");
+
+ document.getElementById("closePublicProfileBtn")?.addEventListener("click",closePublicProfile);
+ document.getElementById("closePublicProfileBackdrop")?.addEventListener("click",closePublicProfile);
+ return true;
+}
 
 function openUserSearch(){
  if(!userSearchModal)return;
@@ -204,7 +228,11 @@ function scheduleUserSearch(value){
 }
 
 async function openPublicProfile(username){
- if(!publicProfileModal||!publicProfileContent)return;
+ if(!ensurePublicProfileModal()) return;
+
+ // Fecha a busca antes de abrir o perfil para evitar dois overlays competindo.
+ closeUserSearch();
+
  publicProfileModal.classList.add("open");
  publicProfileModal.setAttribute("aria-hidden","false");
  document.body.classList.add("modal-open");
@@ -320,8 +348,7 @@ if(searchInput){
 }
 document.getElementById("closeUserSearchBtn")?.addEventListener("click",closeUserSearch);
 document.getElementById("closeUserSearchBackdrop")?.addEventListener("click",closeUserSearch);
-document.getElementById("closePublicProfileBtn")?.addEventListener("click",closePublicProfile);
-document.getElementById("closePublicProfileBackdrop")?.addEventListener("click",closePublicProfile);
+ensurePublicProfileModal();
 userSearchModalInput?.addEventListener("input",e=>{
  if(searchInput) searchInput.value=e.target.value;
  scheduleUserSearch(e.target.value);
