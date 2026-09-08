@@ -30,10 +30,15 @@
         <span>Até 3 fotos</span>
       </div>
       <div class="profile-mural">
-        <div class="mural-slot">+</div>
-        <div class="mural-slot">+</div>
-        <div class="mural-slot">+</div>
+        <button type="button" class="mural-slot mural-slot-button" id="muralSlot1" aria-label="Adicionar foto ao mural">
+          <span class="mural-plus">+</span>
+          <span class="mural-caption">Adicionar foto</span>
+        </button>
+        <div class="mural-slot mural-slot-disabled"><span>+</span></div>
+        <div class="mural-slot mural-slot-disabled"><span>+</span></div>
       </div>
+      <input id="muralFile1" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+      <p id="muralMessage" class="mural-message" aria-live="polite"></p>
     </section>
 
     <section class="profile-stats" aria-label="Informações do perfil">
