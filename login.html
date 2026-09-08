@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Zavyn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="brand-link" aria-label="Voltar para a Zavyn">
+      <img src="zavyn-logo.png" alt="Zavyn" class="site-logo">
+    </a>
+  </header>
+
+  <main class="auth-page">
+    <section class="auth-card">
+      <h1>Entrar</h1>
+      <p class="auth-intro">Acesse sua conta Zavyn.</p>
+
+      <form class="auth-form" id="loginForm">
+        <label for="loginEmail">E-mail</label>
+        <input id="loginEmail" name="email" type="email" autocomplete="email" required>
+
+        <label for="loginPassword">Senha</label>
+        <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+
+        <button type="submit" class="primary-btn">ENTRAR</button>
+      </form>
+
+      <p class="auth-switch">Ainda não tem conta? <a href="cadastro.html">Criar conta</a></p>
+      <p id="loginMessage" class="auth-message" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-support" href="mailto:Zavynsuporte@gmail.com">Suporte: Zavynsuporte@gmail.com</a>
+  </footer>
+</body>
+</html>

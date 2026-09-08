@@ -88,3 +88,153 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
 .support-email:hover{border-color:#d8ad4c;background:rgba(216,173,76,.08);transform:translateY(-1px)}
 .footer-support{display:block;width:max-content;max-width:100%;margin:10px auto 12px;color:#d1a94e;text-decoration:none;font-size:.8rem}.footer-support:hover{text-decoration:underline}
 @media(max-width:700px){.cityscape .moon{width:72px;height:72px;right:8%;top:10%}.skyline{bottom:22%;height:27%;gap:6px}.lake{height:31%}.support-email{font-size:.78rem}}
+
+
+/* ===== Zavyn V16 — base pages ===== */
+.site-header {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 14px 22px;
+}
+.brand-link { display: inline-flex; align-items: center; }
+.site-logo { max-height: 48px; width: auto; }
+
+.auth-page,
+.profile-page {
+  width: min(100% - 32px, 960px);
+  margin: 40px auto 80px;
+}
+
+.auth-card,
+.profile-card,
+.profile-section,
+.profile-stats {
+  background: rgba(20, 20, 24, .94);
+  border: 1px solid rgba(212, 175, 55, .22);
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .18);
+}
+
+.auth-card {
+  width: min(100%, 480px);
+  margin: 0 auto;
+  padding: 32px;
+}
+.auth-card h1,
+.profile-card h1 { margin-top: 0; }
+.auth-intro,
+.auth-switch,
+.profile-handle,
+.profile-bio { opacity: .82; }
+
+.auth-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+.auth-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+}
+.primary-btn {
+  margin-top: 10px;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.auth-switch { margin-bottom: 0; }
+.auth-message { min-height: 1.3em; }
+
+.profile-card {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  padding: 28px;
+}
+.profile-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  font-weight: 800;
+  border: 2px solid rgba(212,175,55,.55);
+}
+.profile-info { min-width: 0; }
+
+.profile-section { margin-top: 24px; padding: 24px; }
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.section-heading h2 { margin: 0; }
+.section-heading span { opacity: .7; font-size: .9rem; }
+
+.profile-mural {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+.mural-slot {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(212,175,55,.38);
+  border-radius: 14px;
+  font-size: 32px;
+  opacity: .75;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 24px;
+  overflow: hidden;
+}
+.profile-stats div {
+  padding: 20px 12px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.profile-stats div:last-child { border-right: 0; }
+.profile-stats strong,
+.profile-stats span { display: block; }
+.profile-stats strong { font-size: 1.3rem; }
+.profile-stats span { margin-top: 5px; font-size: .82rem; opacity: .72; }
+
+.empty-state {
+  margin-top: 18px;
+  padding: 30px;
+  text-align: center;
+  border: 1px dashed rgba(255,255,255,.12);
+  border-radius: 14px;
+  opacity: .75;
+}
+
+.site-footer {
+  padding: 28px 22px;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .auth-card { padding: 24px; }
+  .profile-card { align-items: flex-start; }
+  .profile-avatar { width: 72px; height: 72px; font-size: 26px; }
+  .profile-mural { grid-template-columns: 1fr; }
+  .mural-slot { min-height: 130px; }
+  .profile-stats { grid-template-columns: repeat(2, 1fr); }
+  .profile-stats div:nth-child(2) { border-right: 0; }
+  .profile-stats div:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,.08); }
+}

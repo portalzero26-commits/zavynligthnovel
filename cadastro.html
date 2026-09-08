@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar conta — Zavyn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="brand-link" aria-label="Voltar para a Zavyn">
+      <img src="zavyn-logo.png" alt="Zavyn" class="site-logo">
+    </a>
+  </header>
+
+  <main class="auth-page">
+    <section class="auth-card">
+      <h1>Criar conta</h1>
+      <p class="auth-intro">Crie seu perfil na Zavyn.</p>
+
+      <form class="auth-form" id="signupForm">
+        <label for="signupName">Nome</label>
+        <input id="signupName" name="name" type="text" autocomplete="name" required>
+
+        <label for="signupUsername">@Usuário</label>
+        <input id="signupUsername" name="username" type="text" autocomplete="username" minlength="3" required>
+
+        <label for="signupEmail">E-mail</label>
+        <input id="signupEmail" name="email" type="email" autocomplete="email" required>
+
+        <label for="signupPassword">Senha</label>
+        <input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" required>
+
+        <button type="submit" class="primary-btn">CRIAR CONTA</button>
+      </form>
+
+      <p class="auth-switch">Já tem uma conta? <a href="login.html">Entrar</a></p>
+      <p id="signupMessage" class="auth-message" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-support" href="mailto:Zavynsuporte@gmail.com">Suporte: Zavynsuporte@gmail.com</a>
+  </footer>
+</body>
+</html>
