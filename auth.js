@@ -38,6 +38,51 @@ async function zavynAuthRequest(path, options = {}) {
   return { response, data };
 }
 
+
+function renderAccountNav(user) {
+  const nav = document.getElementById("accountNav");
+  if (!nav) return;
+
+  if (user) {
+    const safeName = user.name || "Meu perfil";
+    nav.innerHTML = `
+      <a class="account-link" href="perfil.html">${safeName}</a>
+      <button class="account-button account-logout" type="button" id="headerLogoutButton">Sair</button>
+    `;
+
+    const logoutButton = document.getElementById("headerLogoutButton");
+    if (logoutButton) logoutButton.addEventListener("click", logoutZavyn);
+  } else {
+    nav.innerHTML = `
+      <a class="account-link" href="login.html">Entrar</a>
+      <a class="account-button" href="cadastro.html">Criar conta</a>
+    `;
+  }
+}
+
+async function loadHeaderAccount() {
+  const nav = document.getElementById("accountNav");
+  if (!nav) return;
+
+  const token = getAuthToken();
+  if (!token) {
+    renderAccountNav(null);
+    return;
+  }
+
+  try {
+    const { response, data } = await zavynAuthRequest("/me", { method: "GET" });
+    if (!response.ok || !data.ok) {
+      setAuthToken("");
+      renderAccountNav(null);
+      return;
+    }
+    renderAccountNav(data.user);
+  } catch {
+    renderAccountNav(null);
+  }
+}
+
 function setAuthMessage(element, message, type = "") {
   if (!element) return;
   element.textContent = message || "";
@@ -217,6 +262,8 @@ async function logoutZavyn() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  loadHeaderAccount();
+
   const signupForm = document.getElementById("signupForm");
   if (signupForm) {
     signupForm.addEventListener("submit", handleSignup);
