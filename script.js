@@ -324,10 +324,13 @@ async function togglePublicFollow(button,username){
    window.location.href="login.html";
    return;
  }
+
  const original=button.textContent;
  const wasFollowing=button.classList.contains("following");
+
  button.disabled=true;
  button.textContent="...";
+
  try{
    const response=await fetch(`${ZAVYN_API_URL}/follow`,{
      method:"POST",
@@ -338,21 +341,94 @@ async function togglePublicFollow(button,username){
      },
      body:JSON.stringify({username})
    });
+
    const data=await response.json();
-   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível atualizar o seguimento.");
 
-   const isFollowing=Boolean(data.following);
-   button.classList.toggle("following",isFollowing);
-   button.textContent=isFollowing ? "✓ Seguindo" : "＋ Seguir";
-
-   const countEl=publicProfileContent.querySelector(".public-profile-stats div:first-child strong");
-   if(countEl && Number.isFinite(Number(data.followers))){
-     countEl.textContent=String(data.followers);
+   if(!response.ok||!data.ok){
+     throw new Error(
+       data.error ||
+       "Não foi possível atualizar o seguimento."
+     );
    }
+
+   /*
+    * Depois da alteração, consultamos novamente o perfil.
+    * Assim o botão usa o estado REAL salvo no D1,
+    * em vez de depender somente da resposta do POST.
+    */
+   const profileResponse=await fetch(
+     `${ZAVYN_API_URL}/public-profile?username=${encodeURIComponent(username)}`,
+     {
+       method:"GET",
+       headers:{
+         Authorization:`Bearer ${token}`,
+         Accept:"application/json"
+       }
+     }
+   );
+
+   const profileData=await profileResponse.json();
+
+   if(!profileResponse.ok||!profileData.ok){
+     throw new Error(
+       profileData.error ||
+       "O seguimento foi atualizado, mas não foi possível atualizar a tela."
+     );
+   }
+
+   const isFollowing=Boolean(
+     profileData.isFollowing
+   );
+
+   button.classList.toggle(
+     "following",
+     isFollowing
+   );
+
+   button.textContent=
+     isFollowing
+       ? "✓ Seguindo"
+       : "＋ Seguir";
+
+   const stats=
+     publicProfileContent.querySelectorAll(
+       ".public-profile-stats strong"
+     );
+
+   if(
+     stats[0] &&
+     Number.isFinite(
+       Number(profileData.followers)
+     )
+   ){
+     stats[0].textContent=
+       String(profileData.followers);
+   }
+
+   if(
+     stats[1] &&
+     Number.isFinite(
+       Number(profileData.following)
+     )
+   ){
+     stats[1].textContent=
+       String(profileData.following);
+   }
+
  }catch(error){
-   button.classList.toggle("following",wasFollowing);
+
+   button.classList.toggle(
+     "following",
+     wasFollowing
+   );
+
    button.textContent=original;
-   alert(error.message||"Não foi possível atualizar o seguimento.");
+
+   alert(
+     error.message ||
+     "Não foi possível atualizar o seguimento."
+   );
+
  }finally{
    button.disabled=false;
  }
