@@ -125,7 +125,7 @@ function ensurePublicProfileModal(){
  publicProfileModal=modal;
  publicProfileContent=modal.querySelector("#publicProfileContent");
 
- document.getElementById("closePublicProfileBtn")?.addEventListener("click",closePublicProfile);
+ document.getElementById("closePublicProfileBtn")?.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();closePublicProfile();});
  document.getElementById("closePublicProfileBackdrop")?.addEventListener("click",closePublicProfile);
  return true;
 }
