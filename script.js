@@ -279,7 +279,7 @@ function renderPublicProfile(data){
    ? '<span class="public-profile-own">Este é o seu perfil</span>'
    : `<button type="button" class="public-follow-btn ${followingUser?"following":""}" id="publicFollowBtn" data-username="${escapeHtml(user.username)}">${followingUser?"✓ Seguindo":"＋ Seguir"}</button>`;
  const avatar=user.avatar_url
-   ? `<div class="public-profile-avatar has-avatar"><img src="${escapeHtml(user.avatar_url)}" alt="Foto de perfil" loading="lazy"></div>`
+   ? `<div class="public-profile-avatar has-avatar" style="overflow:hidden;display:grid;place-items:center;width:150px;height:150px;border-radius:50%;"><img src="${escapeHtml(user.avatar_url)}" alt="Foto de perfil" loading="lazy" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>`
    : `<div class="public-profile-avatar">${escapeHtml(userInitial(user))}</div>`;
  const muralHtml=[1,2,3].map(slot=>{
    const has=mural.some(item=>Number(item.slot)===slot);
@@ -325,6 +325,7 @@ async function togglePublicFollow(button,username){
    return;
  }
  const original=button.textContent;
+ const wasFollowing=button.classList.contains("following");
  button.disabled=true;
  button.textContent="...";
  try{
@@ -338,14 +339,20 @@ async function togglePublicFollow(button,username){
      body:JSON.stringify({username})
    });
    const data=await response.json();
-   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível seguir este usuário.");
-   button.classList.add("following");
-   button.textContent="✓ Seguindo";
+   if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível atualizar o seguimento.");
+
+   const isFollowing=Boolean(data.following);
+   button.classList.toggle("following",isFollowing);
+   button.textContent=isFollowing ? "✓ Seguindo" : "＋ Seguir";
+
    const countEl=publicProfileContent.querySelector(".public-profile-stats div:first-child strong");
-   if(countEl && Number.isFinite(Number(data.followers))) countEl.textContent=String(data.followers);
+   if(countEl && Number.isFinite(Number(data.followers))){
+     countEl.textContent=String(data.followers);
+   }
  }catch(error){
+   button.classList.toggle("following",wasFollowing);
    button.textContent=original;
-   alert(error.message||"Não foi possível seguir este usuário.");
+   alert(error.message||"Não foi possível atualizar o seguimento.");
  }finally{
    button.disabled=false;
  }
@@ -360,6 +367,20 @@ if(searchInput){
 document.getElementById("closeUserSearchBtn")?.addEventListener("click",closeUserSearch);
 document.getElementById("closeUserSearchBackdrop")?.addEventListener("click",closeUserSearch);
 ensurePublicProfileModal();
+
+const publicProfileCloseButton=document.getElementById("closePublicProfileBtn");
+if(publicProfileCloseButton){
+ publicProfileCloseButton.onclick=e=>{
+   e.preventDefault();
+   e.stopPropagation();
+   closePublicProfile();
+ };
+ publicProfileCloseButton.style.pointerEvents="auto";
+ publicProfileCloseButton.style.position="absolute";
+ publicProfileCloseButton.style.zIndex="10002";
+}
+document.getElementById("closePublicProfileBackdrop")?.addEventListener("click",closePublicProfile);
+
 userSearchModalInput?.addEventListener("input",e=>{
  if(searchInput) searchInput.value=e.target.value;
  scheduleUserSearch(e.target.value);
@@ -371,7 +392,7 @@ document.addEventListener("click",e=>{
    e.stopPropagation();
    closePublicProfile();
  }
-});
+},true);
 
 document.addEventListener("keydown",e=>{
  if(e.key==="Escape"){
