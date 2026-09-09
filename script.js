@@ -116,7 +116,7 @@ function ensurePublicProfileModal(){
  modal.innerHTML=`
    <div class="public-profile-backdrop" id="closePublicProfileBackdrop"></div>
    <section class="public-profile-card" role="dialog" aria-modal="true">
-     <button class="modal-close" id="closePublicProfileBtn" type="button" aria-label="Fechar" onclick="closePublicProfile()">×</button>
+     <button class="modal-close" id="closePublicProfileBtn" type="button" aria-label="Fechar">×</button>
      <div id="publicProfileContent"></div>
    </section>
  `;
@@ -125,19 +125,8 @@ function ensurePublicProfileModal(){
  publicProfileModal=modal;
  publicProfileContent=modal.querySelector("#publicProfileContent");
 
- const closeBtn=document.getElementById("closePublicProfileBtn");
- const closeBackdrop=document.getElementById("closePublicProfileBackdrop");
- if(closeBtn){
-   closeBtn.style.pointerEvents="auto";
-   closeBtn.style.position="absolute";
-   closeBtn.style.zIndex="10001";
-   closeBtn.addEventListener("click",e=>{
-     e.preventDefault();
-     e.stopPropagation();
-     closePublicProfile();
-   });
- }
- closeBackdrop?.addEventListener("click",closePublicProfile);
+ document.getElementById("closePublicProfileBtn")?.addEventListener("click",closePublicProfile);
+ document.getElementById("closePublicProfileBackdrop")?.addEventListener("click",closePublicProfile);
  return true;
 }
 
@@ -279,7 +268,7 @@ function renderPublicProfile(data){
    ? '<span class="public-profile-own">Este é o seu perfil</span>'
    : `<button type="button" class="public-follow-btn ${followingUser?"following":""}" id="publicFollowBtn" data-username="${escapeHtml(user.username)}">${followingUser?"✓ Seguindo":"＋ Seguir"}</button>`;
  const avatar=user.avatar_url
-   ? `<div class="public-profile-avatar has-avatar"><img src="${escapeHtml(user.avatar_url)}" alt="Foto de perfil" loading="lazy"></div>`
+   ? `<div class="public-profile-avatar has-avatar" style="background-image:url(${JSON.stringify(user.avatar_url)})"></div>`
    : `<div class="public-profile-avatar">${escapeHtml(userInitial(user))}</div>`;
  const muralHtml=[1,2,3].map(slot=>{
    const has=mural.some(item=>Number(item.slot)===slot);
@@ -339,8 +328,9 @@ async function togglePublicFollow(button,username){
    });
    const data=await response.json();
    if(!response.ok||!data.ok) throw new Error(data.error||"Não foi possível seguir este usuário.");
-   button.classList.add("following");
-   button.textContent="✓ Seguindo";
+   const isFollowingNow=Boolean(data.following);
+   button.classList.toggle("following",isFollowingNow);
+   button.textContent=isFollowingNow?"✓ Seguindo":"＋ Seguir";
    const countEl=publicProfileContent.querySelector(".public-profile-stats div:first-child strong");
    if(countEl && Number.isFinite(Number(data.followers))) countEl.textContent=String(data.followers);
  }catch(error){
@@ -364,15 +354,6 @@ userSearchModalInput?.addEventListener("input",e=>{
  if(searchInput) searchInput.value=e.target.value;
  scheduleUserSearch(e.target.value);
 });
-document.addEventListener("click",e=>{
- const closeBtn=e.target?.closest?.("#closePublicProfileBtn");
- if(closeBtn){
-   e.preventDefault();
-   e.stopPropagation();
-   closePublicProfile();
- }
-});
-
 document.addEventListener("keydown",e=>{
  if(e.key==="Escape"){
    if(publicProfileModal?.classList.contains("open")) closePublicProfile();
