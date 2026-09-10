@@ -693,6 +693,83 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
   line-height:1.6;
 }
 .public-profile-error{text-align:center;padding:30px 10px}
+/* Livros publicados no perfil público */
+.public-books-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-top:18px;
+}
+
+.public-book-card{
+  overflow:hidden;
+  background:linear-gradient(180deg,#151920,#101319);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.25);
+  transition:.2s ease;
+}
+
+.public-book-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(216,173,76,.55);
+}
+
+.public-book-cover{
+  width:100%;
+  aspect-ratio:2/3;
+  overflow:hidden;
+  background:#080a0d;
+}
+
+.public-book-cover img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.public-book-cover-empty{
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
+  color:#d8ad4c;
+  font-size:3rem;
+  font-family:Georgia,serif;
+  font-weight:700;
+}
+
+.public-book-info{
+  padding:12px;
+}
+
+.public-book-info > span{
+  display:block;
+  margin-bottom:5px;
+  color:#8f949d;
+  font-size:.58rem;
+  letter-spacing:1.5px;
+  font-weight:800;
+}
+
+.public-book-info h4{
+  margin:0 0 7px;
+  color:#fff;
+  font-size:.82rem;
+  line-height:1.35;
+}
+
+.public-book-info strong{
+  color:#e2bd63;
+  font-size:.82rem;
+}
+
+@media(max-width:700px){
+  .public-books-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
 .public-profile-error p{color:#c7c9ce;margin-bottom:20px}
 
 @media(max-width:700px){
