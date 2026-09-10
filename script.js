@@ -273,6 +273,7 @@ function renderPublicProfile(data){
  const followers=Number(data.followers||0);
  const following=Number(data.following||0);
  const mural=Array.isArray(data.mural)?data.mural:[];
+ const profileBooks=Array.isArray(data.books)?data.books:[];
  const isSelf=Boolean(data.isSelf);
  const followingUser=Boolean(data.isFollowing);
  const buttonHtml=isSelf
