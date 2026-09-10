@@ -240,7 +240,91 @@ async function loadMyProfile() {
 function getAvatarStorageKey(user) {
   return user && user.id ? `zavynAvatar_${user.id}` : "";
 }
+function renderMyPublishedBooks(user) {
+  const profileForm = document.getElementById("profileEditForm");
 
+  if (!profileForm) return;
+
+  let section = document.getElementById("myPublishedBooks");
+
+  if (!section) {
+    section = document.createElement("section");
+    section.id = "myPublishedBooks";
+    section.className = "public-profile-books";
+
+    profileForm.insertAdjacentElement("afterend", section);
+  }
+
+  const books = Array.isArray(user.profileBooks)
+    ? user.profileBooks
+    : [];
+
+  section.innerHTML = `
+    <div class="public-profile-section-title">
+      <h3>Livros publicados</h3>
+      <span>
+        ${books.length}
+        ${books.length === 1 ? "livro" : "livros"}
+      </span>
+    </div>
+
+    ${
+      books.length
+        ? `
+          <div class="public-books-grid">
+            ${books.map(book => {
+              const cover = book.cover_url
+                ? new URL(book.cover_url, window.location.href).href
+                : "";
+
+              return `
+                <article class="public-book-card">
+
+                  <div class="public-book-cover">
+                    ${
+                      cover
+                        ? `
+                          <img
+                            src="${cover.replace(/"/g, "&quot;")}"
+                            alt="Capa de ${(book.title || "Livro").replace(/"/g, "&quot;")}"
+                            loading="lazy"
+                          >
+                        `
+                        : `
+                          <div class="public-book-cover-empty">
+                            Z
+                          </div>
+                        `
+                    }
+                  </div>
+
+                  <div class="public-book-info">
+                    <span>PUBLICADO</span>
+
+                    <h4>
+                      ${String(book.title || "Livro sem título")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")}
+                    </h4>
+
+                    <strong>
+                      R$ ${Number(book.price || 0)
+                        .toFixed(2)
+                        .replace(".", ",")}
+                    </strong>
+                  </div>
+
+                </article>
+              `;
+            }).join("")}
+          </div>
+        `
+        : `
+          <p>Nenhum livro publicado ainda.</p>
+        `
+    }
+  `;
+}
 function renderProfile(user) {
   const name = document.getElementById("profileName");
   const handle = document.getElementById("profileHandle");
