@@ -309,9 +309,43 @@ function renderPublicProfile(data){
      <div class="public-mural-grid">${muralHtml}</div>
    </div>
    <div class="public-profile-books">
-     <div class="public-profile-section-title"><h3>Livros publicados</h3></div>
-     <p>Este espaço ficará disponível quando a publicação de autores for liberada.</p>
-   </div>
+  <div class="public-profile-section-title">
+    <h3>Livros publicados</h3>
+    <span>${profileBooks.length} ${profileBooks.length === 1 ? "livro" : "livros"}</span>
+  </div>
+
+  ${
+    profileBooks.length
+      ? `
+        <div class="public-books-grid">
+          ${profileBooks.map(book => {
+            const cover = book.cover_url
+              ? new URL(book.cover_url, window.location.href).href
+              : "";
+
+            return `
+              <article class="public-book-card">
+                <div class="public-book-cover">
+                  ${
+                    cover
+                      ? `<img src="${escapeHtml(cover)}" alt="Capa de ${escapeHtml(book.title || "Livro")}" loading="lazy">`
+                      : `<div class="public-book-cover-empty">Z</div>`
+                  }
+                </div>
+
+                <div class="public-book-info">
+                  <span>PUBLICADO</span>
+                  <h4>${escapeHtml(book.title || "Livro sem título")}</h4>
+                  <strong>${money(Number(book.price || 0))}</strong>
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `
+      : `<p>Este autor ainda não publicou nenhum livro.</p>`
+  }
+</div>
  `;
  const followBtn=document.getElementById("publicFollowBtn");
  if(followBtn){
