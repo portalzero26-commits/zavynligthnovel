@@ -194,12 +194,45 @@ async function loadMyProfile() {
   }
 
   const user = data.user || {};
+
   user.profileStats = {
     followers: Number(data.stats?.followers || 0),
     following: Number(data.stats?.following || 0),
     booksPublished: Number(data.stats?.booksPublished || 0),
     favorites: Number(data.stats?.favorites || 0)
   };
+
+  /*
+   * O /me entrega os contadores.
+   * O /public-profile já entrega a lista dos livros publicados.
+   * Usamos o próprio perfil do usuário para carregar essa lista.
+   */
+  user.profileBooks = [];
+
+  if (user.username) {
+    try {
+      const profileResponse = await fetch(
+        `${ZAVYN_AUTH_API}/public-profile?username=${encodeURIComponent(user.username)}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+            Accept: "application/json"
+          }
+        }
+      );
+
+      const profileData = await profileResponse.json();
+
+      if (profileResponse.ok && profileData.ok) {
+        user.profileBooks = Array.isArray(profileData.books)
+          ? profileData.books
+          : [];
+      }
+    } catch {
+      user.profileBooks = [];
+    }
+  }
 
   return user;
 }
