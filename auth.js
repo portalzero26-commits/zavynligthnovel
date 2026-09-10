@@ -361,9 +361,11 @@ function renderProfile(user) {
     }
   }
 
-  if (editName) editName.value = user.name || "";
+    if (editName) editName.value = user.name || "";
   if (editUsername) editUsername.value = user.username || "";
   if (editBio) editBio.value = user.bio || "";
+
+  renderMyPublishedBooks(user);
 }
 
 function compressAvatar(file) {
