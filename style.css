@@ -710,30 +710,3 @@ footer{text-align:center;padding:40px 20px;background:#050608;color:#858991;bord
   .public-mural-slot,
   .public-mural-slot img{min-height:220px}
 }
-
-/* ===== Correção — fotos de perfil públicas ===== */
-.user-result-avatar.has-avatar{
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-}
-.user-result-avatar.has-avatar img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
-}
-
-.public-profile-avatar.has-avatar{
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-}
-.public-profile-avatar.has-avatar img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
-}

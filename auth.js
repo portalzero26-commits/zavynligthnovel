@@ -193,7 +193,15 @@ async function loadMyProfile() {
     return null;
   }
 
-  return data.user;
+  const user = data.user || {};
+  user.profileStats = {
+    followers: Number(data.stats?.followers || 0),
+    following: Number(data.stats?.following || 0),
+    booksPublished: Number(data.stats?.booksPublished || 0),
+    favorites: Number(data.stats?.favorites || 0)
+  };
+
+  return user;
 }
 
 function getAvatarStorageKey(user) {
@@ -208,6 +216,15 @@ function renderProfile(user) {
   const editName = document.getElementById("profileEditName");
   const editUsername = document.getElementById("profileEditUsername");
   const editBio = document.getElementById("profileEditBio");
+  const stats = user.profileStats || {};
+  const statValues = document.querySelectorAll(".profile-stats > div > strong");
+
+  if (statValues.length >= 4) {
+    statValues[0].textContent = String(Number(stats.booksPublished || 0));
+    statValues[1].textContent = String(Number(stats.followers || 0));
+    statValues[2].textContent = String(Number(stats.following || 0));
+    statValues[3].textContent = String(Number(stats.favorites || 0));
+  }
 
   if (name) name.textContent = user.name || "Usuário";
   if (handle) handle.textContent = `@${user.username || "usuario"}`;
