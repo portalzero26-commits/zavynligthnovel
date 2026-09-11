@@ -60,7 +60,7 @@
 
     .publish-form {
       display: grid;
-      gap: 20px;
+      gap: 22px;
     }
 
     .publish-field {
@@ -68,7 +68,7 @@
       gap: 8px;
     }
 
-    .publish-field label {
+    .publish-field > label {
       color: #eee;
       font-weight: 600;
       font-size: .9rem;
@@ -99,10 +99,140 @@
       border-color: #d8b85a;
     }
 
+    .publish-field select option {
+      background: #151922;
+      color: #fff;
+    }
+
+    .publish-help {
+      margin: 0;
+      color: #888;
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+
+    /* TIPO DE PUBLICAÇÃO */
+
+    .publication-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .publication-option {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+
+    .publication-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .publication-option-box {
+      display: block;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.2);
+      transition: .2s ease;
+    }
+
+    .publication-option-box strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    .publication-option-box span {
+      display: block;
+      color: #888;
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+
+    .publication-option input:checked + .publication-option-box {
+      border-color: #d8b85a;
+      background: rgba(216,184,90,.08);
+      box-shadow: 0 0 0 1px rgba(216,184,90,.12);
+    }
+
+    /* GÊNEROS */
+
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .genre-option {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+
+    .genre-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .genre-option span {
+      display: block;
+      padding: 11px 10px;
+      text-align: center;
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(0,0,0,.2);
+      color: #bbb;
+      font-size: .82rem;
+      transition: .2s ease;
+    }
+
+    .genre-option input:checked + span {
+      color: #fff;
+      border-color: #d8b85a;
+      background: rgba(216,184,90,.08);
+    }
+
+    .genre-limit {
+      color: #888;
+      font-size: .78rem;
+      margin: 0;
+    }
+
+    /* AVISO GRATUITO */
+
+    .free-book-notice {
+      display: none;
+      padding: 14px;
+      border-radius: 10px;
+      background: rgba(216,184,90,.06);
+      border: 1px solid rgba(216,184,90,.15);
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    .free-book-notice strong {
+      color: #d8b85a;
+    }
+
+    /* ARQUIVOS */
+
+    .file-help {
+      color: #888;
+      font-size: .78rem;
+      margin: 0;
+    }
+
+    /* BOTÕES */
+
     .publish-actions {
       display: flex;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 8px;
       flex-wrap: wrap;
     }
 
@@ -111,6 +241,8 @@
       color: #aaa;
       font-size: .9rem;
     }
+
+    /* AVISO */
 
     .publish-note {
       margin-top: 25px;
@@ -121,6 +253,16 @@
       color: #aaa;
       font-size: .85rem;
       line-height: 1.5;
+    }
+
+    .publish-note strong {
+      color: #d8b85a;
+    }
+
+    @media (max-width: 700px) {
+      .genre-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 600px) {
@@ -135,6 +277,10 @@
       .author-header h1 {
         font-size: 1.6rem;
       }
+
+      .publication-options {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -145,7 +291,11 @@
     <div class="header-inner">
 
       <a href="index.html" class="brand">
-        <img src="logo.png" alt="Zavyn">
+        <img
+          src="logo.png"
+          alt="Zavyn"
+          onerror="this.style.display='none'; this.parentElement.classList.add('brand-text-fallback'); this.parentElement.textContent='ZAVYN';"
+        >
       </a>
 
       <nav class="header-nav">
@@ -160,7 +310,9 @@
 
     <div class="author-header">
       <div class="eyebrow">PAINEL DO AUTOR</div>
+
       <h1>Publicar livro</h1>
+
       <p>
         Transforme sua história em uma publicação dentro da Zavyn.
       </p>
@@ -171,77 +323,39 @@
       <h2>Novo livro</h2>
 
       <p>
-        Preencha as informações básicas da sua obra.
+        Preencha as informações da sua obra para apresentá-la aos leitores.
       </p>
 
       <form class="publish-form" id="publishBookForm">
 
-       <div class="publish-field">
-  <label>Tipo de publicação</label>
-
-  <div style="display:flex;gap:12px;flex-wrap:wrap;">
-
-    <label style="flex:1;min-width:180px;">
-      <input
-        type="radio"
-        name="bookType"
-        value="paid"
-        id="bookTypePaid"
-        checked
-      >
-      Livro pago
-    </label>
-
-    <label style="flex:1;min-width:180px;">
-      <input
-        type="radio"
-        name="bookType"
-        value="free"
-        id="bookTypeFree"
-      >
-      Livro gratuito
-    </label>
-
-  </div>
-</div>
-
-<div class="publish-field" id="bookPriceField">
-  <label for="bookPrice">Preço</label>
-
-  <input
-    type="number"
-    id="bookPrice"
-    name="price"
-    min="0.01"
-    step="0.01"
-    placeholder="5,00"
-    value="5.00"
-    required
-  >
-
-  <small style="color:#999;">
-    Defina quanto os leitores pagarão pela sua obra.
-  </small>
-</div>
-
-<div
-  id="freeBookNotice"
-  style="
-    display:none;
-    padding:14px;
-    border-radius:10px;
-    background:rgba(216,184,90,.06);
-    border:1px solid rgba(216,184,90,.15);
-    color:#ccc;
-    line-height:1.5;
-  "
->
-  <strong style="color:#d8b85a;">LIVRO GRATUITO</strong><br>
-  Esta obra será disponibilizada gratuitamente aos leitores.
-</div>
+        <!-- TÍTULO -->
 
         <div class="publish-field">
-          <label for="bookDescription">Descrição</label>
+
+          <label for="bookTitle">
+            Título do livro
+          </label>
+
+          <input
+            type="text"
+            id="bookTitle"
+            name="title"
+            placeholder="Digite o título da sua obra"
+            maxlength="150"
+            required
+          >
+
+        </div>
+
+
+        <!-- DESCRIÇÃO -->
+
+        <div class="publish-field">
+
+          <label for="bookDescription">
+            Descrição
+          </label>
+
           <textarea
             id="bookDescription"
             name="description"
@@ -249,42 +363,319 @@
             maxlength="5000"
             required
           ></textarea>
+
+          <p class="publish-help">
+            Conte aos leitores sobre a história, o universo ou o conteúdo da obra.
+          </p>
+
         </div>
 
+
+        <!-- GÊNERO -->
+
         <div class="publish-field">
-          <label for="bookPrice">Preço</label>
+
+          <label>
+            Gênero da obra
+          </label>
+
+          <p class="genre-limit">
+            Escolha até 3 gêneros. Eles serão usados futuramente para organizar
+            os rankings da Zavyn.
+          </p>
+
+          <div class="genre-grid">
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Fantasia">
+              <span>Fantasia</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Romance">
+              <span>Romance</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Ação">
+              <span>Ação</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Aventura">
+              <span>Aventura</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Ficção científica">
+              <span>Ficção científica</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Mistério">
+              <span>Mistério</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Suspense">
+              <span>Suspense</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Terror">
+              <span>Terror</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Drama">
+              <span>Drama</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Comédia">
+              <span>Comédia</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Ficção">
+              <span>Ficção</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Juvenil">
+              <span>Juvenil</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Infantojuvenil">
+              <span>Infantojuvenil</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Poesia">
+              <span>Poesia</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Biografia">
+              <span>Biografia</span>
+            </label>
+
+            <label class="genre-option">
+              <input type="checkbox" name="genres" value="Outro">
+              <span>Outro</span>
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- CLASSIFICAÇÃO -->
+
+        <div class="publish-field">
+
+          <label for="bookAgeRating">
+            Classificação indicativa
+          </label>
+
+          <select id="bookAgeRating" name="age_rating" required>
+
+            <option value="" selected disabled>
+              Selecione a classificação
+            </option>
+
+            <option value="L">
+              Livre
+            </option>
+
+            <option value="10">
+              10 anos
+            </option>
+
+            <option value="12">
+              12 anos
+            </option>
+
+            <option value="14">
+              14 anos
+            </option>
+
+            <option value="16">
+              16 anos
+            </option>
+
+            <option value="18">
+              18 anos
+            </option>
+
+          </select>
+
+          <p class="publish-help">
+            Informe a classificação adequada ao conteúdo da obra.
+          </p>
+
+        </div>
+
+
+        <!-- TIPO DE PUBLICAÇÃO -->
+
+        <div class="publish-field">
+
+          <label>
+            Tipo de publicação
+          </label>
+
+          <div class="publication-options">
+
+            <label class="publication-option">
+
+              <input
+                type="radio"
+                name="bookType"
+                value="paid"
+                id="bookTypePaid"
+                checked
+              >
+
+              <span class="publication-option-box">
+
+                <strong>Livro pago</strong>
+
+                <span>
+                  Defina o preço que os leitores pagarão pela sua obra.
+                </span>
+
+              </span>
+
+            </label>
+
+
+            <label class="publication-option">
+
+              <input
+                type="radio"
+                name="bookType"
+                value="free"
+                id="bookTypeFree"
+              >
+
+              <span class="publication-option-box">
+
+                <strong>Livro gratuito</strong>
+
+                <span>
+                  Disponibilize sua obra gratuitamente para conquistar leitores.
+                </span>
+
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- PREÇO -->
+
+        <div
+          class="publish-field"
+          id="bookPriceField"
+        >
+
+          <label for="bookPrice">
+            Preço
+          </label>
+
           <input
             type="number"
             id="bookPrice"
             name="price"
-            min="0"
+            min="0.01"
             step="0.01"
-            placeholder="0,00"
+            placeholder="5,00"
             required
           >
+
+          <p class="publish-help">
+            O preço mínimo para uma obra paga será definido pela plataforma.
+          </p>
+
         </div>
 
+
+        <!-- AVISO GRATUITO -->
+
+        <div
+          class="free-book-notice"
+          id="freeBookNotice"
+        >
+
+          <strong>
+            LIVRO GRATUITO
+          </strong>
+
+          <br>
+
+          Esta obra será disponibilizada gratuitamente aos leitores da Zavyn.
+
+        </div>
+
+
+        <!-- CAPA -->
+
         <div class="publish-field">
-          <label for="bookCover">Capa do livro</label>
+
+          <label for="bookCover">
+            Capa do livro
+          </label>
+
           <input
             type="file"
             id="bookCover"
             name="cover"
             accept="image/jpeg,image/png,image/webp"
           >
+
+          <p class="file-help">
+            Formatos aceitos: JPG, PNG e WEBP.
+          </p>
+
         </div>
 
+
+        <!-- ARQUIVO -->
+
         <div class="publish-field">
-          <label for="bookFile">Arquivo do livro</label>
+
+          <label for="bookFile">
+            Arquivo do livro
+          </label>
+
           <input
             type="file"
             id="bookFile"
             name="file"
             accept=".pdf,.epub"
           >
+
+          <p class="file-help">
+            Formatos aceitos: PDF e EPUB.
+          </p>
+
         </div>
 
-        <div class="publish-message" id="publishBookMessage"></div>
+
+        <!-- MENSAGEM -->
+
+        <div
+          class="publish-message"
+          id="publishBookMessage"
+        ></div>
+
+
+        <!-- BOTÕES -->
 
         <div class="publish-actions">
 
@@ -307,46 +698,187 @@
 
       </form>
 
+
+      <!-- AVISO -->
+
       <div class="publish-note">
+
         <strong>Importante:</strong>
+
         nesta primeira etapa estamos preparando a estrutura de publicação.
-        O envio definitivo para a plataforma será conectado ao sistema da Zavyn
-        nas próximas etapas.
+        O envio definitivo para a plataforma será conectado ao sistema da
+        Zavyn nas próximas etapas.
+
       </div>
 
     </section>
 
   </main>
 
+
   <footer class="site-footer">
-    <p>Zavyn — livros que ganham vida.</p>
+
+    <p>
+      Zavyn — livros que ganham vida.
+    </p>
+
   </footer>
-<script>
-  const bookTypePaid = document.getElementById("bookTypePaid");
-  const bookTypeFree = document.getElementById("bookTypeFree");
-  const bookPrice = document.getElementById("bookPrice");
-  const bookPriceField = document.getElementById("bookPriceField");
-  const freeBookNotice = document.getElementById("freeBookNotice");
 
-  function updateBookPriceMode() {
-    if (bookTypeFree.checked) {
-      bookPrice.value = "0";
-      bookPrice.disabled = true;
-      bookPrice.required = false;
-      bookPriceField.style.opacity = "0.45";
-      freeBookNotice.style.display = "block";
-    } else {
-      bookPrice.disabled = false;
-      bookPrice.required = true;
-      bookPrice.value = "5.00";
-      bookPriceField.style.opacity = "1";
-      freeBookNotice.style.display = "none";
+
+  <script>
+
+    const bookTypePaid =
+      document.getElementById("bookTypePaid");
+
+    const bookTypeFree =
+      document.getElementById("bookTypeFree");
+
+    const bookPrice =
+      document.getElementById("bookPrice");
+
+    const bookPriceField =
+      document.getElementById("bookPriceField");
+
+    const freeBookNotice =
+      document.getElementById("freeBookNotice");
+
+    const publishForm =
+      document.getElementById("publishBookForm");
+
+
+    function updateBookPriceMode() {
+
+      if (bookTypeFree.checked) {
+
+        bookPrice.value = "0";
+
+        bookPrice.disabled = true;
+
+        bookPrice.required = false;
+
+        bookPriceField.style.opacity = "0.45";
+
+        freeBookNotice.style.display = "block";
+
+      } else {
+
+        bookPrice.disabled = false;
+
+        bookPrice.required = true;
+
+        bookPrice.value = "";
+
+        bookPriceField.style.opacity = "1";
+
+        freeBookNotice.style.display = "none";
+
+      }
+
     }
-  }
 
-  bookTypePaid.addEventListener("change", updateBookPriceMode);
-  bookTypeFree.addEventListener("change", updateBookPriceMode);
-</script>
+
+    bookTypePaid.addEventListener(
+      "change",
+      updateBookPriceMode
+    );
+
+
+    bookTypeFree.addEventListener(
+      "change",
+      updateBookPriceMode
+    );
+
+
+    /*
+     * Limita a seleção a no máximo 3 gêneros.
+     */
+
+    const genreCheckboxes =
+      document.querySelectorAll(
+        'input[name="genres"]'
+      );
+
+
+    genreCheckboxes.forEach(
+      checkbox => {
+
+        checkbox.addEventListener(
+          "change",
+          () => {
+
+            const selected =
+              document.querySelectorAll(
+                'input[name="genres"]:checked'
+              );
+
+            if (selected.length > 3) {
+
+              checkbox.checked = false;
+
+              alert(
+                "Você pode escolher no máximo 3 gêneros."
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+    /*
+     * Por enquanto o formulário ainda não envia
+     * a obra para o servidor.
+     *
+     * A próxima etapa conectará este botão
+     * ao sistema da Zavyn.
+     */
+
+    publishForm.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+        const selectedGenres =
+          Array.from(
+            document.querySelectorAll(
+              'input[name="genres"]:checked'
+            )
+          );
+
+
+        if (selectedGenres.length === 0) {
+
+          alert(
+            "Selecione pelo menos um gênero para a obra."
+          );
+
+          return;
+
+        }
+
+
+        const message =
+          document.getElementById(
+            "publishBookMessage"
+          );
+
+
+        message.textContent =
+          "Informações preenchidas. A publicação será conectada ao sistema da Zavyn na próxima etapa.";
+
+        message.style.color =
+          "#d8b85a";
+
+      }
+    );
+
+  </script>
+
+
   <script src="auth.js"></script>
 
 </body>
