@@ -622,6 +622,68 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderProfile(user);
       setupMural(user);
     }
+    const connectMercadoPagoButton =
+    document.getElementById("connectMercadoPagoButton");
+
+const mercadoPagoMessage =
+    document.getElementById("mercadoPagoMessage");
+
+if (connectMercadoPagoButton) {
+    connectMercadoPagoButton.addEventListener("click", async () => {
+        const token = getAuthToken();
+
+        if (!token) {
+            setAuthMessage(
+                mercadoPagoMessage,
+                "Faça login para conectar sua conta do Mercado Pago.",
+                "error"
+            );
+            return;
+        }
+
+        try {
+            connectMercadoPagoButton.disabled = true;
+
+            setAuthMessage(
+                mercadoPagoMessage,
+                "Conectando ao Mercado Pago..."
+            );
+
+            const response = await zavynAuthRequest(
+                "/oauth/mercadopago/start",
+                {
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+            if (!response || !response.ok || !response.authorization_url) {
+                throw new Error(
+                    response?.error ||
+                    "Não foi possível iniciar a conexão com o Mercado Pago."
+                );
+            }
+
+            window.location.href = response.authorization_url;
+
+        } catch (error) {
+            console.error(
+                "Erro ao conectar Mercado Pago:",
+                error
+            );
+
+            setAuthMessage(
+                mercadoPagoMessage,
+                error.message ||
+                "Erro ao conectar Mercado Pago.",
+                "error"
+            );
+
+            connectMercadoPagoButton.disabled = false;
+        }
+    });
+}
   }
 
   const avatarButton = document.getElementById("profileAvatarButton");
