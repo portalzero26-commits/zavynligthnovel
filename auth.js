@@ -599,7 +599,56 @@ async function logoutZavyn() {
     window.location.href = "index.html";
   }
 }
+async function loadMercadoPagoStatus() {
+    const button =
+        document.getElementById("connectMercadoPagoButton");
 
+    const message =
+        document.getElementById("mercadoPagoMessage");
+
+    if (!button) return;
+
+    try {
+        const { response, data } =
+            await zavynAuthRequest(
+                "/marketplace/mercadopago/status",
+                {
+                    method: "GET"
+                }
+            );
+
+        if (!response.ok || !data.ok) {
+            throw new Error(
+                data?.error ||
+                "Não foi possível verificar a conexão do Mercado Pago."
+            );
+        }
+
+        if (data.connected) {
+            button.textContent =
+                "MERCADO PAGO CONECTADO";
+
+            button.disabled = true;
+
+            setAuthMessage(
+                message,
+                "🟢 Mercado Pago conectado",
+                "success"
+            );
+        } else {
+            button.textContent =
+                "CONECTAR MERCADO PAGO";
+
+            button.disabled = false;
+        }
+
+    } catch (error) {
+        console.error(
+            "Erro ao verificar Mercado Pago:",
+            error
+        );
+    }
+}
 document.addEventListener("DOMContentLoaded", async () => {
   loadHeaderAccount();
 
