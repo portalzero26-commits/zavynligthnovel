@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Publicar livro — Zavyn</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .author-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 50px 20px 80px;
+    }
+
+    .author-header {
+      margin-bottom: 35px;
+    }
+
+    .author-header .eyebrow {
+      color: #d8b85a;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      margin-bottom: 8px;
+    }
+
+    .author-header h1 {
+      margin: 0;
+      color: #fff;
+      font-size: 2rem;
+    }
+
+    .author-header p {
+      margin-top: 10px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    .publish-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(216,184,90,.18);
+      border-radius: 18px;
+      padding: 28px;
+    }
+
+    .publish-card h2 {
+      margin-top: 0;
+      color: #fff;
+      font-size: 1.15rem;
+    }
+
+    .publish-card > p {
+      color: #999;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .publish-form {
+      display: grid;
+      gap: 20px;
+    }
+
+    .publish-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .publish-field label {
+      color: #eee;
+      font-weight: 600;
+      font-size: .9rem;
+    }
+
+    .publish-field input,
+    .publish-field textarea,
+    .publish-field select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: #fff;
+      outline: none;
+      font: inherit;
+    }
+
+    .publish-field textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .publish-field input:focus,
+    .publish-field textarea:focus,
+    .publish-field select:focus {
+      border-color: #d8b85a;
+    }
+
+    .publish-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .publish-message {
+      min-height: 22px;
+      color: #aaa;
+      font-size: .9rem;
+    }
+
+    .publish-note {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(216,184,90,.06);
+      border: 1px solid rgba(216,184,90,.12);
+      color: #aaa;
+      font-size: .85rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .author-page {
+        padding: 35px 15px 60px;
+      }
+
+      .publish-card {
+        padding: 20px;
+      }
+
+      .author-header h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+
+      <a href="index.html" class="brand">
+        <img src="logo.png" alt="Zavyn">
+      </a>
+
+      <nav class="header-nav">
+        <a href="index.html">LOJA</a>
+        <a href="perfil.html">MEU PERFIL</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="author-page">
+
+    <div class="author-header">
+      <div class="eyebrow">PAINEL DO AUTOR</div>
+      <h1>Publicar livro</h1>
+      <p>
+        Transforme sua história em uma publicação dentro da Zavyn.
+      </p>
+    </div>
+
+    <section class="publish-card">
+
+      <h2>Novo livro</h2>
+
+      <p>
+        Preencha as informações básicas da sua obra.
+      </p>
+
+      <form class="publish-form" id="publishBookForm">
+
+        <div class="publish-field">
+          <label for="bookTitle">Título do livro</label>
+          <input
+            type="text"
+            id="bookTitle"
+            name="title"
+            placeholder="Digite o título da sua obra"
+            maxlength="150"
+            required
+          >
+        </div>
+
+        <div class="publish-field">
+          <label for="bookDescription">Descrição</label>
+          <textarea
+            id="bookDescription"
+            name="description"
+            placeholder="Apresente sua obra aos leitores..."
+            maxlength="5000"
+            required
+          ></textarea>
+        </div>
+
+        <div class="publish-field">
+          <label for="bookPrice">Preço</label>
+          <input
+            type="number"
+            id="bookPrice"
+            name="price"
+            min="0"
+            step="0.01"
+            placeholder="0,00"
+            required
+          >
+        </div>
+
+        <div class="publish-field">
+          <label for="bookCover">Capa do livro</label>
+          <input
+            type="file"
+            id="bookCover"
+            name="cover"
+            accept="image/jpeg,image/png,image/webp"
+          >
+        </div>
+
+        <div class="publish-field">
+          <label for="bookFile">Arquivo do livro</label>
+          <input
+            type="file"
+            id="bookFile"
+            name="file"
+            accept=".pdf,.epub"
+          >
+        </div>
+
+        <div class="publish-message" id="publishBookMessage"></div>
+
+        <div class="publish-actions">
+
+          <button
+            type="submit"
+            class="button"
+            id="publishBookSubmit"
+          >
+            PUBLICAR LIVRO
+          </button>
+
+          <a
+            href="perfil.html"
+            class="outline-button"
+          >
+            VOLTAR AO PERFIL
+          </a>
+
+        </div>
+
+      </form>
+
+      <div class="publish-note">
+        <strong>Importante:</strong>
+        nesta primeira etapa estamos preparando a estrutura de publicação.
+        O envio definitivo para a plataforma será conectado ao sistema da Zavyn
+        nas próximas etapas.
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Zavyn — livros que ganham vida.</p>
+  </footer>
+
+  <script src="auth.js"></script>
+
+</body>
+</html>
