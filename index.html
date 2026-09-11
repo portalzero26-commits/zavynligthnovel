@@ -1,226 +1,1704 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Zavyn — uma livraria digital para histórias independentes e novos mundos.">
-<title>Zavyn — Livros que levam você a novos mundos</title>
-<link rel="stylesheet" href="style.css">
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Zavyn — descubra histórias, novos autores e mundos incríveis."
+  >
+
+  <title>Zavyn — Descubra novos mundos</title>
+
+  <link rel="stylesheet" href="style.css">
+
+
+  <style>
+
+    /* =====================================================
+       NOVA HOME ZAVYN
+    ===================================================== */
+
+    .zavyn-home {
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 20% 10%,
+          rgba(216,184,90,.08),
+          transparent 30%
+        ),
+        #09090c;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .platform-hero {
+
+      min-height: 650px;
+
+      display: flex;
+      align-items: center;
+
+      position: relative;
+
+      overflow: hidden;
+
+      padding: 90px 7%;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(9,9,12,.98) 0%,
+          rgba(9,9,12,.88) 45%,
+          rgba(9,9,12,.45) 100%
+        );
+
+    }
+
+
+    .platform-hero::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 650px;
+      height: 650px;
+
+      right: -150px;
+      top: -100px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(216,184,90,.16),
+          transparent 65%
+        );
+
+    }
+
+
+    .hero-platform-content {
+
+      position: relative;
+
+      z-index: 2;
+
+      max-width: 720px;
+
+    }
+
+
+    .platform-eyebrow {
+
+      margin-bottom: 18px;
+
+      color: #d8b85a;
+
+      font-size: .78rem;
+
+      font-weight: 800;
+
+      letter-spacing: .2em;
+
+      text-transform: uppercase;
+
+    }
+
+
+    .hero-platform-content h1 {
+
+      margin: 0;
+
+      font-size:
+        clamp(
+          3rem,
+          7vw,
+          6.5rem
+        );
+
+      line-height: .95;
+
+      letter-spacing: -.04em;
+
+    }
+
+
+    .hero-platform-content h1 em {
+
+      color: #d8b85a;
+
+      font-style: normal;
+
+    }
+
+
+    .hero-platform-content p {
+
+      max-width: 620px;
+
+      margin: 28px 0;
+
+      color: rgba(255,255,255,.68);
+
+      font-size: 1.05rem;
+
+      line-height: 1.7;
+
+    }
+
+
+    .platform-actions {
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 12px;
+
+    }
+
+
+    .platform-button {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      min-height: 48px;
+
+      padding: 0 22px;
+
+      border-radius: 10px;
+
+      border: 1px solid transparent;
+
+      background: #d8b85a;
+
+      color: #101010;
+
+      font-weight: 800;
+
+      text-decoration: none;
+
+      transition: .2s;
+
+    }
+
+
+    .platform-button:hover {
+
+      transform: translateY(-2px);
+
+      filter: brightness(1.08);
+
+    }
+
+
+    .platform-button.secondary {
+
+      background: transparent;
+
+      color: #fff;
+
+      border-color:
+        rgba(255,255,255,.18);
+
+    }
+
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .platform-section {
+
+      width: min(
+        1180px,
+        calc(100% - 32px)
+      );
+
+      margin: auto;
+
+      padding: 75px 0;
+
+    }
+
+
+    .platform-heading {
+
+      margin-bottom: 30px;
+
+    }
+
+
+    .platform-heading small {
+
+      display: block;
+
+      margin-bottom: 8px;
+
+      color: #d8b85a;
+
+      font-size: .72rem;
+
+      font-weight: 800;
+
+      letter-spacing: .18em;
+
+    }
+
+
+    .platform-heading h2 {
+
+      margin: 0;
+
+      font-size:
+        clamp(
+          1.8rem,
+          4vw,
+          3rem
+        );
+
+    }
+
+
+    .platform-heading p {
+
+      max-width: 680px;
+
+      margin-top: 10px;
+
+      color: #888;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* =====================================================
+       DESTAQUE / EVENTO
+    ===================================================== */
+
+    .zavyn-highlight {
+
+      position: relative;
+
+      width: min(
+        1180px,
+        calc(100% - 32px)
+      );
+
+      min-height: 260px;
+
+      margin: 50px auto 10px;
+
+      overflow: hidden;
+
+      border-radius: 22px;
+
+      border:
+        1px solid
+        rgba(216,184,90,.22);
+
+      background:
+        linear-gradient(
+          135deg,
+          #15151a,
+          #0d0d10
+        );
+
+    }
+
+
+    .highlight-placeholder {
+
+      min-height: 260px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      flex-direction: column;
+
+      text-align: center;
+
+      padding: 35px;
+
+    }
+
+
+    .highlight-placeholder .icon {
+
+      font-size: 2rem;
+
+      margin-bottom: 12px;
+
+    }
+
+
+    .highlight-placeholder strong {
+
+      color: #d8b85a;
+
+      letter-spacing: .08em;
+
+      font-size: .85rem;
+
+    }
+
+
+    .highlight-placeholder span {
+
+      margin-top: 8px;
+
+      color: #777;
+
+      font-size: .82rem;
+
+    }
+
+
+    /* =====================================================
+       GÊNEROS
+    ===================================================== */
+
+    .genre-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0,1fr)
+        );
+
+      gap: 14px;
+
+    }
+
+
+    .genre-card {
+
+      min-height: 125px;
+
+      display: flex;
+
+      align-items: flex-end;
+
+      padding: 20px;
+
+      border-radius: 15px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.06),
+          rgba(255,255,255,.02)
+        );
+
+      color: #fff;
+
+      text-decoration: none;
+
+      transition:
+        transform .2s,
+        border-color .2s;
+
+    }
+
+
+    .genre-card:hover {
+
+      transform: translateY(-4px);
+
+      border-color:
+        rgba(216,184,90,.4);
+
+    }
+
+
+    .genre-card strong {
+
+      font-size: 1rem;
+
+    }
+
+
+    .genre-card span {
+
+      display: block;
+
+      margin-top: 5px;
+
+      color: #888;
+
+      font-size: .72rem;
+
+    }
+
+
+    /* =====================================================
+       RANKING
+    ===================================================== */
+
+    .ranking-preview {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0,1fr)
+        );
+
+      gap: 16px;
+
+    }
+
+
+    .ranking-card {
+
+      padding: 25px;
+
+      border-radius: 16px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08);
+
+      background:
+        rgba(255,255,255,.025);
+
+    }
+
+
+    .ranking-position {
+
+      color: #d8b85a;
+
+      font-size: .75rem;
+
+      font-weight: 800;
+
+      letter-spacing: .12em;
+
+    }
+
+
+    .ranking-card h3 {
+
+      margin:
+        10px 0 7px;
+
+    }
+
+
+    .ranking-card p {
+
+      margin: 0;
+
+      color: #777;
+
+      font-size: .82rem;
+
+    }
+
+
+    /* =====================================================
+       LIVROS
+    ===================================================== */
+
+    .books-placeholder {
+
+      min-height: 220px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      text-align: center;
+
+      padding: 30px;
+
+      border:
+        1px dashed
+        rgba(255,255,255,.12);
+
+      border-radius: 18px;
+
+      color: #777;
+
+    }
+
+
+    /* =====================================================
+       AUTORES
+    ===================================================== */
+
+    .authors-platform {
+
+      display: grid;
+
+      grid-template-columns:
+        1.1fr .9fr;
+
+      gap: 30px;
+
+      align-items: stretch;
+
+    }
+
+
+    .authors-copy {
+
+      padding: 40px;
+
+      border-radius: 20px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08);
+
+      background:
+        rgba(255,255,255,.025);
+
+    }
+
+
+    .authors-copy h2 {
+
+      margin: 0 0 15px;
+
+      font-size: 2rem;
+
+    }
+
+
+    .authors-copy p {
+
+      color: #888;
+
+      line-height: 1.7;
+
+    }
+
+
+    .authors-panel {
+
+      min-height: 300px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      text-align: center;
+
+      border-radius: 20px;
+
+      border:
+        1px solid
+        rgba(216,184,90,.18);
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(216,184,90,.10),
+          transparent 65%
+        );
+
+    }
+
+
+    .authors-panel strong {
+
+      display: block;
+
+      font-size: 1.3rem;
+
+    }
+
+
+    .authors-panel span {
+
+      display: block;
+
+      margin-top: 8px;
+
+      color: #777;
+
+      font-size: .8rem;
+
+    }
+
+
+    /* =====================================================
+       PUBLICAR
+    ===================================================== */
+
+    .publish-platform {
+
+      text-align: center;
+
+      padding: 70px 25px;
+
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(216,184,90,.11),
+          rgba(255,255,255,.025)
+        );
+
+      border:
+        1px solid
+        rgba(216,184,90,.16);
+
+    }
+
+
+    .publish-platform h2 {
+
+      margin: 0;
+
+      font-size:
+        clamp(
+          2rem,
+          4vw,
+          3.3rem
+        );
+
+    }
+
+
+    .publish-platform p {
+
+      max-width: 650px;
+
+      margin: 15px auto 25px;
+
+      color: #888;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .platform-footer {
+
+      padding: 40px 20px;
+
+      text-align: center;
+
+      border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+      color: #777;
+
+    }
+
+
+    .platform-footer img {
+
+      width: 120px;
+
+      margin-bottom: 12px;
+
+    }
+
+
+    /* =====================================================
+       COMPATIBILIDADE COM O SISTEMA ANTIGO
+       Os 8 volumes continuam preservados,
+       mas não aparecem na Home.
+    ===================================================== */
+
+    .legacy-compat {
+
+      display: none !important;
+
+    }
+
+
+    /* =====================================================
+       RESPONSIVO
+    ===================================================== */
+
+    @media (max-width: 850px) {
+
+      .genre-grid {
+
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0,1fr)
+          );
+
+      }
+
+
+      .ranking-preview {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
+      .authors-platform {
+
+        grid-template-columns: 1fr;
+
+      }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+      .platform-hero {
+
+        min-height: 560px;
+
+        padding:
+          70px 20px;
+
+      }
+
+
+      .genre-grid {
+
+        grid-template-columns: 1fr 1fr;
+
+      }
+
+
+      .platform-section {
+
+        padding: 55px 0;
+
+      }
+
+    }
+
+  </style>
+
 </head>
+
+
 <body>
 
-<header class="header">
-  <a class="logo" href="#inicio" aria-label="Zavyn início">
-    <img src="zavyn-logo.png" alt="Zavyn — Seu mundo. Sua escolha.">
-  </a>
-  <nav class="main-nav">
-    <a href="#inicio">Início</a>
-    <a class="active" href="#livros">Livros</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#contato">Contato</a>
-  </nav>
-  <div class="header-tools">
-    <div class="account-nav" id="accountNav" aria-label="Conta Zavyn">
-      <a class="account-link" href="login.html">Entrar</a>
-      <a class="account-button" href="cadastro.html">Criar conta</a>
+
+<div class="zavyn-home">
+
+
+  <!-- ===================================================
+       CABEÇALHO
+  ==================================================== -->
+
+  <header class="header">
+
+    <a
+      class="logo"
+      href="index.html"
+      aria-label="Zavyn início"
+    >
+
+      <img
+        src="zavyn-logo.png"
+        alt="Zavyn"
+      >
+
+    </a>
+
+
+    <nav class="main-nav">
+
+      <a
+        class="active"
+        href="index.html"
+      >
+        Início
+      </a>
+
+      <a href="genero.html?genre=Fantasia">
+        Livros
+      </a>
+
+      <a href="#ranking">
+        Ranking
+      </a>
+
+      <a href="#autores">
+        Autores
+      </a>
+
+      <a href="#sobre">
+        Sobre
+      </a>
+
+    </nav>
+
+
+    <div class="header-tools">
+
+
+      <div
+        class="account-nav"
+        id="accountNav"
+        aria-label="Conta Zavyn"
+      >
+
+        <a
+          class="account-link"
+          href="login.html"
+        >
+          Entrar
+        </a>
+
+        <a
+          class="account-button"
+          href="cadastro.html"
+        >
+          Criar conta
+        </a>
+
+      </div>
+
+
+      <label
+        class="search-box"
+        aria-label="Buscar usuários"
+      >
+
+        <span>⌕</span>
+
+        <input
+          id="bookSearch"
+          type="search"
+          placeholder="Buscar usuários..."
+          autocomplete="off"
+        >
+
+      </label>
+
+
+      <button
+        class="cart-link"
+        id="openCartBtn"
+        type="button"
+        aria-label="Abrir carrinho"
+      >
+
+        🛒
+
+        <span id="cartCount">
+          0
+        </span>
+
+      </button>
+
+
     </div>
-    <label class="search-box" aria-label="Buscar usuários">
-      <span>⌕</span><input id="bookSearch" type="search" placeholder="Buscar usuários..." autocomplete="off">
-    </label>
-    <button class="cart-link" id="openCartBtn" type="button" aria-label="Abrir carrinho">
-    <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.1 10.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H7"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
-    <span id="cartCount">0</span>
-  </button>
-  </div>
-</header>
 
-<main>
-<section id="inicio" class="hero">
-  <div class="hero-glow"></div>
-  <div class="cityscape" aria-hidden="true"><div class="moon"></div><div class="skyline skyline-back"></div><div class="skyline skyline-front"></div><div class="lake"></div></div>
-  <div class="hero-content">
-    <p class="eyebrow gold">BEM-VINDO AO UNIVERSO ZAVYN</p>
-    <h1>Histórias que<br><em>levam você</em><br>a novos mundos.</h1>
-    <p class="lead">Descubra aventuras, fantasias e histórias independentes. A Zavyn começa com uma obra — e nasce para abrir espaço para muitas outras.</p>
-    <div class="actions">
-      <a class="button" href="#livros">EXPLORAR LIVROS</a>
-      <a class="text-button" href="#sobre">Conheça a Zavyn →</a>
+  </header>
+
+
+
+  <!-- ===================================================
+       HERO
+  ==================================================== -->
+
+  <section class="platform-hero">
+
+
+    <div class="hero-platform-content">
+
+
+      <div class="platform-eyebrow">
+        O UNIVERSO ZAVYN
+      </div>
+
+
+      <h1>
+
+        Descubra histórias
+        <br>
+
+        <em>que merecem ser lidas.</em>
+
+      </h1>
+
+
+      <p>
+
+        Explore livros, descubra novos autores
+        e encontre histórias capazes de levar
+        você para mundos completamente diferentes.
+
+        <br><br>
+
+        A Zavyn é uma plataforma criada para
+        conectar leitores e escritores
+        independentes.
+
+      </p>
+
+
+      <div class="platform-actions">
+
+        <a
+          class="platform-button"
+          href="#generos"
+        >
+          EXPLORAR LIVROS
+        </a>
+
+
+        <a
+          class="platform-button secondary"
+          href="#ranking"
+        >
+          VER RANKING
+        </a>
+
+      </div>
+
+
     </div>
-  </div>
-  <div class="hero-card">
-    <span>OBRA EM DESTAQUE</span>
-    <strong>REINCARNATION<br>IN ANOTHER WORLD</strong>
-    <small>NEXT LEVEL</small>
-    <img class="fake-cover real-hero-cover" src="covers/volume-8.png" alt="Capa do Volume 8 de Reincarnation in Another World: Next Level">
-  </div>
-</section>
 
-<section id="livros" class="section">
-  <div class="section-heading">
-    <div>
-      <p class="eyebrow gold">CATÁLOGO ZAVYN</p>
-      <h2>Reincarnation in Another World: <em>Next Level</em></h2>
-      <p class="catalog-subtitle">Conheça os oito volumes da primeira série da Zavyn.</p>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       DESTAQUE ZAVYN
+  ==================================================== -->
+
+  <section class="zavyn-highlight">
+
+    <div
+      class="highlight-placeholder"
+      id="zavynHomeHighlight"
+    >
+
+      <div class="icon">
+        ✦
+      </div>
+
+      <strong>
+        DESTAQUE ZAVYN
+      </strong>
+
+      <span>
+        Eventos e novidades da plataforma aparecerão aqui.
+      </span>
+
     </div>
-    <p class="catalog-quote">“Histórias que vão além do imaginável.”</p>
-  </div>
-  <div id="volumes" class="grid"></div>
-</section>
 
-<section id="autores" class="author-section">
-  <div class="author-copy">
-    <p class="eyebrow">FUTURO DA ZAVYN</p>
-    <h2>Novas histórias.<br>Novos autores.</h2>
-    <p>A Zavyn começa como uma livraria própria, mas foi pensada para crescer. No futuro, autores independentes poderão encontrar aqui um espaço para apresentar suas obras e alcançar novos leitores.</p>
-    <button class="outline-button" onclick="alert('A área de publicação para autores será adicionada em uma próxima versão.')">QUERO PUBLICAR</button>
-  </div>
-  <div class="author-panel">
-    <div class="orbit">Z</div>
-    <div class="panel-line"></div>
-    <p>EM BREVE</p>
-    <strong>UMA NOVA CASA<br>PARA AUTORES</strong>
-  </div>
-</section>
+  </section>
 
-<section id="contato" class="contact-section">
-  <div>
-    <p class="eyebrow gold">CONTATO</p>
-    <h2>Fale com a Zavyn.</h2>
-    <p>Precisa de ajuda com sua compra, pagamento ou download? Fale diretamente com nossa equipe de suporte.</p>
-    <a class="support-email" href="mailto:Zavynsuporte@gmail.com">Zavynsuporte@gmail.com</a>
-  </div>
-</section>
 
-<section id="sobre" class="section about">
-  <div class="about-box">
-    <p class="eyebrow">SOBRE A ZAVYN</p>
-    <h2>Uma plataforma construída para crescer.</h2>
-    <p>A Zavyn é uma proposta de livraria digital independente. O objetivo é criar um lugar simples, bonito e acessível para leitores descobrirem histórias e, futuramente, para autores apresentarem seus próprios livros.</p>
-  </div>
-</section>
 
-<section id="carrinho" class="cart-section">
-  <div class="section-heading centered">
-    <div>
-      <p class="eyebrow">SUA SACOLA</p>
-      <h2>Carrinho</h2>
+  <!-- ===================================================
+       GÊNEROS
+  ==================================================== -->
+
+  <section
+    class="platform-section"
+    id="generos"
+  >
+
+
+    <div class="platform-heading">
+
+      <small>
+        EXPLORE
+      </small>
+
+      <h2>
+        Encontre seu próximo mundo.
+      </h2>
+
+      <p>
+        Explore histórias separadas por gênero
+        e descubra autores independentes da Zavyn.
+      </p>
+
     </div>
-  </div>
-  <div id="cartItems"><p class="empty">Seu carrinho está vazio.</p></div>
-  <div class="cart-total">Total <strong id="cartTotal">R$ 0,00</strong></div>
-  <button class="button" id="checkoutBtn" type="button">FINALIZAR COMPRA</button>
-  <p class="notice">Seu carrinho fica salvo neste dispositivo. Após a confirmação do pagamento, os e-books comprados ficam disponíveis para download.</p>
-</section>
 
-<section id="checkout" class="checkout-section" aria-labelledby="checkoutTitle">
-  <div class="checkout-wrap">
-    <div class="checkout-heading">
-      <p class="eyebrow gold">FINALIZAÇÃO</p>
-      <h2 id="checkoutTitle">Finalize sua compra.</h2>
-      <p>Confira seu pedido e informe os dados necessários para receber seus livros digitais.</p>
-    </div>
-    <div class="checkout-grid">
-      <form id="checkoutForm" class="checkout-form">
-        <div class="checkout-card">
-          <p class="checkout-label">1. Seus dados</p>
-          <label>Nome completo<input id="customerName" name="name" type="text" autocomplete="name" required placeholder="Seu nome"></label>
-          <label>E-mail<input id="customerEmail" name="email" type="email" autocomplete="email" required placeholder="voce@email.com"></label>
-          <p class="form-note">O e-mail identifica o comprador. Após a confirmação, os e-books ficam disponíveis para download nesta página.</p>
+
+    <div class="genre-grid">
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Fantasia"
+      >
+        <div>
+          <strong>✨ Fantasia</strong>
+          <span>Magia e mundos extraordinários</span>
         </div>
-        <div class="checkout-card">
-          <p class="checkout-label">2. Forma de pagamento</p>
-          <div class="payment-options">
-            <button type="button" class="payment-option selected" data-payment="pix"><span>PIX</span><small>Pagamento instantâneo</small></button>
-            <button type="button" class="payment-option" data-payment="card"><span>Cartão</span><small>Crédito ou débito</small></button>
-          </div>
-          <div id="paymentNotice" class="payment-notice">PIX conectado ao Mercado Pago. O pedido será criado com o valor calculado pela Zavyn.</div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Romance"
+      >
+        <div>
+          <strong>❤️ Romance</strong>
+          <span>Histórias para sentir</span>
         </div>
-        <button class="button checkout-submit" type="submit">CONTINUAR PARA PAGAMENTO</button>
-        <button class="back-to-cart" id="backToCartBtn" type="button">← Voltar para a sacola</button>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Ação"
+      >
+        <div>
+          <strong>⚔️ Ação</strong>
+          <span>Confrontos e adrenalina</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Aventura"
+      >
+        <div>
+          <strong>🗺️ Aventura</strong>
+          <span>Grandes jornadas</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Ficção%20científica"
+      >
+        <div>
+          <strong>🚀 Ficção científica</strong>
+          <span>Além do impossível</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Mistério"
+      >
+        <div>
+          <strong>🔎 Mistério</strong>
+          <span>Segredos esperando por você</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Suspense"
+      >
+        <div>
+          <strong>🌑 Suspense</strong>
+          <span>Histórias que prendem</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Terror"
+      >
+        <div>
+          <strong>👻 Terror</strong>
+          <span>Coragem será necessária</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Drama"
+      >
+        <div>
+          <strong>🎭 Drama</strong>
+          <span>Histórias humanas</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Comédia"
+      >
+        <div>
+          <strong>😂 Comédia</strong>
+          <span>Para ler e se divertir</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Ficção"
+      >
+        <div>
+          <strong>📖 Ficção</strong>
+          <span>Novas possibilidades</span>
+        </div>
+      </a>
+
+
+      <a
+        class="genre-card"
+        href="genero.html?genre=Juvenil"
+      >
+        <div>
+          <strong>🌟 Juvenil</strong>
+          <span>Histórias para novas gerações</span>
+        </div>
+      </a>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       RANKING
+  ==================================================== -->
+
+  <section
+    class="platform-section"
+    id="ranking"
+  >
+
+
+    <div class="platform-heading">
+
+      <small>
+        RANKING DA ZAVYN
+      </small>
+
+      <h2>
+        Os livros mais votados.
+      </h2>
+
+      <p>
+        Todos os meses, os leitores ajudam
+        a escolher as histórias que merecem
+        chegar ao topo.
+      </p>
+
+    </div>
+
+
+    <div class="ranking-preview">
+
+
+      <article class="ranking-card">
+
+        <div class="ranking-position">
+          🥇 1º LUGAR
+        </div>
+
+        <h3>
+          Em breve
+        </h3>
+
+        <p>
+          O ranking mensal será alimentado
+          pelos votos dos leitores.
+        </p>
+
+      </article>
+
+
+      <article class="ranking-card">
+
+        <div class="ranking-position">
+          🥈 2º LUGAR
+        </div>
+
+        <h3>
+          Em breve
+        </h3>
+
+        <p>
+          Vote nos seus livros favoritos.
+        </p>
+
+      </article>
+
+
+      <article class="ranking-card">
+
+        <div class="ranking-position">
+          🥉 3º LUGAR
+        </div>
+
+        <h3>
+          Em breve
+        </h3>
+
+        <p>
+          O ranking será atualizado mensalmente.
+        </p>
+
+      </article>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       LIVROS EM DESTAQUE
+  ==================================================== -->
+
+  <section
+    class="platform-section"
+    id="livros-destaque"
+  >
+
+
+    <div class="platform-heading">
+
+      <small>
+        LIVROS DA COMUNIDADE
+      </small>
+
+      <h2>
+        Histórias em destaque.
+      </h2>
+
+      <p>
+        Obras publicadas pelos autores
+        da plataforma Zavyn.
+      </p>
+
+    </div>
+
+
+    <div class="books-placeholder">
+
+      <div>
+
+        <strong>
+          📚 Os livros dos autores aparecerão aqui.
+        </strong>
+
+        <br><br>
+
+        <span>
+          A área será alimentada automaticamente
+          pelo catálogo da Zavyn.
+        </span>
+
+      </div>
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- ===================================================
+       AUTORES
+  ==================================================== -->
+
+  <section
+    class="platform-section"
+    id="autores"
+  >
+
+
+    <div class="authors-platform">
+
+
+      <div class="authors-copy">
+
+        <div class="platform-heading">
+
+          <small>
+            COMUNIDADE ZAVYN
+          </small>
+
+          <h2>
+            Conheça novos autores.
+          </h2>
+
+        </div>
+
+
+        <p>
+
+          A Zavyn foi criada para dar espaço
+          a escritores independentes.
+
+          <br><br>
+
+          Aqui, leitores podem descobrir novas
+          histórias e acompanhar os autores
+          que estão construindo seus próprios mundos.
+
+        </p>
+
+
+        <a
+          class="platform-button"
+          href="#autores"
+        >
+          EXPLORAR AUTORES
+        </a>
+
+      </div>
+
+
+      <div class="authors-panel">
+
+        <div>
+
+          <strong>
+            NOVOS MUNDOS.
+          </strong>
+
+          <span>
+            NOVAS HISTÓRIAS. NOVOS AUTORES.
+          </span>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       PUBLICAÇÃO
+  ==================================================== -->
+
+  <section class="platform-section">
+
+
+    <div class="publish-platform">
+
+
+      <div class="platform-eyebrow">
+        PARA ESCRITORES
+      </div>
+
+
+      <h2>
+        Sua história merece ser descoberta.
+      </h2>
+
+
+      <p>
+
+        Publique seu livro na Zavyn,
+        encontre leitores e faça parte
+        de uma comunidade criada para
+        histórias independentes.
+
+      </p>
+
+
+      <a
+        class="platform-button"
+        href="publicar.html"
+      >
+        PUBLICAR MEU LIVRO
+      </a>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       SOBRE
+  ==================================================== -->
+
+  <section
+    class="platform-section"
+    id="sobre"
+  >
+
+
+    <div class="platform-heading">
+
+      <small>
+        SOBRE A ZAVYN
+      </small>
+
+      <h2>
+        Uma plataforma feita para crescer.
+      </h2>
+
+      <p>
+
+        A Zavyn conecta leitores e autores
+        em um espaço dedicado à descoberta
+        de novas histórias.
+
+        <br><br>
+
+        Livros, avaliações, comentários,
+        rankings, eventos e muito mais
+        fazem parte do futuro da plataforma.
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       COMPATIBILIDADE — SISTEMA LEGADO
+       NÃO APARECE NA HOME
+  ==================================================== -->
+
+  <div class="legacy-compat">
+
+
+    <div id="volumes"></div>
+
+
+    <div id="cartItems"></div>
+
+    <div id="cartTotal">
+      R$ 0,00
+    </div>
+
+
+    <section id="checkout">
+
+      <div id="checkoutItems"></div>
+
+      <form id="checkoutForm">
+
+        <input
+          id="customerName"
+          type="text"
+        >
+
+        <input
+          id="customerEmail"
+          type="email"
+        >
+
+        <div class="payment-option selected"
+             data-payment="pix">
+        </div>
+
+        <div
+          class="payment-option"
+          data-payment="card"
+        >
+        </div>
+
+        <div id="paymentNotice"></div>
+
+        <button
+          class="checkout-submit"
+          type="submit"
+        >
+          CONTINUAR
+        </button>
+
       </form>
 
-      <aside class="checkout-summary">
-        <p class="checkout-label">RESUMO DO PEDIDO</p>
-        <div id="checkoutItems"></div>
-        <div class="summary-line"><span>Subtotal</span><strong id="checkoutSubtotal">R$ 0,00</strong></div>
-        <div class="summary-line total"><span>Total</span><strong id="checkoutTotal">R$ 0,00</strong></div>
-        <p class="digital-note">📖 Produto digital · download liberado após a confirmação do pagamento.</p>
-      <div id="paymentResult" class="payment-result" aria-live="polite"></div>
-      </aside>
-    </div>
-  </div>
-</section>
-</main>
 
-<div id="bookModal" class="book-modal" aria-hidden="true">
-  <div class="modal-backdrop" onclick="closeBookModal()"></div>
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <button class="modal-close" onclick="closeBookModal()" aria-label="Fechar">×</button>
-    <div class="modal-cover-wrap"><img id="modalCover" src="" alt=""></div>
-    <div class="modal-info">
-      <p class="eyebrow" id="modalSeries">REINCARNATION IN ANOTHER WORLD: NEXT LEVEL</p>
+      <div id="checkoutSubtotal">
+        R$ 0,00
+      </div>
+
+      <div id="checkoutTotal">
+        R$ 0,00
+      </div>
+
+      <div id="paymentResult"></div>
+
+      <button
+        id="backToCartBtn"
+        type="button"
+      >
+        Voltar
+      </button>
+
+    </section>
+
+
+    <div
+      id="bookModal"
+      aria-hidden="true"
+    >
+
+      <img id="modalCover">
+
       <h2 id="modalTitle"></h2>
-      <p id="modalVolume" class="modal-volume"></p>
-      <p id="modalDescription" class="modal-description"></p>
-      <div class="modal-buy"><strong id="modalPrice"></strong><button class="button" id="modalAdd">ADICIONAR AO CARRINHO</button></div>
+
+      <p id="modalVolume"></p>
+
+      <p id="modalDescription"></p>
+
+      <strong id="modalPrice"></strong>
+
+      <button id="modalAdd">
+        Adicionar
+      </button>
+
     </div>
+
+
+    <div
+      id="cartDrawer"
+      aria-hidden="true"
+    >
+
+      <div id="drawerItems"></div>
+
+      <strong id="drawerTotal">
+        R$ 0,00
+      </strong>
+
+      <button id="drawerCheckoutBtn">
+        Checkout
+      </button>
+
+      <button id="closeCartBtn">
+        Fechar
+      </button>
+
+      <div id="closeCartBackdrop"></div>
+
+    </div>
+
+
+    <div
+      id="userSearchModal"
+      aria-hidden="true"
+    >
+
+      <button id="closeUserSearchBtn">
+        Fechar
+      </button>
+
+      <div id="closeUserSearchBackdrop"></div>
+
+      <input
+        id="userSearchModalInput"
+      >
+
+      <div id="userSearchResults"></div>
+
+    </div>
+
+
+    <div
+      id="publicProfileModal"
+      aria-hidden="true"
+    >
+
+      <button id="closePublicProfileBtn">
+        Fechar
+      </button>
+
+      <div id="closePublicProfileBackdrop"></div>
+
+      <div id="publicProfileContent"></div>
+
+    </div>
+
   </div>
+
+
+
+  <!-- ===================================================
+       FOOTER
+  ==================================================== -->
+
+  <footer class="platform-footer">
+
+    <img
+      src="zavyn-logo.png"
+      alt="Zavyn"
+    >
+
+    <p>
+      Histórias que levam você a novos mundos.
+    </p>
+
+    <a
+      href="mailto:Zavynsuporte@gmail.com"
+    >
+      Suporte: Zavynsuporte@gmail.com
+    </a>
+
+    <br><br>
+
+    <small>
+      © 2026 Zavyn. Todos os direitos reservados.
+    </small>
+
+  </footer>
+
+
 </div>
 
-
-<div id="userSearchModal" class="user-search-modal" aria-hidden="true">
-  <div class="user-search-backdrop" id="closeUserSearchBackdrop"></div>
-  <section class="user-search-card" role="dialog" aria-modal="true" aria-labelledby="userSearchTitle">
-    <button class="modal-close" id="closeUserSearchBtn" type="button" aria-label="Fechar">×</button>
-    <div class="user-search-head">
-      <p class="eyebrow gold">COMUNIDADE ZAVYN</p>
-      <h2 id="userSearchTitle">Buscar usuários</h2>
-      <p>Encontre leitores e autores pelo nome ou @usuário.</p>
-    </div>
-    <label class="user-search-input-wrap">
-      <span>⌕</span>
-      <input id="userSearchModalInput" type="search" placeholder="Digite um nome ou @usuário..." autocomplete="off">
-    </label>
-    <div id="userSearchResults" class="user-search-results">
-      <p class="user-search-empty">Digite para começar a buscar.</p>
-    </div>
-  </section>
-</div>
-
-<div id="publicProfileModal" class="public-profile-modal" aria-hidden="true">
-  <div class="public-profile-backdrop" id="closePublicProfileBackdrop"></div>
-  <section class="public-profile-card" role="dialog" aria-modal="true" aria-labelledby="publicProfileName">
-    <button class="modal-close" id="closePublicProfileBtn" type="button" aria-label="Fechar">×</button>
-    <div id="publicProfileContent">
-      <p class="user-search-loading">Carregando perfil...</p>
-    </div>
-  </section>
-</div>
-
-<div id="cartDrawer" class="cart-drawer" aria-hidden="true">
-  <div class="cart-drawer-backdrop" id="closeCartBackdrop"></div>
-  <aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle">
-    <div class="cart-panel-head">
-      <div><p class="eyebrow gold">SUA SACOLA</p><h2 id="cartDrawerTitle">Carrinho</h2></div>
-      <button class="modal-close" id="closeCartBtn" type="button" aria-label="Fechar carrinho">×</button>
-    </div>
-    <div id="drawerItems" class="drawer-items"></div>
-    <div class="drawer-footer">
-      <div class="drawer-total"><span>Total</span><strong id="drawerTotal">R$ 0,00</strong></div>
-      <button class="button drawer-checkout" id="drawerCheckoutBtn" type="button">PROSSEGUIR PARA CHECKOUT</button>
-      <p class="notice">Pagamento processado pelo Mercado Pago. A entrega digital é liberada após a confirmação.</p>
-    </div>
-  </aside>
-</div>
-
-<footer>
-  <img class="footer-logo-img" src="zavyn-logo.png" alt="Zavyn — Seu mundo. Sua escolha.">
-  <p>Livros que levam você a novos mundos.</p>
-  <a class="footer-support" href="mailto:Zavynsuporte@gmail.com">Suporte: Zavynsuporte@gmail.com</a>
-  <small>© 2026 Zavyn. Todos os direitos reservados.</small>
-</footer>
 
 <script src="script.js"></script>
+
 <script src="auth.js"></script>
+
+
 </body>
+
 </html>
