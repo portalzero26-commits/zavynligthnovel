@@ -671,6 +671,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderProfile(user);
       setupMural(user);
     }
+    await loadMercadoPagoStatus();
     const urlParams = new URLSearchParams(window.location.search);
 
 if (urlParams.get("mp_connected") === "1") {
