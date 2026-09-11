@@ -663,10 +663,10 @@ if (connectMercadoPagoButton) {
                 !data.ok ||
                 !data.authorization_url
             ) {
-                throw new Error(
-                    data?.error ||
-                    "Não foi possível iniciar a conexão com o Mercado Pago."
-                );
+            throw new Error(
+    data?.error ||
+    `Erro HTTP ${response.status}: resposta inesperada do servidor.`
+);
             }
 
             window.location.href = data.authorization_url;
