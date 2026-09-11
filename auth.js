@@ -650,5 +650,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const logoutButton = document.getElementById("logoutButton");
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutZavyn);
+    const publishBookButton = document.getElementById("publishBookButton");
+if (publishBookButton) {
+  publishBookButton.addEventListener("click", () => {
+    window.location.href = "publicar.html";
+  });
+}
   }
 });
