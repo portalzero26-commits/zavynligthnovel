@@ -321,7 +321,32 @@
   <footer class="site-footer">
     <p>Zavyn — livros que ganham vida.</p>
   </footer>
+<script>
+  const bookTypePaid = document.getElementById("bookTypePaid");
+  const bookTypeFree = document.getElementById("bookTypeFree");
+  const bookPrice = document.getElementById("bookPrice");
+  const bookPriceField = document.getElementById("bookPriceField");
+  const freeBookNotice = document.getElementById("freeBookNotice");
 
+  function updateBookPriceMode() {
+    if (bookTypeFree.checked) {
+      bookPrice.value = "0";
+      bookPrice.disabled = true;
+      bookPrice.required = false;
+      bookPriceField.style.opacity = "0.45";
+      freeBookNotice.style.display = "block";
+    } else {
+      bookPrice.disabled = false;
+      bookPrice.required = true;
+      bookPrice.value = "5.00";
+      bookPriceField.style.opacity = "1";
+      freeBookNotice.style.display = "none";
+    }
+  }
+
+  bookTypePaid.addEventListener("change", updateBookPriceMode);
+  bookTypeFree.addEventListener("change", updateBookPriceMode);
+</script>
   <script src="auth.js"></script>
 
 </body>
