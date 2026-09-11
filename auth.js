@@ -622,6 +622,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderProfile(user);
       setupMural(user);
     }
+    const urlParams = new URLSearchParams(window.location.search);
+
+if (urlParams.get("mp_connected") === "1") {
+    setAuthMessage(
+        document.getElementById("mercadoPagoMessage"),
+        "✅ Mercado Pago conectado com sucesso!",
+        "success"
+    );
+
+    const button = document.getElementById("connectMercadoPagoButton");
+
+    if (button) {
+        button.textContent = "MERCADO PAGO CONECTADO";
+        button.disabled = true;
+    }
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+}
  const connectMercadoPagoButton =
     document.getElementById("connectMercadoPagoButton");
 
