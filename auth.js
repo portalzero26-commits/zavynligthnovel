@@ -622,7 +622,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderProfile(user);
       setupMural(user);
     }
-    const connectMercadoPagoButton =
+ const connectMercadoPagoButton =
     document.getElementById("connectMercadoPagoButton");
 
 const mercadoPagoMessage =
@@ -649,7 +649,7 @@ if (connectMercadoPagoButton) {
                 "Conectando ao Mercado Pago..."
             );
 
-            const response = await zavynAuthRequest(
+            const { response, data } = await zavynAuthRequest(
                 "/oauth/mercadopago/start",
                 {
                     headers: {
@@ -658,14 +658,18 @@ if (connectMercadoPagoButton) {
                 }
             );
 
-            if (!response || !response.ok || !response.authorization_url) {
+            if (
+                !response.ok ||
+                !data.ok ||
+                !data.authorization_url
+            ) {
                 throw new Error(
-                    response?.error ||
+                    data?.error ||
                     "Não foi possível iniciar a conexão com o Mercado Pago."
                 );
             }
 
-            window.location.href = response.authorization_url;
+            window.location.href = data.authorization_url;
 
         } catch (error) {
             console.error(
