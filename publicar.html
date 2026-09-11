@@ -829,49 +829,290 @@
 
 
     /*
-     * Por enquanto o formulário ainda não envia
-     * a obra para o servidor.
-     *
-     * A próxima etapa conectará este botão
-     * ao sistema da Zavyn.
+     * PUBLICAÇÃO REAL
+     * Envia os dados e os arquivos para o Worker da Zavyn.
      */
 
     publishForm.addEventListener(
       "submit",
-      event => {
+      async event => {
 
         event.preventDefault();
-
-        const selectedGenres =
-          Array.from(
-            document.querySelectorAll(
-              'input[name="genres"]:checked'
-            )
-          );
-
-
-        if (selectedGenres.length === 0) {
-
-          alert(
-            "Selecione pelo menos um gênero para a obra."
-          );
-
-          return;
-
-        }
-
 
         const message =
           document.getElementById(
             "publishBookMessage"
           );
 
+        const button =
+          document.getElementById(
+            "publishBookSubmit"
+          );
+
+        const title =
+          document.getElementById(
+            "bookTitle"
+          ).value.trim();
+
+        const description =
+          document.getElementById(
+            "bookDescription"
+          ).value.trim();
+
+        const ageRating =
+          document.getElementById(
+            "bookAgeRating"
+          ).value;
+
+        const bookType =
+          document.querySelector(
+            'input[name="bookType"]:checked'
+          )?.value || "paid";
+
+        const priceInput =
+          document.getElementById(
+            "bookPrice"
+          );
+
+        const coverInput =
+          document.getElementById(
+            "bookCover"
+          );
+
+        const bookFileInput =
+          document.getElementById(
+            "bookFile"
+          );
+
+        const selectedGenres =
+          Array.from(
+            document.querySelectorAll(
+              'input[name="genres"]:checked'
+            )
+          ).map(
+            checkbox => checkbox.value
+          );
+
+        if (!title) {
+          message.textContent =
+            "Informe o título da obra.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        if (!description) {
+          message.textContent =
+            "Informe a descrição da obra.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        if (selectedGenres.length === 0) {
+          message.textContent =
+            "Selecione pelo menos um gênero.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        if (!ageRating) {
+          message.textContent =
+            "Selecione a classificação indicativa.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        if (
+          !coverInput.files ||
+          !coverInput.files[0]
+        ) {
+          message.textContent =
+            "Selecione a capa do livro.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        if (
+          !bookFileInput.files ||
+          !bookFileInput.files[0]
+        ) {
+          message.textContent =
+            "Selecione o arquivo do livro.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        const coverFile =
+          coverInput.files[0];
+
+        const bookFile =
+          bookFileInput.files[0];
+
+        if (
+          !/^image\/(jpeg|png|webp)$/.test(
+            coverFile.type
+          )
+        ) {
+          message.textContent =
+            "A capa deve estar em JPG, PNG ou WebP.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        if (
+          !(
+            bookFile.type === "application/pdf" ||
+            bookFile.type === "application/epub+zip" ||
+            /\.epub$/i.test(bookFile.name)
+          )
+        ) {
+          message.textContent =
+            "O livro deve estar em PDF ou EPUB.";
+          message.style.color =
+            "#ff8a8a";
+          return;
+        }
+
+        let price = "0";
+
+        if (bookType === "paid") {
+
+          price =
+            String(
+              priceInput.value || ""
+            ).trim();
+
+          if (
+            !price ||
+            Number(price) <= 0
+          ) {
+            message.textContent =
+              "Informe um preço válido para o livro pago.";
+            message.style.color =
+              "#ff8a8a";
+            return;
+          }
+        }
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          "title",
+          title
+        );
+
+        formData.append(
+          "description",
+          description
+        );
+
+        /*
+         * O formulário permite até 3 gêneros.
+         * O Worker recebe todos em um único campo.
+         */
+        formData.append(
+          "genre",
+          selectedGenres.join(", ")
+        );
+
+        formData.append(
+          "ageRating",
+          ageRating
+        );
+
+        formData.append(
+          "bookType",
+          bookType
+        );
+
+        formData.append(
+          "price",
+          price
+        );
+
+        formData.append(
+          "cover",
+          coverFile,
+          coverFile.name
+        );
+
+        formData.append(
+          "bookFile",
+          bookFile,
+          bookFile.name
+        );
+
+        const originalText =
+          button.textContent;
+
+        button.disabled = true;
+        button.textContent =
+          "PUBLICANDO...";
 
         message.textContent =
-          "Informações preenchidas. A publicação será conectada ao sistema da Zavyn na próxima etapa.";
-
+          "Enviando sua obra para a Zavyn...";
         message.style.color =
           "#d8b85a";
+
+        try {
+
+          const {
+            response,
+            data
+          } =
+            await zavynAuthRequest(
+              "/publish-book",
+              {
+                method: "POST",
+                body: formData
+              }
+            );
+
+          if (
+            !response.ok ||
+            !data.ok
+          ) {
+            throw new Error(
+              data.error ||
+              "Não foi possível publicar o livro."
+            );
+          }
+
+          publishForm.reset();
+          updateBookPriceMode();
+
+          message.textContent =
+            data.book &&
+            data.book.title
+              ? `“${data.book.title}” foi publicado com sucesso na Zavyn!`
+              : "Livro publicado com sucesso na Zavyn!";
+
+          message.style.color =
+            "#7ee787";
+
+        } catch (error) {
+
+          message.textContent =
+            error.message ||
+            "Erro ao publicar o livro.";
+
+          message.style.color =
+            "#ff8a8a";
+
+        } finally {
+
+          button.disabled = false;
+          button.textContent =
+            originalText;
+
+        }
 
       }
     );
