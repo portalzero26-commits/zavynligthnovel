@@ -550,6 +550,35 @@ function ensureBookSearchModal(){
     );
 
   if(modal){
+
+    const closeBtn=
+      document.getElementById(
+        "closeBookSearchBtn"
+      );
+
+    const backdrop=
+      document.getElementById(
+        "closeBookSearchBackdrop"
+      );
+
+    if(closeBtn && !closeBtn.dataset.bound){
+      closeBtn.addEventListener(
+        "click",
+        closeBookSearchModal
+      );
+
+      closeBtn.dataset.bound="true";
+    }
+
+    if(backdrop && !backdrop.dataset.bound){
+      backdrop.addEventListener(
+        "click",
+        closeBookSearchModal
+      );
+
+      backdrop.dataset.bound="true";
+    }
+
     return modal;
   }
 
