@@ -1777,7 +1777,12 @@
     </section>
 
 
-    <div id="userSearchModal" class="user-search-modal" aria-hidden="true">
+    <!-- IMPORTANTE:
+         ESTE ERA O MODAL DUPLICADO.
+         AGORA ELE É bookModal.
+    -->
+
+    <div id="bookModal" class="user-search-modal" aria-hidden="true">
 
       <img id="modalCover">
 
@@ -1818,35 +1823,45 @@
       <div id="closeCartBackdrop"></div>
 
     </div>
+        <div
+      id="userSearchModal"
+      aria-hidden="true"
+    >
+
+      <button id="closeUserSearchBtn">
+        Fechar
+      </button>
+
+      <div id="closeUserSearchBackdrop"></div>
+
+      <input
+        id="userSearchModalInput"
+      >
+
+      <div id="userSearchResults"></div>
+
+    </div>
+
+
     <div
-  id="userSearchModal"
-  aria-hidden="true"
->
+      id="publicProfileModal"
+      class="public-profile-modal"
+      aria-hidden="true"
+    >
 
-  <button id="closeUserSearchBtn">
-    Fechar
-  </button>
+      <button id="closePublicProfileBtn">
+        Fechar
+      </button>
 
-  <div id="closeUserSearchBackdrop"></div>
+      <div id="closePublicProfileBackdrop"></div>
 
-  <input
-    id="userSearchModalInput"
-  >
+      <div id="publicProfileContent"></div>
 
-  <div id="userSearchResults"></div>
+    </div>
 
-</div>
-<div id="publicProfileModal" class="public-profile-modal" aria-hidden="true">
+  </div>
 
-  <button id="closePublicProfileBtn">
-    Fechar
-  </button>
 
-  <div id="closePublicProfileBackdrop"></div>
-
-  <div id="publicProfileContent"></div>
-
-</div>
   <!-- ===================================================
        FOOTER
   ==================================================== -->
@@ -1883,6 +1898,7 @@
 <script src="script.js"></script>
 
 <script src="auth.js"></script>
+
 <script>
 
 async function loadCommunityBooks() {
@@ -1916,6 +1932,7 @@ async function loadCommunityBooks() {
       return;
     }
 
+
     container.innerHTML = data.books.map(book => {
 
       const price =
@@ -1929,7 +1946,9 @@ async function loadCommunityBooks() {
               }
             );
 
+
       return `
+
         <article class="community-book-card">
 
           <img
@@ -1975,9 +1994,11 @@ async function loadCommunityBooks() {
           </div>
 
         </article>
+
       `;
 
     }).join("");
+
 
   } catch (error) {
 
@@ -1986,11 +2007,19 @@ async function loadCommunityBooks() {
       error
     );
 
+
     container.innerHTML = `
+
       <div class="community-books-loading">
+
         <span>⚠️</span>
-        <p>Não foi possível carregar os livros.</p>
+
+        <p>
+          Não foi possível carregar os livros.
+        </p>
+
       </div>
+
     `;
 
   }
@@ -2001,10 +2030,15 @@ async function loadCommunityBooks() {
 function escapeCommunityText(value) {
 
   return String(value ?? "")
+
     .replace(/&/g, "&amp;")
+
     .replace(/</g, "&lt;")
+
     .replace(/>/g, "&gt;")
+
     .replace(/"/g, "&quot;")
+
     .replace(/'/g, "&#039;");
 
 }
@@ -2022,6 +2056,7 @@ function communityBookComingSoon() {
 loadCommunityBooks();
 
 </script>
+
 
 </body>
 
