@@ -529,29 +529,239 @@
        LIVROS
     ===================================================== */
 
-    .books-placeholder {
+   .community-books-grid {
 
-      min-height: 220px;
+  display: grid;
 
-      display: flex;
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
 
-      align-items: center;
+  gap: 18px;
 
-      justify-content: center;
+}
 
-      text-align: center;
 
-      padding: 30px;
+.community-books-loading {
 
-      border:
-        1px dashed
-        rgba(255,255,255,.12);
+  min-height: 220px;
 
-      border-radius: 18px;
+  grid-column: 1 / -1;
 
-      color: #777;
+  display: flex;
 
-    }
+  align-items: center;
+
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+
+  padding: 30px;
+
+  border:
+    1px dashed
+    rgba(255,255,255,.12);
+
+  border-radius: 18px;
+
+  color: #777;
+
+}
+
+
+.community-books-loading span {
+
+  font-size: 2rem;
+
+  margin-bottom: 10px;
+
+}
+
+
+.community-books-loading p {
+
+  margin: 0;
+
+  font-size: .85rem;
+
+}
+
+
+.community-book-card {
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.025);
+
+  transition:
+    transform .2s,
+    border-color .2s;
+
+}
+
+
+.community-book-card:hover {
+
+  transform: translateY(-5px);
+
+  border-color:
+    rgba(216,184,90,.35);
+
+}
+
+
+.community-book-cover {
+
+  width: 100%;
+
+  aspect-ratio: 2 / 3;
+
+  object-fit: cover;
+
+  display: block;
+
+  background: #15151a;
+
+}
+
+
+.community-book-info {
+
+  padding: 16px;
+
+}
+
+
+.community-book-info h3 {
+
+  margin: 0 0 6px;
+
+  font-size: 1rem;
+
+}
+
+
+.community-book-author {
+
+  margin: 0 0 10px;
+
+  color: #d8b85a;
+
+  font-size: .75rem;
+
+}
+
+
+.community-book-description {
+
+  margin: 0;
+
+  color: #888;
+
+  font-size: .78rem;
+
+  line-height: 1.5;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+.community-book-bottom {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-top: 15px;
+
+}
+
+
+.community-book-price {
+
+  color: #fff;
+
+  font-weight: 800;
+
+  font-size: .9rem;
+
+}
+
+
+.community-book-button {
+
+  border: 0;
+
+  border-radius: 8px;
+
+  padding: 9px 12px;
+
+  background: #d8b85a;
+
+  color: #101010;
+
+  font-size: .7rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+}
+
+
+.community-book-button:hover {
+
+  filter: brightness(1.08);
+
+}
+
+
+@media (max-width: 850px) {
+
+  .community-books-grid {
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .community-books-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
 
 
     /* =====================================================
