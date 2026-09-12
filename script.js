@@ -940,7 +940,7 @@ async function searchCommunityBooks(
 
     const response=
       await fetch(
-        `${ZAVYN_API_URL}/books/latest?limit=50`
+       `${ZAVYN_API_URL}/books/search?q=${encodeURIComponent(q)}`
       );
 
 
