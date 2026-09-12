@@ -961,6 +961,170 @@
 
 
     /* =====================================================
+       BUSCA DE LIVROS E AUTORES
+    ===================================================== */
+
+    .book-search-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .book-search-modal[aria-hidden="false"] {
+      display: flex;
+    }
+
+    .book-search-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+    }
+
+    .book-search-panel {
+      position: relative;
+      z-index: 2;
+      width: min(760px, 100%);
+      max-height: min(760px, calc(100vh - 48px));
+      overflow: auto;
+      box-sizing: border-box;
+      padding: 24px;
+      border: 1px solid rgba(216,184,90,.22);
+      border-radius: 20px;
+      background: #111116;
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+    }
+
+    .book-search-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,.05);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .book-search-header {
+      padding-right: 80px;
+      margin-bottom: 18px;
+    }
+
+    .book-search-header strong {
+      display: block;
+      color: #d8b85a;
+      font-size: 1.2rem;
+    }
+
+    .book-search-header span {
+      display: block;
+      margin-top: 6px;
+      color: #888;
+      font-size: .82rem;
+    }
+
+    .book-search-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 15px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      outline: none;
+      background: #0b0b0f;
+      color: #fff;
+      font-size: .95rem;
+    }
+
+    .book-search-input:focus {
+      border-color: rgba(216,184,90,.55);
+    }
+
+    .book-search-results {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .book-search-result {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+      cursor: pointer;
+    }
+
+    .book-search-result:hover {
+      border-color: rgba(216,184,90,.35);
+    }
+
+    .book-search-result img {
+      width: 64px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 7px;
+      background: #19191f;
+    }
+
+    .book-search-result h3 {
+      margin: 0 0 5px;
+      font-size: .95rem;
+    }
+
+    .book-search-result p {
+      margin: 0;
+      color: #888;
+      font-size: .76rem;
+      line-height: 1.45;
+    }
+
+    .book-search-result-price {
+      color: #d8b85a;
+      font-weight: 800;
+      font-size: .8rem;
+      white-space: nowrap;
+    }
+
+    .book-search-empty {
+      padding: 30px 15px;
+      text-align: center;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      .book-search-modal {
+        padding: 12px;
+      }
+
+      .book-search-panel {
+        padding: 18px;
+        max-height: calc(100vh - 24px);
+      }
+
+      .book-search-result {
+        grid-template-columns: 52px 1fr;
+      }
+
+      .book-search-result img {
+        width: 52px;
+        height: 76px;
+      }
+
+      .book-search-result-price {
+        grid-column: 2;
+      }
+    }
+
+
+    /* =====================================================
        RESPONSIVO
     ===================================================== */
 
@@ -1107,7 +1271,7 @@
 
       <label
         class="search-box"
-        aria-label="Buscar usuários"
+        aria-label="Buscar livros ou autores"
       >
 
         <span>⌕</span>
@@ -1115,7 +1279,7 @@
         <input
           id="bookSearch"
           type="search"
-          placeholder="Buscar usuários..."
+          placeholder="Buscar livros ou autores..."
           autocomplete="off"
         >
 
@@ -1528,14 +1692,14 @@
 
 
    <div
-  class="community-books-grid"
-  id="communityBooks"
->
-  <div class="community-books-loading">
-    <span>📚</span>
-    <p>Carregando livros da comunidade...</p>
-  </div>
-</div>
+   class="community-books-grid"
+   id="communityBooks"
+   >
+     <div class="community-books-loading">
+       <span>📚</span>
+       <p>Carregando livros da comunidade...</p>
+     </div>
+   </div>
 
 
   </section>
@@ -1590,6 +1754,7 @@
         >
           EXPLORAR AUTORES
         </a>
+
 
       </div>
 
@@ -1735,8 +1900,10 @@
           type="email"
         >
 
-        <div class="payment-option selected"
-             data-payment="pix">
+        <div
+          class="payment-option selected"
+          data-payment="pix"
+        >
         </div>
 
         <div
@@ -1782,7 +1949,11 @@
          AGORA ELE É bookModal.
     -->
 
-    <div id="bookModal" class="user-search-modal" aria-hidden="true">
+    <div
+      id="bookModal"
+      class="user-search-modal"
+      aria-hidden="true"
+    >
 
       <img id="modalCover">
 
@@ -1823,39 +1994,69 @@
       <div id="closeCartBackdrop"></div>
 
     </div>
-        <div
-      id="userSearchModal"
-      aria-hidden="true"
-    >
+        </div>
+  </div>
 
-      <button id="closeUserSearchBtn">
-        Fechar
-      </button>
 
-      <div id="closeUserSearchBackdrop"></div>
+  <!-- ===================================================
+       BUSCA DE LIVROS E AUTORES
+  ==================================================== -->
 
-      <input
-        id="userSearchModalInput"
-      >
+  <div
+    id="bookSearchModal"
+    class="book-search-modal"
+    aria-hidden="true"
+  >
 
-      <div id="userSearchResults"></div>
-
-    </div>
+    <div
+      class="book-search-backdrop"
+      id="bookSearchBackdrop"
+    ></div>
 
 
     <div
-      id="publicProfileModal"
-      class="public-profile-modal"
-      aria-hidden="true"
+      class="book-search-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="bookSearchTitle"
     >
 
-      <button id="closePublicProfileBtn">
+      <button
+        type="button"
+        class="book-search-close"
+        id="closeBookSearchBtn"
+        aria-label="Fechar busca"
+      >
         Fechar
       </button>
 
-      <div id="closePublicProfileBackdrop"></div>
 
-      <div id="publicProfileContent"></div>
+      <div class="book-search-header">
+
+        <strong id="bookSearchTitle">
+          Buscar na Zavyn
+        </strong>
+
+        <span>
+          Encontre livros e autores da comunidade.
+        </span>
+
+      </div>
+
+
+      <input
+        id="bookSearchModalInput"
+        class="book-search-input"
+        type="search"
+        placeholder="Digite o nome do livro, autor ou gênero..."
+        autocomplete="off"
+      >
+
+
+      <div
+        id="bookSearchResults"
+        class="book-search-results"
+      ></div>
 
     </div>
 
@@ -1873,9 +2074,11 @@
       alt="Zavyn"
     >
 
+
     <p>
       Histórias que levam você a novos mundos.
     </p>
+
 
     <a
       href="mailto:Zavynsuporte@gmail.com"
@@ -1883,7 +2086,9 @@
       Suporte: Zavynsuporte@gmail.com
     </a>
 
+
     <br><br>
+
 
     <small>
       © 2026 Zavyn. Todos os direitos reservados.
@@ -1899,6 +2104,7 @@
 
 <script src="auth.js"></script>
 
+
 <script>
 
 async function loadCommunityBooks() {
@@ -1908,13 +2114,16 @@ async function loadCommunityBooks() {
 
   if (!container) return;
 
+
   try {
 
     const response = await fetch(
       "https://zavyn-api.portalzero26.workers.dev/books/latest?limit=8"
     );
 
+
     const data = await response.json();
+
 
     if (
       !data.ok ||
@@ -1930,14 +2139,18 @@ async function loadCommunityBooks() {
       `;
 
       return;
+
     }
 
 
     container.innerHTML = data.books.map(book => {
 
+
       const price =
         Number(book.price || 0) === 0
+
           ? "GRÁTIS"
+
           : Number(book.price).toLocaleString(
               "pt-BR",
               {
@@ -1951,35 +2164,47 @@ async function loadCommunityBooks() {
 
         <article class="community-book-card">
 
+
           <img
             class="community-book-cover"
             src="${book.cover_url || ""}"
             alt="${escapeCommunityText(book.title)}"
           >
 
+
           <div class="community-book-info">
+
 
             <h3>
               ${escapeCommunityText(book.title)}
             </h3>
 
+
             <p class="community-book-author">
+
               por ${escapeCommunityText(
                 book.author?.name || "Autor"
               )}
+
             </p>
 
+
             <p class="community-book-description">
+
               ${escapeCommunityText(
                 book.description || "Sem descrição."
               )}
+
             </p>
 
+
             <div class="community-book-bottom">
+
 
               <span class="community-book-price">
                 ${price}
               </span>
+
 
               <button
                 class="community-book-button"
@@ -1989,9 +2214,12 @@ async function loadCommunityBooks() {
                 VER LIVRO
               </button>
 
+
             </div>
 
+
           </div>
+
 
         </article>
 
@@ -2001,6 +2229,7 @@ async function loadCommunityBooks() {
 
 
   } catch (error) {
+
 
     console.error(
       "Erro ao carregar livros da comunidade:",
