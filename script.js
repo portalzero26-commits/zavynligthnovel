@@ -95,7 +95,7 @@ function openCheckout(){
 }
 
 document.getElementById("drawerCheckoutBtn").onclick=openCheckout;
-document.getElementById("checkoutBtn").onclick=openCheckout;
+document.getElementById("checkoutBtn")?.addEventListener("click",openCheckout);
 
 renderBooks();renderCart();
 
