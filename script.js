@@ -635,14 +635,18 @@ function ensureBookSearchModal(){
     modal
   );
 
-  document
-    .getElementById(
-      "closeBookSearchBtn"
-    )
-    ?.addEventListener(
-      "click",
-      closeBookSearchModal
-    );
+const searchBackdrop =
+  document.getElementById(
+    "bookSearchBackdrop"
+  ) ||
+  document.getElementById(
+    "closeBookSearchBackdrop"
+  );
+
+searchBackdrop?.addEventListener(
+  "click",
+  closeBookSearchModal
+);
 
   document
     .getElementById(
