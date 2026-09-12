@@ -557,9 +557,12 @@ function ensureBookSearchModal(){
       );
 
     const backdrop=
-      document.getElementById(
-        "closeBookSearchBackdrop"
-      );
+  document.getElementById(
+    "bookSearchBackdrop"
+  ) ||
+  document.getElementById(
+    "closeBookSearchBackdrop"
+  );
 
     if(closeBtn && !closeBtn.dataset.bound){
       closeBtn.addEventListener(
