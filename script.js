@@ -903,16 +903,13 @@ function renderBookSearchResults(
 /* =========================================================
    PESQUISAR LIVROS
 ========================================================= */
-
 async function searchCommunityBooks(
   query
 ){
-
   const q=
     String(
       query||""
     ).trim();
-
 
   const results=
     document.getElementById(
@@ -921,53 +918,98 @@ async function searchCommunityBooks(
 
   if(!results)return;
 
-
   if(q.length<2){
-
     results.innerHTML=
       '<p class="user-search-empty">Digite pelo menos 2 caracteres.</p>';
-
     return;
-
   }
-
 
   results.innerHTML=
     '<p class="user-search-loading">Procurando livros...</p>';
-
 
   try{
 
     const response=
       await fetch(
-       `${ZAVYN_API_URL}/books/search?q=${encodeURIComponent(q)}`
+        `${ZAVYN_API_URL}/books/search?q=${encodeURIComponent(q)}`
       );
-
 
     const data=
       await response.json();
-
 
     if(
       !response.ok||
       !data.ok
     ){
-
       throw new Error(
         data.error||
         "Não foi possível buscar os livros."
       );
-
     }
-
 
     const normalized=
       q.toLocaleLowerCase(
         "pt-BR"
       );
 
+    /* =========================================
+       LIVROS ANTIGOS DA ZAVYN
+    ========================================= */
 
-    const filtered=
+    const legacyBooks=
+      books
+        .filter(book=>{
+
+          const title=
+            String(
+              book.title||""
+            ).toLocaleLowerCase(
+              "pt-BR"
+            );
+
+          const description=
+            String(
+              book.description||""
+            ).toLocaleLowerCase(
+              "pt-BR"
+            );
+
+          return(
+            title.includes(
+              normalized
+            )
+            ||
+            description.includes(
+              normalized
+            )
+          );
+
+        })
+        .map(book=>({
+
+          ...book,
+
+          id:
+            `legacy-${book.n}`,
+
+          cover_url:
+            book.image||"",
+
+          author:{
+            name:"Zavyn",
+            username:"zavyn"
+          },
+
+          isLegacy:true
+
+        }));
+
+
+    /* =========================================
+       LIVROS DOS AUTORES
+    ========================================= */
+
+    const communityBooks=
       (
         Array.isArray(
           data.books
@@ -975,98 +1017,44 @@ async function searchCommunityBooks(
           ? data.books
           : []
       )
-      .filter(book=>{
+      .map(book=>({
 
-        const title=
-          String(
-            book.title||""
-          )
-          .toLocaleLowerCase(
-            "pt-BR"
-          );
+        ...book,
+
+        isLegacy:false
+
+      }));
 
 
-        const author=
-          String(
-            book.author?.name||""
-          )
-          .toLocaleLowerCase(
-            "pt-BR"
-          );
+    /* =========================================
+       JUNTA OS DOIS CATÁLOGOS
+    ========================================= */
 
-
-        const username=
-          String(
-            book.author?.username||""
-          )
-          .toLocaleLowerCase(
-            "pt-BR"
-          );
-
-
-        const genre=
-          String(
-            book.genre||""
-          )
-          .toLocaleLowerCase(
-            "pt-BR"
-          );
-
-
-        return(
-
-          title.includes(
-            normalized
-          )
-
-          ||
-
-          author.includes(
-            normalized
-          )
-
-          ||
-
-          username.includes(
-            normalized
-          )
-
-          ||
-
-          genre.includes(
-            normalized
-          )
-
-        );
-
-      });
+    const allBooks=[
+      ...legacyBooks,
+      ...communityBooks
+    ];
 
 
     renderBookSearchResults(
-      filtered,
+      allBooks,
       q
     );
-
 
   }catch(error){
 
     results.innerHTML=`
-
       <p
         class="user-search-empty error"
       >
-
         ${escapeBookSearchText(
           error.message||
           "Erro ao buscar livros."
         )}
-
       </p>
-
     `;
 
   }
-
 }
 
 
