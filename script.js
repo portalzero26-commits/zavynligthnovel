@@ -362,15 +362,15 @@ function renderCart(){
 function openCart(){
 
   const d=
-   document.getElementById(
-    "cartDrawer"
-   );
+    document.getElementById(
+     "cartDrawer"
+    );
 
   d.classList.add("open");
 
   d.setAttribute(
-   "aria-hidden",
-   "false"
+    "aria-hidden",
+    "false"
   );
 
 }
@@ -379,17 +379,17 @@ function openCart(){
 function closeCart(){
 
   const d=
-   document.getElementById(
-    "cartDrawer"
-   );
+    document.getElementById(
+     "cartDrawer"
+    );
 
   if(!d)return;
 
   d.classList.remove("open");
 
   d.setAttribute(
-   "aria-hidden",
-   "true"
+    "aria-hidden",
+    "true"
   );
 
 }
@@ -399,11 +399,9 @@ document.getElementById(
  "openCartBtn"
 ).onclick=openCart;
 
-
 document.getElementById(
  "closeCartBtn"
 ).onclick=closeCart;
-
 
 document.getElementById(
  "closeCartBackdrop"
@@ -413,11 +411,9 @@ document.getElementById(
 function openCheckout(){
 
   if(!cart.length){
-
     alert(
       "Adicione pelo menos um livro ao carrinho."
     );
-
     return;
   }
 
@@ -445,16 +441,13 @@ document.getElementById(
  "drawerCheckoutBtn"
 ).onclick=openCheckout;
 
-
 document.getElementById(
  "checkoutBtn"
 )?.addEventListener(
  "click",
  openCheckout
 );
-/* =========================================================
-   INICIALIZAÇÃO
-========================================================= */
+
 
 renderBooks();
 
@@ -462,7 +455,6 @@ renderCart();
 
 const searchInput=
   document.getElementById("bookSearch");
-
 
 let communitySearchTimer=null;
 
@@ -564,39 +556,33 @@ function ensureBookSearchModal(){
       );
 
     const backdrop=
-      document.getElementById(
-        "bookSearchBackdrop"
-      ) ||
-      document.getElementById(
-        "closeBookSearchBackdrop"
-      );
+  document.getElementById(
+    "bookSearchBackdrop"
+  ) ||
+  document.getElementById(
+    "closeBookSearchBackdrop"
+  );
 
     if(closeBtn && !closeBtn.dataset.bound){
-
       closeBtn.addEventListener(
         "click",
         closeBookSearchModal
       );
 
       closeBtn.dataset.bound="true";
-
     }
 
     if(backdrop && !backdrop.dataset.bound){
-
       backdrop.addEventListener(
         "click",
         closeBookSearchModal
       );
 
       backdrop.dataset.bound="true";
-
     }
 
     return modal;
-
   }
-
 
   modal=
     document.createElement("div");
@@ -648,21 +634,18 @@ function ensureBookSearchModal(){
     modal
   );
 
-
-  const searchBackdrop =
-    document.getElementById(
-      "bookSearchBackdrop"
-    ) ||
-    document.getElementById(
-      "closeBookSearchBackdrop"
-    );
-
-
-  searchBackdrop?.addEventListener(
-    "click",
-    closeBookSearchModal
+const searchBackdrop =
+  document.getElementById(
+    "bookSearchBackdrop"
+  ) ||
+  document.getElementById(
+    "closeBookSearchBackdrop"
   );
 
+searchBackdrop?.addEventListener(
+  "click",
+  closeBookSearchModal
+);
 
   document
     .getElementById(
@@ -673,12 +656,10 @@ function ensureBookSearchModal(){
       closeBookSearchModal
     );
 
-
   const modalInput=
     document.getElementById(
       "bookSearchModalInput"
     );
-
 
   modalInput?.addEventListener(
     "input",
@@ -697,7 +678,6 @@ function ensureBookSearchModal(){
 
     }
   );
-
 
   return modal;
 
@@ -758,13 +738,11 @@ function renderBookSearchResults(
 
   if(!results)return;
 
-
   if(!books.length){
 
     results.innerHTML=`
 
       <p class="user-search-empty">
-
         Nenhum livro encontrado para
 
         <strong>
@@ -776,7 +754,6 @@ function renderBookSearchResults(
     `;
 
     return;
-
   }
 
 
@@ -829,7 +806,6 @@ function renderBookSearchResults(
                 <span
                   class="user-result-avatar"
                 >
-
                   ${escapeBookSearchText(
                     String(
                       book.title||"L"
@@ -838,7 +814,6 @@ function renderBookSearchResults(
                     .charAt(0)
                     .toUpperCase()
                   )}
-
                 </span>
 
               `
@@ -855,7 +830,6 @@ function renderBookSearchResults(
               )}
             </strong>
 
-
             <small>
               por
               ${escapeBookSearchText(
@@ -863,7 +837,6 @@ function renderBookSearchResults(
                 "Autor"
               )}
             </small>
-
 
             <small>
               ${price}
@@ -908,61 +881,18 @@ function renderBookSearchResults(
             );
 
 
-          if(book){
-
-            if(book.isLegacy){
-
-              openBookModal(
-                book.n
-              );
-
-            }else{
-
-              showCommunityBookDetails(
-                book
-              );
-
-            }
-
-          }
+         if(book){
+  if(book.isLegacy){
+    openBookModal(book.n);
+  }else{
+    showCommunityBookDetails(book);
+  }
+ }
 
         }
       );
 
     });
-
-}
-  searchInput.addEventListener(
-    "input",
-    e=>{
-
-      if(
-        document
-          .getElementById(
-            "bookSearchModal"
-          )
-      ){
-
-        const modalInput=
-          document.getElementById(
-            "bookSearchModalInput"
-          );
-
-        if(modalInput){
-
-          modalInput.value=
-            e.target.value;
-
-        }
-
-      }
-
-      scheduleBookSearch(
-        e.target.value
-      );
-
-    }
-  );
 
 }
 
@@ -987,34 +917,25 @@ async function searchCommunityBooks(
 
   if(!results)return;
 
-
   if(q.length<2){
 
     results.innerHTML=
       '<p class="user-search-empty">Digite pelo menos 2 caracteres.</p>';
 
     return;
-
   }
-
 
   results.innerHTML=
     '<p class="user-search-loading">Procurando livros...</p>';
-
 
   const normalizeSearchText=value=>
     String(value||"")
       .toLocaleLowerCase("pt-BR")
       .normalize("NFD")
-      .replace(
-        /[\u0300-\u036f]/g,
-        ""
-      );
-
+      .replace(/[\u0300-\u036f]/g,"");
 
   const normalized=
     normalizeSearchText(q);
-
 
   /* =========================================
      LIVROS ANTIGOS DA ZAVYN
@@ -1078,10 +999,8 @@ async function searchCommunityBooks(
         `${ZAVYN_API_URL}/books/search?q=${encodeURIComponent(q)}`
       );
 
-
     const data=
       await response.json();
-
 
     if(
       !response.ok||
@@ -1094,7 +1013,6 @@ async function searchCommunityBooks(
       );
 
     }
-
 
     communityBooks=
       (
@@ -1112,7 +1030,6 @@ async function searchCommunityBooks(
 
       }));
 
-
   }catch(error){
 
     /*
@@ -1122,9 +1039,7 @@ async function searchCommunityBooks(
     */
 
     if(!legacyBooks.length){
-
       throw error;
-
     }
 
   }
@@ -1203,14 +1118,11 @@ function showCommunityBookDetails(
       "div"
     );
 
-
   modal.id=
     "communityBookDetailsModal";
 
-
   modal.className=
     "book-search-modal";
-
 
   modal.setAttribute(
     "aria-hidden",
@@ -1301,7 +1213,6 @@ function showCommunityBookDetails(
 
         <p>
           por
-
           <strong>
             ${escapeBookSearchText(
               book.author?.name||
@@ -1335,6 +1246,7 @@ function showCommunityBookDetails(
 
       </div>
 
+
     </section>
 
   `;
@@ -1351,13 +1263,10 @@ function showCommunityBookDetails(
 
 
   const close=()=>{
-
     modal.remove();
-
     document.body.classList.remove(
       "modal-open"
     );
-
   };
 
 
@@ -1388,34 +1297,74 @@ function showCommunityBookDetails(
     ?.addEventListener(
       "click",
       ()=>{
-
         alert(
           "A página individual e a compra deste livro serão conectadas na próxima etapa."
         );
-
       }
     );
 
 }
+
+
+/* =========================================================
+   CAMPO DE BUSCA DO CABEÇALHO
+========================================================= */
+
+if(searchInput){
+
+  searchInput.readOnly=
+    false;
+
+
+  searchInput.placeholder=
+    "Buscar livros ou autores...";
+
+
+  searchInput.addEventListener(
+    "focus",
+    openBookSearchModal
+  );
+
+
+  searchInput.addEventListener(
+    "click",
+    openBookSearchModal
+  );
+
+
   searchInput.addEventListener(
     "input",
     e=>{
 
-      const modalInput=
-        document.getElementById(
-          "bookSearchModalInput"
+      if(
+        document
+          .getElementById(
+            "bookSearchModal"
+          )
+          ?.classList.contains(
+            "open"
+          )
+      ){
+
+        const modalInput=
+          document.getElementById(
+            "bookSearchModalInput"
+          );
+
+
+        if(modalInput){
+
+          modalInput.value=
+            e.target.value;
+
+        }
+
+
+        scheduleBookSearch(
+          e.target.value
         );
 
-      if(modalInput){
-
-        modalInput.value=
-          e.target.value;
-
       }
-
-      scheduleBookSearch(
-        e.target.value
-      );
 
     }
   );
@@ -1424,61 +1373,47 @@ function showCommunityBookDetails(
 
 
 /* =========================================================
-   FECHAR BUSCA COM ESC
+   ESC PARA FECHAR
 ========================================================= */
 
 document.addEventListener(
   "keydown",
   e=>{
 
-    if(
-      e.key==="Escape"
-    ){
-
-      closeBookSearchModal();
-
+    if(e.key!=="Escape"){
+      return;
     }
 
-  }
-);
 
-
-/* =========================================================
-   CLIQUE FORA DO PAINEL DE BUSCA
-========================================================= */
-
-document.addEventListener(
-  "click",
-  e=>{
-
-    const modal=
+    const details=
       document.getElementById(
-        "bookSearchModal"
+        "communityBookDetailsModal"
       );
 
-    if(!modal)return;
 
-    if(
-      !modal.classList.contains(
-        "open"
-      )
-    ){
+    if(details){
+
+      details.remove();
+
+      document.body.classList.remove(
+        "modal-open"
+      );
 
       return;
 
     }
 
-    const panel=
-      modal.querySelector(
-        ".book-search-panel"
+
+    const searchModal=
+      document.getElementById(
+        "bookSearchModal"
       );
 
-    const target=e.target;
 
     if(
-      panel &&
-      !panel.contains(target) &&
-      target!==searchInput
+      searchModal?.classList.contains(
+        "open"
+      )
     ){
 
       closeBookSearchModal();
@@ -1490,500 +1425,66 @@ document.addEventListener(
 
 
 /* =========================================================
-   NAVEGAÇÃO
+   CHECKOUT
 ========================================================= */
 
-const menuToggle=
-  document.getElementById(
-    "menuToggle"
-  );
+function renderCheckout(){
 
-const mobileMenu=
-  document.getElementById(
-    "mobileMenu"
-  );
-
-
-if(menuToggle){
-
-  menuToggle.addEventListener(
-    "click",
-    ()=>{
-
-      mobileMenu?.classList.toggle(
-        "open"
-      );
-
-    }
-  );
-
-}
-
-
-document
-  .querySelectorAll(
-    "[data-close-menu]"
-  )
-  .forEach(
-    link=>{
-
-      link.addEventListener(
-        "click",
-        ()=>{
-
-          mobileMenu?.classList.remove(
-            "open"
-          );
-
-        }
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   NEWSLETTER
-========================================================= */
-
-const newsletterForm=
-  document.getElementById(
-    "newsletterForm"
-  );
-
-
-if(newsletterForm){
-
-  newsletterForm.addEventListener(
-    "submit",
-    e=>{
-
-      e.preventDefault();
-
-      const email=
-        newsletterForm
-          .querySelector(
-            'input[type="email"]'
-          )?.value
-          ?.trim();
-
-
-      if(!email){
-
-        alert(
-          "Digite um e-mail válido."
-        );
-
-        return;
-
-      }
-
-
-      alert(
-        "Inscrição realizada com sucesso!"
-      );
-
-
-      newsletterForm.reset();
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   SCROLL SUAVE
-========================================================= */
-
-document
-  .querySelectorAll(
-    'a[href^="#"]'
-  )
-  .forEach(
-    link=>{
-
-      link.addEventListener(
-        "click",
-        e=>{
-
-          const targetId=
-            link.getAttribute(
-              "href"
-            );
-
-          if(
-            !targetId||
-            targetId==="#"
-          ){
-
-            return;
-
-          }
-
-
-          const target=
-            document.querySelector(
-              targetId
-            );
-
-
-          if(!target)return;
-
-
-          e.preventDefault();
-
-
-          target.scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-          });
-
-        }
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   MODAL DE LOGIN
-========================================================= */
-
-function openLoginModal(){
-
-  const modal=
+  const container=
     document.getElementById(
-      "loginModal"
+      "checkoutItems"
     );
 
-  if(!modal)return;
-
-  modal.classList.add(
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add(
-    "modal-open"
-  );
-
-}
+  if(!container)return;
 
 
-function closeLoginModal(){
+  container.innerHTML=
+    cart.length
 
-  const modal=
-    document.getElementById(
-      "loginModal"
-    );
+      ? cart.map(
+          b=>`
 
-  if(!modal)return;
+            <div
+              class="summary-item"
+            >
 
-  modal.classList.remove(
-    "open"
-  );
+              <span>
+                V${b.n} · ${b.title}
 
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+                <b>
+                  × ${b.qty}
+                </b>
 
-  document.body.classList.remove(
-    "modal-open"
-  );
+              </span>
 
-}
+              <strong>
+                ${money(
+                  b.price*b.qty
+                )}
+              </strong>
 
+            </div>
 
-document
-  .querySelectorAll(
-    "[data-open-login]"
-  )
-  .forEach(
-    button=>{
+          `
+        ).join("")
 
-      button.addEventListener(
-        "click",
-        openLoginModal
-      );
-
-    }
-  );
+      : '<p class="empty">Seu carrinho está vazio.</p>';
 
 
-document
-  .querySelectorAll(
-    "[data-close-login]"
-  )
-  .forEach(
-    button=>{
-
-      button.addEventListener(
-        "click",
-        closeLoginModal
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   FORMULÁRIO DE LOGIN
-========================================================= */
-
-const loginForm=
   document.getElementById(
-    "loginForm"
-  );
+    "checkoutSubtotal"
+  ).textContent=
+    money(cartTotal());
 
 
-if(loginForm){
-
-  loginForm.addEventListener(
-    "submit",
-    async e=>{
-
-      e.preventDefault();
-
-
-      const email=
-        loginForm
-          .querySelector(
-            '[name="email"]'
-          )
-          ?.value
-          ?.trim();
-
-
-      const password=
-        loginForm
-          .querySelector(
-            '[name="password"]'
-          )
-          ?.value||"";
-
-
-      if(!email||!password){
-
-        alert(
-          "Preencha todos os campos."
-        );
-
-        return;
-
-      }
-
-
-      try{
-
-        const response=
-          await fetch(
-            `${ZAVYN_API_URL}/auth/login`,
-            {
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:JSON.stringify({
-                email,
-                password
-              })
-            }
-          );
-
-
-        const data=
-          await response.json();
-
-
-        if(
-          !response.ok||
-          !data.ok
-        ){
-
-          throw new Error(
-            data.error||
-            "Não foi possível entrar."
-          );
-
-        }
-
-
-        if(data.token){
-
-          localStorage.setItem(
-            "zavynAuthToken",
-            data.token
-          );
-
-        }
-
-
-        alert(
-          "Login realizado com sucesso!"
-        );
-
-
-        closeLoginModal();
-
-
-        window.location.reload();
-
-
-      }catch(error){
-
-        alert(
-          error.message||
-          "Erro ao fazer login."
-        );
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   FORMULÁRIO DE CADASTRO
-========================================================= */
-
-const registerForm=
   document.getElementById(
-    "registerForm"
-  );
-
-
-if(registerForm){
-
-  registerForm.addEventListener(
-    "submit",
-    async e=>{
-
-      e.preventDefault();
-
-
-      const name=
-        registerForm
-          .querySelector(
-            '[name="name"]'
-          )
-          ?.value
-          ?.trim();
-
-
-      const username=
-        registerForm
-          .querySelector(
-            '[name="username"]'
-          )
-          ?.value
-          ?.trim();
-
-
-      const email=
-        registerForm
-          .querySelector(
-            '[name="email"]'
-          )
-          ?.value
-          ?.trim();
-
-
-      const password=
-        registerForm
-          .querySelector(
-            '[name="password"]'
-          )
-          ?.value||"";
-
-
-      if(
-        !name||
-        !username||
-        !email||
-        !password
-      ){
-
-        alert(
-          "Preencha todos os campos."
-        );
-
-        return;
-
-      }
-
-
-      try{
-
-        const response=
-          await fetch(
-            `${ZAVYN_API_URL}/auth/register`,
-            {
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:JSON.stringify({
-                name,
-                username,
-                email,
-                password
-              })
-            }
-          );
-
-
-        const data=
-          await response.json();
-
-
-        if(
-          !response.ok||
-          !data.ok
-        ){
-
-          throw new Error(
-            data.error||
-            "Não foi possível criar a conta."
-          );
-
-        }
-
-
-        alert(
-          "Conta criada com sucesso!"
-        );
-
-
-        registerForm.reset();
-
-
-      }catch(error){
-
-        alert(
-          error.message||
-          "Erro ao criar a conta."
-        );
-
-      }
-
-    }
-  );
+    "checkoutTotal"
+  ).textContent=
+    money(cartTotal());
 
 }
+
+
 /* =========================================================
    FORMA DE PAGAMENTO
 ========================================================= */
@@ -2003,16 +1504,15 @@ document
               ".payment-option"
             )
             .forEach(
-              option=>{
-                option.classList.remove(
-                  "active"
-                );
-              }
+              b=>
+                b.classList.remove(
+                  "selected"
+                )
             );
 
 
           btn.classList.add(
-            "active"
+            "selected"
           );
 
 
@@ -2021,33 +1521,20 @@ document
             "pix";
 
 
-          const pixArea=
+          const notice=
             document.getElementById(
-              "pixPaymentArea"
-            );
-
-          const cardArea=
-            document.getElementById(
-              "cardPaymentArea"
+              "paymentNotice"
             );
 
 
-          if(pixArea){
+          if(notice){
 
-            pixArea.style.display=
+            notice.textContent=
               selectedPayment==="pix"
-                ? ""
-                : "none";
 
-          }
+                ? "PIX conectado ao Mercado Pago. O pedido será criado com o valor calculado pela Zavyn."
 
-
-          if(cardArea){
-
-            cardArea.style.display=
-              selectedPayment==="card"
-                ? ""
-                : "none";
+                : "Cartão será conectado na próxima etapa. Nesta versão, use PIX para testar o pagamento.";
 
           }
 
@@ -2057,7 +1544,80 @@ document
 
 
 /* =========================================================
-   CRIAR PAGAMENTO PIX
+   RESULTADO DO PAGAMENTO
+========================================================= */
+
+function showPaymentResult(
+  html
+){
+
+  const box=
+    document.getElementById(
+      "paymentResult"
+    );
+
+
+  if(!box)return;
+
+
+  box.innerHTML=
+    html;
+
+
+  box.classList.add(
+    "visible"
+  );
+
+
+  box.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+}
+
+
+function closePaymentResult(){
+
+  const box=
+    document.getElementById(
+      "paymentResult"
+    );
+
+
+  if(box){
+
+    box.classList.remove(
+      "visible"
+    );
+
+    box.innerHTML="";
+
+  }
+
+
+  localStorage.removeItem(
+    "zavynCurrentOrderId"
+  );
+
+
+  localStorage.removeItem(
+    "zavynCurrentOrderExternalReference"
+  );
+
+
+  currentOrderId=
+    null;
+
+
+  currentOrderExternalReference=
+    null;
+
+}
+
+
+/* =========================================================
+   CRIAR PIX
 ========================================================= */
 
 async function createPixPayment(){
@@ -2065,7 +1625,7 @@ async function createPixPayment(){
   if(!cart.length){
 
     alert(
-      "Adicione pelo menos um livro ao carrinho."
+      "Seu carrinho está vazio."
     );
 
     return;
@@ -2073,39 +1633,72 @@ async function createPixPayment(){
   }
 
 
-  const button=
-    document.getElementById(
-      "payButton"
+  const name=
+    document
+      .getElementById(
+        "customerName"
+      )
+      .value
+      .trim();
+
+
+  const email=
+    document
+      .getElementById(
+        "customerEmail"
+      )
+      .value
+      .trim();
+
+
+  if(!name || !email){
+
+    alert(
+      "Preencha seu nome e seu e-mail."
     );
 
-
-  if(button){
-
-    button.disabled=true;
-
-    button.textContent=
-      "GERANDO PIX...";
+    return;
 
   }
 
 
+  if(
+    !/^\S+@\S+\.\S+$/.test(
+      email
+    )
+  ){
+
+    alert(
+      "Digite um e-mail válido."
+    );
+
+    return;
+
+  }
+
+
+  const submit=
+    document.querySelector(
+      ".checkout-submit"
+    );
+
+
+  const original=
+    submit.textContent;
+
+
+  submit.disabled=
+    true;
+
+
+  submit.textContent=
+    "CRIANDO PIX...";
+
+
+  closePaymentResult();
+
+
   try{
-
-    const token=
-      localStorage.getItem(
-        "zavynAuthToken"
-      );
-
-
-    const items=
-      cart.map(item=>({
-
-        volume:item.n,
-
-        quantity:item.qty
-
-      }));
-
 
     const response=
       await fetch(
@@ -2115,21 +1708,29 @@ async function createPixPayment(){
 
           headers:{
             "Content-Type":
-              "application/json",
-
-            ...(token
-              ? {
-                  Authorization:
-                    `Bearer ${token}`
-                }
-              : {})
+              "application/json"
           },
 
-          body:JSON.stringify({
-            items,
-            payment_method:"pix"
-          })
+          body:
+            JSON.stringify({
 
+              name,
+
+              email,
+
+              totalAmount:
+                cartTotal()
+                  .toFixed(2),
+
+              items:
+                cart.map(
+                  b=>({
+                    n:b.n,
+                    qty:b.qty
+                  })
+                )
+
+            })
         }
       );
 
@@ -2145,20 +1746,25 @@ async function createPixPayment(){
 
       throw new Error(
         data.error||
-        "Não foi possível gerar o pagamento."
+        "Não foi possível criar o PIX."
       );
 
     }
 
 
+    const order=
+      data.order||
+      {};
+
+
     currentOrderId=
-      data.order_id||
-      data.id||
+      order.id||
       null;
 
 
     currentOrderExternalReference=
-      data.external_reference||
+      order.external_reference||
+      data.externalReference||
       null;
 
 
@@ -2184,346 +1790,238 @@ async function createPixPayment(){
     }
 
 
-    const qrCode=
-      document.getElementById(
-        "pixQrCode"
-      );
+    const payment=
+      order.transactions
+        ?.payments?.[0]||
+      {};
 
 
-    const pixCode=
-      document.getElementById(
-        "pixCode"
-      );
+    const method=
+      payment.payment_method||
+      {};
 
 
-    const pixArea=
-      document.getElementById(
-        "pixPaymentArea"
-      );
+    const qr=
+      method.qr_code_base64||
+      "";
 
 
-    if(
-      qrCode&&
-      data.qr_code_base64
-    ){
-
-      qrCode.src=
-        data.qr_code_base64
-          .startsWith(
-            "data:"
-          )
-          ? data.qr_code_base64
-          : `data:image/png;base64,${data.qr_code_base64}`;
-
-    }
+    const code=
+      method.qr_code||
+      "";
 
 
-    if(
-      pixCode&&
-      data.qr_code
-    ){
-
-      pixCode.value=
-        data.qr_code;
-
-    }
+    const ticket=
+      method.ticket_url||
+      "";
 
 
-    if(pixArea){
+    showPaymentResult(`
 
-      pixArea.style.display="";
+      <div
+        class="payment-result-head"
+      >
 
-    }
+        <span
+          class="payment-status-dot"
+        ></span>
 
+        <div>
 
-    alert(
-      "PIX gerado com sucesso!"
-    );
+          <strong>
+            PIX criado com sucesso
+          </strong>
 
+          <small>
+            Pedido ${order.id||""}
+          </small>
 
-  }catch(error){
+        </div>
 
-    alert(
-      error.message||
-      "Erro ao gerar o PIX."
-    );
-
-
-  }finally{
-
-    if(button){
-
-      button.disabled=false;
-
-      button.textContent=
-        "PAGAR COM PIX";
-
-    }
-
-  }
-
-}
+      </div>
 
 
-/* =========================================================
-   COPIAR PIX
-========================================================= */
+      <p
+        class="payment-result-total"
+      >
 
-const copyPixBtn=
-  document.getElementById(
-    "copyPixBtn"
-  );
+        Total:
 
+        <strong>
+          ${money(
+            data.calculatedTotal||
+            cartTotal()
+          )}
+        </strong>
 
-if(copyPixBtn){
-
-  copyPixBtn.addEventListener(
-    "click",
-    async ()=>{
-
-      const pixCode=
-        document.getElementById(
-          "pixCode"
-        );
+      </p>
 
 
-      if(
-        !pixCode||
-        !pixCode.value
-      ){
+      ${
+        qr
 
-        alert(
-          "Código PIX ainda não disponível."
-        );
+          ? `
 
-        return;
+            <div
+              class="pix-qr-wrap"
+            >
 
+              <img
+                src="data:image/png;base64,${qr}"
+                alt="QR Code PIX para pagamento"
+              >
+
+            </div>
+
+          `
+
+          : ""
       }
 
 
-      try{
+      ${
+        code
 
-        await navigator.clipboard.writeText(
-          pixCode.value
-        );
+          ? `
+
+            <label
+              class="pix-code-label"
+            >
+
+              PIX copia e cola
+
+              <input
+                id="pixCode"
+                readonly
+                value="${code.replace(
+                  /"/g,
+                  "&quot;"
+                )}"
+              >
+
+            </label>
 
 
-        alert(
-          "Código PIX copiado!"
-        );
+            <button
+              type="button"
+              class="button secondary-action"
+              id="copyPixBtn"
+            >
+              COPIAR CÓDIGO PIX
+            </button>
 
+          `
 
-      }catch(error){
-
-        pixCode.select();
-
-        document.execCommand(
-          "copy"
-        );
-
-
-        alert(
-          "Código PIX copiado!"
-        );
-
+          : ""
       }
 
-    }
-  );
 
-}
+      <div
+        class="payment-result-actions"
+      >
 
-
-/* =========================================================
-   BOTÃO DE PAGAMENTO
-========================================================= */
-
-const payButton=
-  document.getElementById(
-    "payButton"
-  );
+        <button
+          type="button"
+          class="button"
+          id="checkPaymentBtn"
+        >
+          VERIFICAR PAGAMENTO
+        </button>
 
 
-if(payButton){
+        ${
+          ticket
 
-  payButton.addEventListener(
-    "click",
-    ()=>{
+            ? `
 
-      if(
-        selectedPayment==="pix"
-      ){
+              <a
+                class="payment-ticket"
+                href="${ticket}"
+                target="_blank"
+                rel="noopener"
+              >
+                ABRIR PIX
+              </a>
 
-        createPixPayment();
+            `
 
-      }else{
-
-        alert(
-          "O pagamento por cartão será disponibilizado em uma próxima etapa."
-        );
-
-      }
-
-    }
-  );
-
-}
+            : ""
+        }
 
 
-/* =========================================================
-   VERIFICAR PAGAMENTO
-========================================================= */
-
-async function checkCurrentPayment(){
-
-  if(
-    !currentOrderId&&
-    !currentOrderExternalReference
-  ){
-
-    alert(
-      "Nenhum pagamento em andamento."
-    );
-
-    return;
-
-  }
+      </div>
 
 
-  const checkBtn=
-    document.getElementById(
-      "checkPaymentBtn"
-    );
+      <p
+        class="payment-help"
+      >
+
+        Pagamento em ambiente de produção.
+
+        Após pagar o PIX, use
+        “VERIFICAR PAGAMENTO”
+        para confirmar a aprovação.
+
+      </p>
+
+    `);
 
 
-  if(checkBtn){
-
-    checkBtn.disabled=true;
-
-    checkBtn.textContent=
-      "VERIFICANDO...";
-
-  }
-
-
-  try{
-
-    const params=
-      new URLSearchParams();
-
-
-    if(currentOrderId){
-
-      params.set(
-        "order_id",
-        currentOrderId
+    const copyBtn=
+      document.getElementById(
+        "copyPixBtn"
       );
+
+
+    if(copyBtn){
+
+      copyBtn.onclick=
+        async()=>{
+
+          try{
+
+            await navigator
+              .clipboard
+              .writeText(
+                code
+              );
+
+
+            copyBtn.textContent=
+              "CÓDIGO COPIADO ✓";
+
+
+          }catch{
+
+            alert(
+              "Não foi possível copiar automaticamente. Selecione o código e copie."
+            );
+
+          }
+
+        };
 
     }
 
 
-    if(
-      currentOrderExternalReference
-    ){
-
-      params.set(
-        "external_reference",
-        currentOrderExternalReference
+    const checkBtn=
+      document.getElementById(
+        "checkPaymentBtn"
       );
 
-    }
-
-
-    const response=
-      await fetch(
-        `${ZAVYN_API_URL}/check-payment?${params.toString()}`
-      );
-
-
-    const data=
-      await response.json();
-
-
-    if(
-      !response.ok||
-      !data.ok
-    ){
-
-      throw new Error(
-        data.error||
-        "Não foi possível verificar o pagamento."
-      );
-
-    }
-
-
-    if(
-      data.paid||
-      data.status==="approved"
-    ){
-
-      alert(
-        "Pagamento confirmado! Obrigado pela compra."
-      );
-
-      localStorage.removeItem(
-        "zavynCurrentOrderId"
-      );
-
-      localStorage.removeItem(
-        "zavynCurrentOrderExternalReference"
-      );
-
-      currentOrderId=null;
-
-      currentOrderExternalReference=null;
-
-      return;
-
-    }
-
-
-    alert(
-      `Pagamento ainda não confirmado. Status: ${data.status||"pendente"}`
-    );
-
-
-  }catch(error){
-
-    alert(
-      error.message||
-      "Erro ao verificar pagamento."
-    );
-
-
-  }finally{
 
     if(checkBtn){
 
-      checkBtn.disabled=false;
-
-      checkBtn.textContent=
-        "VERIFICAR PAGAMENTO";
+      checkBtn.onclick=
+        checkCurrentPayment;
 
     }
 
-  }
 
-}
+  }catch(error){
 
+    showPaymentResult(`
 
-const checkBtn=
-  document.getElementById(
-    "checkPaymentBtn"
-  );
-
-
-if(checkBtn){
-
-  checkBtn.onclick=
-    checkCurrentPayment;
-
-}
       <div
         class="payment-error"
       >
@@ -2633,8 +2131,6 @@ function getPurchasedVolumesFromReference(
   return volumes;
 
 }
-
-
 /* =========================================================
    VERIFICAR PAGAMENTO
 ========================================================= */
@@ -2908,6 +2404,7 @@ async function checkCurrentPayment(){
             CONTINUAR
           </button>
 
+
         </div>
 
       `);
@@ -2955,6 +2452,7 @@ async function checkCurrentPayment(){
             VERIFICAR NOVAMENTE
           </button>
 
+
         </div>
 
       `);
@@ -2993,6 +2491,7 @@ async function checkCurrentPayment(){
         >
           TENTAR NOVAMENTE
         </button>
+
 
       </div>
 
@@ -3056,6 +2555,28 @@ document
 
     }
   );
+
+
+/* =========================================================
+   VOLTAR PARA O CARRINHO
+========================================================= */
+
+document
+  .getElementById(
+    "backToCartBtn"
+  )
+  .onclick=()=>{
+
+    document
+      .getElementById(
+        "carrinho"
+      )
+      .scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+  };
 
 
 /* =========================================================
