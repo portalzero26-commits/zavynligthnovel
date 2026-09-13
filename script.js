@@ -1388,44 +1388,29 @@ if(searchInput){
 
 
   searchInput.addEventListener(
-    "input",
-    e=>{
+  "input",
+  e=>{
 
-      if(
-        document
-          .getElementById(
-            "bookSearchModal"
-          )
-          ?.classList.contains(
-            "open"
-          )
-      ){
-
-        const modalInput=
-          document.getElementById(
-            "bookSearchModalInput"
-          );
+    const modalInput=
+      document.getElementById(
+        "bookSearchModalInput"
+      );
 
 
-        if(modalInput){
+    if(modalInput){
 
-          modalInput.value=
-            e.target.value;
-
-        }
-
-
-        scheduleBookSearch(
-          e.target.value
-        );
-
-      }
+      modalInput.value=
+        e.target.value;
 
     }
-  );
 
-}
 
+    scheduleBookSearch(
+      e.target.value
+    );
+
+  }
+);
 
 /* =========================================================
    ESC PARA FECHAR
