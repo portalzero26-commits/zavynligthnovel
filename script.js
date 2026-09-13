@@ -919,86 +919,99 @@ function renderBookSearchResults(
 async function searchCommunityBooks(
   query
 ){
+
   const q=
     String(
       query||""
     ).trim();
+
 
   const results=
     document.getElementById(
       "bookSearchResults"
     );
 
+
   if(!results)return;
 
+
   if(q.length<2){
+
     results.innerHTML=
       '<p class="user-search-empty">Digite pelo menos 2 caracteres.</p>';
+
     return;
+
   }
+
 
   results.innerHTML=
     '<p class="user-search-loading">Procurando livros...</p>';
 
-  try{
 
-    const response=
-      await fetch(
-        `${ZAVYN_API_URL}/books/search?q=${encodeURIComponent(q)}`
-      );
+  /* =========================================
+     NORMALIZAR TEXTO
+     Ignora maiúsculas, minúsculas e acentos
+  ========================================= */
 
-    const data=
-      await response.json();
+  const normalizeSearchText=
+    value=>
+      String(
+        value||""
+      )
+        .toLocaleLowerCase(
+          "pt-BR"
+        )
+        .normalize(
+          "NFD"
+        )
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        );
 
-    if(
-      !response.ok||
-      !data.ok
-    ){
-      throw new Error(
-        data.error||
-        "Não foi possível buscar os livros."
-      );
-    }
 
-    const normalized=
-      q.toLocaleLowerCase(
-        "pt-BR"
-      );
+  const normalizedQuery=
+    normalizeSearchText(
+      q
+    );
 
-    /* =========================================
-       LIVROS ANTIGOS DA ZAVYN
-    ========================================= */
 
-    const legacyBooks=
-      books
-        .filter(book=>{
+  /* =========================================
+     LIVROS ANTIGOS DA ZAVYN
+  ========================================= */
+
+  const legacyBooks=
+    books
+      .filter(
+        book=>{
 
           const title=
-            String(
+            normalizeSearchText(
               book.title||""
-            ).toLocaleLowerCase(
-              "pt-BR"
             );
 
+
           const description=
-            String(
+            normalizeSearchText(
               book.description||""
-            ).toLocaleLowerCase(
-              "pt-BR"
             );
+
 
           return(
             title.includes(
-              normalized
+              normalizedQuery
             )
             ||
             description.includes(
-              normalized
+              normalizedQuery
             )
           );
 
-        })
-        .map(book=>({
+        }
+      )
+      .map(
+        book=>({
 
           ...book,
 
@@ -1011,63 +1024,89 @@ async function searchCommunityBooks(
           author:{
             name:"Zavyn",
             username:"zavyn"
-                      },
+          },
 
           isLegacy:true
 
-        }));
+        })
+      );
 
 
-    /* =========================================
-       LIVROS DOS AUTORES
-    ========================================= */
+  /* =========================================
+     MOSTRA OS LIVROS ANTIGOS IMEDIATAMENTE
+  ========================================= */
 
-    const communityBooks=
-      (
-        Array.isArray(
-          data.books
-        )
-          ? data.books
-          : []
+  renderBookSearchResults(
+    legacyBooks,
+    q
+  );
+
+
+  /* =========================================
+     LIVROS DOS AUTORES
+  ========================================= */
+
+  let communityBooks=[];
+
+
+  try{
+
+    const response=
+      await fetch(
+        `${ZAVYN_API_URL}/books/search?q=${encodeURIComponent(q)}`
+      );
+
+
+    const data=
+      await response.json();
+
+
+    if(
+      response.ok&&
+      data.ok&&
+      Array.isArray(
+        data.books
       )
-      .map(book=>({
+    ){
 
-        ...book,
+      communityBooks=
+        data.books.map(
+          book=>({
 
-        isLegacy:false
+            ...book,
 
-      }));
+            isLegacy:false
 
+          })
+        );
 
-    /* =========================================
-       JUNTA OS DOIS CATÁLOGOS
-    ========================================= */
+    }
 
-    const allBooks=[
-      ...legacyBooks,
-      ...communityBooks
-    ];
-
-
-    renderBookSearchResults(
-      allBooks,
-      q
-    );
 
   }catch(error){
 
-    results.innerHTML=`
-      <p
-        class="user-search-empty error"
-      >
-        ${escapeBookSearchText(
-          error.message||
-          "Erro ao buscar livros."
-        )}
-      </p>
-    `;
+    console.warn(
+      "Não foi possível buscar livros da comunidade:",
+      error
+    );
 
   }
+
+
+  /* =========================================
+     JUNTA OS DOIS CATÁLOGOS
+  ========================================= */
+
+  const allBooks=[
+    ...legacyBooks,
+    ...communityBooks
+  ];
+
+
+  renderBookSearchResults(
+    allBooks,
+    q
+  );
 
 }
 
