@@ -884,13 +884,13 @@ function renderBookSearchResults(
             );
 
 
-          if(book){
-
-            showCommunityBookDetails(
-              book
-            );
-
-          }
+         if(book){
+  if(book.isLegacy){
+    openBookModal(book.n);
+  }else{
+    showCommunityBookDetails(book);
+  }
+}
 
         }
       );
