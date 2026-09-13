@@ -27,28 +27,34 @@ let currentOrderExternalReference=
 
 
 function saveCart(){
+
   localStorage.setItem(
     "zavynCart",
     JSON.stringify(
       cart.map(b=>({n:b.n,qty:b.qty}))
     )
   );
+
 }
 
 
 function cartCount(){
+
   return cart.reduce(
     (sum,b)=>sum+b.qty,
     0
   );
+
 }
 
 
 function cartTotal(){
+
   return cart.reduce(
     (sum,b)=>sum+b.price*b.qty,
     0
   );
+
 }
 
 
@@ -453,9 +459,9 @@ renderBooks();
 
 renderCart();
 
+
 const searchInput=
   document.getElementById("bookSearch");
-
 
 let communitySearchTimer=null;
 
@@ -499,7 +505,8 @@ function openBookSearchModal(){
       modalInput.focus();
     },40);
 
-    if(modalInput.value){
+  }
+      if(modalInput.value){
 
       searchCommunityBooks(
         modalInput.value
@@ -513,8 +520,6 @@ function openBookSearchModal(){
     }
 
   }
-
-}
 
 
 function closeBookSearchModal(){
@@ -565,24 +570,29 @@ function ensureBookSearchModal(){
   );
 
     if(closeBtn && !closeBtn.dataset.bound){
+
       closeBtn.addEventListener(
         "click",
         closeBookSearchModal
       );
 
       closeBtn.dataset.bound="true";
+
     }
 
     if(backdrop && !backdrop.dataset.bound){
+
       backdrop.addEventListener(
         "click",
         closeBookSearchModal
       );
 
       backdrop.dataset.bound="true";
+
     }
 
     return modal;
+
   }
 
   modal=
@@ -683,6 +693,8 @@ searchBackdrop?.addEventListener(
   return modal;
 
 }
+
+
 /* =========================================================
    ESCAPE PARA TEXTOS
 ========================================================= */
@@ -903,6 +915,7 @@ function renderBookSearchResults(
 /* =========================================================
    PESQUISAR LIVROS
 ========================================================= */
+
 async function searchCommunityBooks(
   query
 ){
@@ -998,7 +1011,7 @@ async function searchCommunityBooks(
           author:{
             name:"Zavyn",
             username:"zavyn"
-          },
+                      },
 
           isLegacy:true
 
@@ -1055,6 +1068,7 @@ async function searchCommunityBooks(
     `;
 
   }
+
 }
 
 
@@ -1171,7 +1185,6 @@ function showCommunityBookDetails(
 
       ${
         book.cover_url
-
           ? `
 
             <img
@@ -1185,7 +1198,6 @@ function showCommunityBookDetails(
             >
 
           `
-
           : ""
       }
 
@@ -1218,7 +1230,6 @@ function showCommunityBookDetails(
               "Autor"
             )}
           </strong>
-
         </p>
 
 
@@ -1427,6 +1438,8 @@ document.addEventListener(
 
   }
 );
+
+
 function renderCheckout(){
 
   const container=
@@ -1454,7 +1467,6 @@ function renderCheckout(){
                 <b>
                   × ${b.qty}
                 </b>
-
               </span>
 
               <strong>
@@ -1495,510 +1507,9 @@ document
   )
   .forEach(
     btn=>
-
       btn.addEventListener(
         "click",
-        ()=>{
-
-          document
-            .querySelectorAll(
-              ".payment-option"
-            )
-            .forEach(
-              b=>
-                b.classList.remove(
-                  "selected"
-                )
-            );
-
-
-          btn.classList.add(
-            "selected"
-          );
-
-
-          selectedPayment=
-            btn.dataset.payment||
-            "pix";
-
-
-          const notice=
-            document.getElementById(
-              "paymentNotice"
-            );
-
-
-          if(notice){
-
-            notice.textContent=
-              selectedPayment==="pix"
-
-                ? "PIX conectado ao Mercado Pago. O pedido será criado com o valor calculado pela Zavyn."
-
-                : "Cartão será conectado na próxima etapa. Nesta versão, use PIX para testar o pagamento.";
-
-          }
-
-        }
-      )
-  );
-
-
-/* =========================================================
-   RESULTADO DO PAGAMENTO
-========================================================= */
-
-function showPaymentResult(
-  html
-){
-
-  const box=
-    document.getElementById(
-      "paymentResult"
-    );
-
-
-  if(!box)return;
-
-
-  box.innerHTML=
-    html;
-
-
-  box.classList.add(
-    "visible"
-  );
-
-
-  box.scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
-
-}
-
-
-function closePaymentResult(){
-
-  const box=
-    document.getElementById(
-      "paymentResult"
-    );
-
-
-  if(box){
-
-    box.classList.remove(
-      "visible"
-    );
-
-    box.innerHTML="";
-
-  }
-
-
-  localStorage.removeItem(
-    "zavynCurrentOrderId"
-  );
-
-
-  localStorage.removeItem(
-    "zavynCurrentOrderExternalReference"
-  );
-
-
-  currentOrderId=
-    null;
-
-
-  currentOrderExternalReference=
-    null;
-
-}
-
-
-/* =========================================================
-   CRIAR PIX
-========================================================= */
-
-async function createPixPayment(){
-
-  if(!cart.length){
-
-    alert(
-      "Seu carrinho está vazio."
-    );
-
-    return;
-
-  }
-
-
-  const name=
-    document
-      .getElementById(
-        "customerName"
-      )
-      .value
-      .trim();
-
-
-  const email=
-    document
-      .getElementById(
-        "customerEmail"
-      )
-      .value
-      .trim();
-
-
-  if(!name || !email){
-
-    alert(
-      "Preencha seu nome e seu e-mail."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    !/^\S+@\S+\.\S+$/.test(
-      email
-    )
-  ){
-
-    alert(
-      "Digite um e-mail válido."
-    );
-
-    return;
-
-  }
-
-
-  const submit=
-    document.querySelector(
-      ".checkout-submit"
-    );
-
-
-  const original=
-    submit.textContent;
-
-
-  submit.disabled=
-    true;
-
-
-  submit.textContent=
-    "CRIANDO PIX...";
-
-
-  closePaymentResult();
-
-
-  try{
-
-    const response=
-      await fetch(
-        `${ZAVYN_API_URL}/create-order`,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-
-              name,
-
-              email,
-
-              totalAmount:
-                cartTotal()
-                  .toFixed(2),
-
-              items:
-                cart.map(
-                  b=>({
-                    n:b.n,
-                    qty:b.qty
-                  })
-                )
-
-            })
-
-        }
-      );
-
-
-    const data=
-      await response.json();
-
-
-    if(
-      !response.ok||
-      !data.ok
-    ){
-
-      throw new Error(
-        data.error||
-        "Não foi possível criar o PIX."
-      );
-
-    }
-
-
-    const order=
-      data.order||
-      {};
-
-
-    currentOrderId=
-      order.id||
-      null;
-
-
-    currentOrderExternalReference=
-      order.external_reference||
-      data.externalReference||
-      null;
-
-
-    if(currentOrderId){
-
-      localStorage.setItem(
-        "zavynCurrentOrderId",
-        currentOrderId
-      );
-
-    }
-
-
-    if(
-      currentOrderExternalReference
-    ){
-
-      localStorage.setItem(
-        "zavynCurrentOrderExternalReference",
-        currentOrderExternalReference
-      );
-
-    }
-
-
-    const payment=
-      order.transactions
-        ?.payments?.[0]||
-      {};
-
-
-    const method=
-      payment.payment_method||
-      {};
-
-
-    const qr=
-      method.qr_code_base64||
-      "";
-
-
-    const code=
-      method.qr_code||
-      "";
-
-
-    const ticket=
-      method.ticket_url||
-      "";
-
-
-    showPaymentResult(`
-
-      <div
-        class="payment-result-head"
-      >
-
-        <span
-          class="payment-status-dot"
-        ></span>
-
-        <div>
-
-          <strong>
-            PIX criado com sucesso
-          </strong>
-
-          <small>
-            Pedido ${order.id||""}
-          </small>
-
-        </div>
-
-      </div>
-
-
-      <p
-        class="payment-result-total"
-      >
-
-        Total:
-
-        <strong>
-          ${money(
-            data.calculatedTotal||
-            cartTotal()
-          )}
-        </strong>
-
-      </p>
-
-
-      ${
-        qr
-
-          ? `
-
-            <div
-              class="pix-qr-wrap"
-            >
-
-              <img
-                src="data:image/png;base64,${qr}"
-                alt="QR Code PIX para pagamento"
-              >
-
-            </div>
-
-          `
-
-          : ""
-      }
-
-
-      ${
-        code
-
-          ? `
-
-            <label
-              class="pix-code-label"
-            >
-
-              PIX copia e cola
-
-              <input
-                id="pixCode"
-                readonly
-                value="${code.replace(
-                  /"/g,
-                  "&quot;"
-                )}"
-              >
-
-            </label>
-
-
-            <button
-              type="button"
-              class="button secondary-action"
-              id="copyPixBtn"
-            >
-              COPIAR CÓDIGO PIX
-            </button>
-
-          `
-
-          : ""
-      }
-
-
-      <div
-        class="payment-result-actions"
-      >
-
-        <button
-          type="button"
-          class="button"
-          id="checkPaymentBtn"
-        >
-          VERIFICAR PAGAMENTO
-        </button>
-
-
-        ${
-          ticket
-
-            ? `
-
-              <a
-                class="payment-ticket"
-                href="${ticket}"
-                target="_blank"
-                rel="noopener"
-              >
-                ABRIR PIX
-              </a>
-
-            `
-
-            : ""
-        }
-
-      </div>
-
-
-      <p
-        class="payment-help"
-      >
-        Pagamento em ambiente de produção.
-        Após pagar o PIX, use
-        “VERIFICAR PAGAMENTO”
-        para confirmar a aprovação.
-      </p>
-
-    `);
-
-
-    const copyBtn=
-      document.getElementById(
-        "copyPixBtn"
-      );
-
-
-    if(copyBtn){
-
-      copyBtn.onclick=
-        async()=>{
-
-          try{
-
-            await navigator
-              .clipboard
-              .writeText(
-                code
-              );
-
-
-            copyBtn.textContent=
-              "CÓDIGO COPIADO ✓";
-
-
-          }catch{
-
-            alert(
-              "Não foi possível copiar automaticamente. Selecione o código e copie."
-            );
-
-          }
-
-        };
-
+                };
     }
 
 
@@ -2019,7 +1530,375 @@ async function createPixPayment(){
   }catch(error){
 
     showPaymentResult(`
+      <div
+        class="payment-error"
+      >
 
+        <strong>
+          Erro ao criar o PIX
+        </strong>
+
+        <p>
+          ${escapeHtml(
+            error.message||
+            "Não foi possível criar o pagamento."
+          )}
+        </p>
+
+        <button
+          type="button"
+          class="button secondary-action"
+          id="closePaymentError"
+        >
+          FECHAR
+        </button>
+
+      </div>
+    `);
+
+
+    document
+      .getElementById(
+        "closePaymentError"
+      )
+      ?.addEventListener(
+        "click",
+        closePaymentResult
+      );
+
+
+  }finally{
+
+    submit.disabled=
+      false;
+
+    submit.textContent=
+      original;
+
+  }
+
+}
+
+
+/* =========================================================
+   VERIFICAR PAGAMENTO
+========================================================= */
+
+async function checkCurrentPayment(){
+
+  const button=
+    document.getElementById(
+      "checkPaymentBtn"
+    );
+
+
+  if(!button){
+    return;
+  }
+
+
+  if(!currentOrderId){
+
+    alert(
+      "Nenhum pedido ativo foi encontrado."
+    );
+
+    return;
+
+  }
+
+
+  const original=
+    button.textContent;
+
+
+  button.disabled=
+    true;
+
+  button.textContent=
+    "VERIFICANDO...";
+
+
+  try{
+
+    const response=
+      await fetch(
+        `${ZAVYN_API_URL}/order-status?id=${encodeURIComponent(
+          currentOrderId
+        )}`
+      );
+
+
+    const data=
+      await response.json();
+
+
+    if(
+      !response.ok||
+      !data.ok
+    ){
+
+      throw new Error(
+        data.error||
+        "Não foi possível verificar o pagamento."
+      );
+
+    }
+
+
+    const status=
+      String(
+        data.status||
+        ""
+      ).toLowerCase();
+
+
+    if(
+      status==="approved"||
+      status==="paid"
+    ){
+
+      showPaymentResult(`
+        <div
+          class="payment-success"
+        >
+
+          <div
+            class="payment-result-head"
+          >
+
+            <span
+              class="payment-status-dot"
+            ></span>
+
+            <div>
+
+              <strong>
+                Pagamento aprovado!
+              </strong>
+
+              <small>
+                Pedido ${currentOrderId}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <p>
+            Seu pagamento foi confirmado pela Zavyn.
+          </p>
+
+
+          <p>
+            Os livros comprados serão liberados
+            conforme a confirmação do pedido.
+          </p>
+
+        </div>
+      `);
+
+
+      return;
+
+    }
+
+
+    if(
+      status==="pending"||
+      status==="in_process"
+    ){
+
+      alert(
+        "O pagamento ainda está pendente. Aguarde alguns instantes e tente verificar novamente."
+      );
+
+      return;
+
+    }
+
+
+    if(
+      status==="cancelled"||
+      status==="rejected"
+    ){
+
+      alert(
+        "O pagamento não foi aprovado. Status: "+
+        status
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Status atual do pagamento: "+
+      (
+        data.status||
+        "desconhecido"
+      )
+    );
+
+
+  }catch(error){
+
+    alert(
+      error.message||
+      "Erro ao verificar o pagamento."
+    );
+
+  }finally{
+
+    button.disabled=
+      false;
+
+    button.textContent=
+      original;
+
+  }
+
+}
+
+
+/* =========================================================
+   BOTÃO FINAL DO CHECKOUT
+========================================================= */
+
+const checkoutSubmit=
+  document.querySelector(
+    ".checkout-submit"
+  );
+
+
+if(checkoutSubmit){
+
+  checkoutSubmit.addEventListener(
+    "click",
+    async e=>{
+
+      e.preventDefault();
+
+
+      if(
+        selectedPayment===
+        "pix"
+      ){
+
+        await createPixPayment();
+
+        return;
+
+      }
+
+
+      alert(
+        "O pagamento com cartão será conectado em uma próxima etapa. Use PIX para testar."
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   ABRIR CHECKOUT
+========================================================= */
+
+const checkoutButton=
+  document.getElementById(
+    "goCheckout"
+  );
+
+
+if(checkoutButton){
+
+  checkoutButton.addEventListener(
+    "click",
+    ()=>{
+
+      if(!cart.length){
+
+        alert(
+          "Seu carrinho está vazio."
+        );
+
+        return;
+
+      }
+
+
+      renderCheckout();
+
+
+      document
+        .getElementById(
+          "checkout"
+        )
+        ?.scrollIntoView({
+          behavior:"smooth"
+        });
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   ATUALIZA CHECKOUT QUANDO O CARRINHO MUDA
+========================================================= */
+
+renderCheckout();
+
+
+/* =========================================================
+   RESTAURAR PEDIDO ATIVO
+========================================================= */
+
+currentOrderId=
+  localStorage.getItem(
+    "zavynCurrentOrderId"
+  )||
+  null;
+
+
+currentOrderExternalReference=
+  localStorage.getItem(
+    "zavynCurrentOrderExternalReference"
+  )||
+  null;
+
+
+/* =========================================================
+   FINALIZAÇÃO
+========================================================= */
+
+updateCartCount();
+
+renderCart();
+
+renderCheckout();
+    const checkBtn=
+      document.getElementById(
+        "checkPaymentBtn"
+      );
+
+
+    if(checkBtn){
+
+      checkBtn.onclick=
+        checkCurrentPayment;
+
+    }
+
+
+  }catch(error){
+
+    showPaymentResult(`
       <div
         class="payment-error"
       >
@@ -2069,7 +1948,9 @@ function getPurchasedVolumesFromReference(
 
 
   if(!externalReference){
+
     return volumes;
+
   }
 
 
@@ -2129,6 +2010,8 @@ function getPurchasedVolumesFromReference(
   return volumes;
 
 }
+
+
 /* =========================================================
    VERIFICAR PAGAMENTO
 ========================================================= */
@@ -2378,7 +2261,9 @@ async function checkCurrentPayment(){
             <div
               class="download-list"
             >
+
               ${downloads}
+
             </div>
 
           </div>
@@ -2498,7 +2383,8 @@ async function checkCurrentPayment(){
     ).onclick=
       checkCurrentPayment;
 
-  }finally{
+  }
+    }finally{
 
     const b=
       document.getElementById(
@@ -2572,6 +2458,8 @@ document
       });
 
   };
+
+
 /* =========================================================
    VOLTAR PARA O CARRINHO
 ========================================================= */
